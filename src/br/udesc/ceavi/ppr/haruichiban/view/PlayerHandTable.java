@@ -1,11 +1,8 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.view.PlayerPanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -17,7 +14,6 @@ import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Tabela para a mão atual do jogador.

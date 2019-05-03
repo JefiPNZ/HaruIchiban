@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.Game;
+import br.udesc.ceavi.ppr.haruichiban.control.Game;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

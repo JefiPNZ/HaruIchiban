@@ -1,5 +1,6 @@
-package br.udesc.ceavi.ppr.haruichiban;
+package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.view.MainFrame;
 import java.util.Random;
 import javax.swing.SwingUtilities;
@@ -36,6 +37,16 @@ public class Game {
     private long fixedSeed;
     
     /**
+     * Representa o jogador do topo da tela.
+     */
+    private ModelPlayer topPlayer;
+    
+    /**
+     * Representa o jogador da base da tela.
+     */
+    private ModelPlayer bottomPlayer;
+    
+    /**
      * Situação do jogo (se já foi ou não inicializado).
      */
     private boolean gameStarted;
@@ -47,7 +58,9 @@ public class Game {
         this.gameStarted = false;
         this.randomizer  = new Random();
         this.fixedSeed   = this.randomizer.nextLong();
-        this.gameFrame   = new MainFrame();
+        SwingUtilities.invokeLater(() -> {
+            this.gameFrame   = new MainFrame();
+        });
     }
     
     /**
@@ -58,7 +71,7 @@ public class Game {
      * Retorna a instância existente do Singleton.
      * @return A instância existente ou uma nova instância do jogo.
      */
-    public static Game getInstance(){
+    public synchronized static Game getInstance(){
         if(instance == null){
             instance = new Game();
         }

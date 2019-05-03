@@ -7,13 +7,16 @@ import java.awt.image.BufferedImage;
  * @author Jeferson Penz
  */
 public interface IBoardController {
+    
+    /**
+     * Inicia o tabuleiro.
+     */
+    public void startBoard();
 
     /**
-     * Retorna a imagem para um tile do jogo.
-     * @param row
-     * @param col
-     * @return 
+     * Adiciona um observador para o controller.
+     * @param observer
      */
-    public BufferedImage getImage(int row, int col);
+    public void addObserver(BoardObserver observer);
     
 }

@@ -1,5 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
+import br.udesc.ceavi.ppr.haruichiban.control.BoardObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.Game;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -12,24 +14,35 @@ import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.TestBoardController;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
+import br.udesc.ceavi.ppr.haruichiban.utils.Images;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import javax.swing.BorderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Tabela para representação do tabuleiro do jogo.
  * @author Jeferson Penz
  */
-public class BoardTable extends JTable {
+public class BoardTable extends JTable implements BoardObserver{
     
-    private IBoardController controller;
-    private BoardPanel       parentPanel;
+    private IBoardController  controller;
+    private BoardPanel        parentPanel;
+    private BufferedImage[][] boardImages;
+    private BufferedImage     tileImage;
+    private BufferedImage     lilypadImage;
+    private BufferedImage     eggImage;
+    private BufferedImage     flowerImage;
+    private BufferedImage     frogImage;
 
     /**
      * Modelo de dados para tabela.
@@ -49,7 +62,7 @@ public class BoardTable extends JTable {
         @Override
         public Object getValueAt(int row, int col) {
             try {
-                return controller.getImage(row, col);
+                return boardImages[row][col];
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.toString());
                 return null;
@@ -80,11 +93,81 @@ public class BoardTable extends JTable {
     }
 
     /**
+     * {@inheritdoc}
+     */
+    @Override
+    public void clearTile(int row, int col) {
+        BufferedImage converted = new BufferedImage(this.tileImage.getWidth(), this.tileImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = converted.createGraphics();
+        g.drawImage(this.tileImage, 0, 0, null);
+        this.boardImages[row][col] = converted;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    @Override
+    public void drawLilypad(int row, int col, boolean isDark, float rotation) {
+        ColorScale scale = new ColorScale(isDark ? new Color(10, 125, 10) : new Color(15, 205, 15));
+        BufferedImage origin = this.boardImages[row][col];
+        Graphics2D g = origin.createGraphics();
+        g.rotate(Math.toRadians(rotation), origin.getWidth() / 2, origin.getHeight() / 2);
+        g.drawImage(scale.convert(this.lilypadImage), 0, 0, null);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    @Override
+    public void drawEgg(int row, int col, Color eggColor) {
+        
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    @Override
+    public void drawFlower(int row, int col, Color flowerColor) {
+        ColorScale scale = new ColorScale(flowerColor);
+        BufferedImage origin = this.boardImages[row][col];
+        Graphics2D g = origin.createGraphics();
+        g.drawImage(scale.convert(this.flowerImage), 10, 10, null);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    @Override
+    public void drawFrog(int row, int col, Color frogColor) {
+    }
+
+    /**
      * Cria uma nova tabela para servir de tabuleiro.
+     * @param parent
      */
     public BoardTable(BoardPanel parent) {
         this.controller  = new TestBoardController();
+        this.controller.addObserver(this);
         this.parentPanel = parent;
+        this.boardImages = new BufferedImage[5][5];
+        
+        try {
+            this.tileImage    = ImageIO.read(new File(Images.PECA_TABULEIRO));
+            this.lilypadImage = ImageIO.read(new File(Images.VITORIA_REGIA));
+            this.eggImage     = null;
+            this.flowerImage  = ImageIO.read(new File(Images.JOGADOR_FLOR));
+            this.frogImage    = null;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+        }
+        this.initializeProperties();
+        this.controller.startBoard();
+    }
+    
+    /**
+     * Inicializa as propriedades da tabela.
+     */
+    private void initializeProperties(){
         this.setModel(new BoardTableModel());
         this.setDefaultRenderer(Object.class, new BoardTableRenderer());
         this.setBackground(new Color(0, 0, 0, 0));

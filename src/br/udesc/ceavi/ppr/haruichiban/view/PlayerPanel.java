@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.Game;
+import br.udesc.ceavi.ppr.haruichiban.control.Game;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
