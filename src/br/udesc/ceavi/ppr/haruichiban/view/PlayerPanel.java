@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.Game;
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
@@ -18,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
-import br.udesc.ceavi.ppr.haruichiban.control.TestPlayerController;
 
 /**
  * Painel para representação dos dados de um jogador.
@@ -39,8 +38,9 @@ public class PlayerPanel extends JPanel{
      * Cria um novo painel para o jogador com a cor desejada.
      * @param color Cor do jogador.
      */
-    public PlayerPanel(Color color) {
+    public PlayerPanel(Color color, IPlayerController controller) {
         super();
+        this.controller  = controller;
         ColorScale scale = new ColorScale(color);
         try {
             this.floorImg  = ImageIO.read(new File(Images.JOGADOR_TABUA));
@@ -61,7 +61,6 @@ public class PlayerPanel extends JPanel{
      * Realiza o carregamento da tabela de jogo.
      */
     private void initializePlayerHand(){
-        this.controller  = new TestPlayerController();
         this.playerHand  = new PlayerHandTable(this, this.controller);
         JScrollPane pane = new JScrollPane();
         
@@ -96,7 +95,7 @@ public class PlayerPanel extends JPanel{
         int xImg = (int)Math.ceil((float)this.getWidth() / (float)floorImg.getWidth());
         AffineTransform rotTransform  = AffineTransform.getRotateInstance(Math.toRadians(this.rotation), floorImg.getWidth() / 2, floorImg.getHeight() / 2);
         AffineTransformOp rotOperator = new AffineTransformOp(rotTransform, AffineTransformOp.TYPE_BICUBIC);
-        Random rand = Game.getInstance().getFixedRandomizer();
+        Random rand = GameController.getInstance().getFixedRandomizer();
         for (int i = 0; i < xImg; i++) {
             AffineTransform tslTransform  = AffineTransform.getTranslateInstance(0, rand.nextInt(10));
             AffineTransformOp tslOperator = new AffineTransformOp(tslTransform, AffineTransformOp.TYPE_BICUBIC);
@@ -121,7 +120,7 @@ public class PlayerPanel extends JPanel{
      * @param g 
      */
     private void drawPile(Graphics g){
-        Random rand = Game.getInstance().getFixedRandomizer();
+        Random rand = GameController.getInstance().getFixedRandomizer();
         int displacement = this.getHeight() / 2 - flowerImg.getHeight() / 2;
         for (int i = 0; i < controller.getPileSize(); i++) {
             g.drawImage(flowerImg,

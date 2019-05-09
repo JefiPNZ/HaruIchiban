@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
-import br.udesc.ceavi.ppr.haruichiban.control.Game;
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import javax.swing.ImageIcon;
 
 /**
@@ -16,7 +16,7 @@ public class ModelBoardTile {
      * Cria uma nova peça para o tabuleiro.
      */
     public ModelBoardTile() {
-        this.rotation = Game.getInstance().getRandomizer().nextInt(360);
+        this.rotation = GameController.getInstance().getRandomizer().nextInt(360);
         this.lilypad  = false;
     }
     

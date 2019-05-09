@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.Game;
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,15 +9,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 /**
  * JFrame Principal contendo a tela da Aplicação.
+ *
  * @author Jeferson Penz
  */
-public class MainFrame extends JFrame{
-    
+public class MainFrame extends JFrame {
+
     /**
      * Painel para conter todo o jogo.
      */
@@ -42,19 +41,19 @@ public class MainFrame extends JFrame{
      * Painel.para o menu.
      */
     private JPanel menuPanel;
-    
+
     /**
      * Cria o frame para conter o jogo.
      */
-    public MainFrame(){
-        super(Game.GAME_NAME);
+    public MainFrame() {
+        super(GameController.GAME_NAME);
         this.initializeGameComponents();
     }
-    
+
     /**
      * (Re)Inicializa as propriedades da tela atualizando esta de acordo.
      */
-    public final void initializeFrameProperties(){
+    public final void initializeFrameProperties() {
         this.setVisible(false);
         this.setSize(new Dimension(1024, 768));
         this.setUndecorated(true);
@@ -62,23 +61,25 @@ public class MainFrame extends JFrame{
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
-    
+
     /**
      * Inicializa os diferentes componentes do jogo.
      */
-    private void initializeGameComponents(){
-        this.gamePanel         = new GamePanel();
-        this.topPlayerPanel    = new PlayerPanel(new Color(255, 210, 65));
+    private void initializeGameComponents() {
+        this.gamePanel = new GamePanel();
+        //Passo os devidos controladores para os PlayerPanel!
+        this.topPlayerPanel = new PlayerPanel(new Color(255, 210, 65), GameController.getInstance().getTopPlayer());
         this.topPlayerPanel.setRotation(180);
-        this.bottomPlayerPanel = new PlayerPanel(new Color(255, 15, 35));
-        this.boardPanel        = new BoardPanel();
-        this.scorePanel        = new ScorePanel();
-        this.menuPanel         = new JPanel();
-        this.gamePanel.add(this.topPlayerPanel,    BorderLayout.NORTH);
+        //Passo os devidos controladores para os PlayerPanel!
+        this.bottomPlayerPanel = new PlayerPanel(new Color(255, 15, 35), GameController.getInstance().getBottomPlayer());
+        this.boardPanel = new BoardPanel();
+        this.scorePanel = new ScorePanel();
+        this.menuPanel = new JPanel();
+        this.gamePanel.add(this.topPlayerPanel, BorderLayout.NORTH);
         this.gamePanel.add(this.bottomPlayerPanel, BorderLayout.SOUTH);
-        this.gamePanel.add(this.boardPanel,        BorderLayout.CENTER);
-        this.gamePanel.add(this.scorePanel,        BorderLayout.WEST);
-        this.gamePanel.add(this.menuPanel,         BorderLayout.EAST);
+        this.gamePanel.add(this.boardPanel, BorderLayout.CENTER);
+        this.gamePanel.add(this.scorePanel, BorderLayout.WEST);
+        this.gamePanel.add(this.menuPanel, BorderLayout.EAST);
         this.menuPanel.setBackground(new Color(140, 75, 55));
         this.menuPanel.setLayout(new BoxLayout(this.menuPanel, BoxLayout.Y_AXIS));
         JLabel haruIchiban = new JLabel("Haru Ichiban");
@@ -91,5 +92,5 @@ public class MainFrame extends JFrame{
         this.menuPanel.add(men);
         this.setContentPane(this.gamePanel);
     }
-    
+
 }

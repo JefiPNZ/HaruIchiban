@@ -20,4 +20,6 @@ public interface IPlayerController {
      */
     public List<Object> getHand();
     
+    public void selecionarFlor(int x);
+    
 }

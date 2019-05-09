@@ -34,7 +34,7 @@ public class TestBoardController implements IBoardController {
                 for (BoardObserver observer : observers) {
                     observer.clearTile(row, column);
                     if(board[row][column]){
-                        observer.drawLilypad(row, column, false, Game.getInstance().getRandomizer().nextFloat() * 360);
+                        observer.drawLilypad(row, column, false, GameController.getInstance().getRandomizer().nextFloat() * 360);
                         if(row == 2){
                             observer.drawFlower(row, column, new Color(255, 15, 35));
                         }
