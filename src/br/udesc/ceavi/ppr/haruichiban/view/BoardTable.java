@@ -103,8 +103,8 @@ public class BoardTable extends JTable implements BoardObserver {
      * {@inheritdoc}
      */
     @Override
-    public void drawLilypad(int row, int col, boolean isDark, float rotation) {
-        ColorScale scale = new ColorScale(isDark ? new Color(10, 125, 10) : new Color(15, 205, 15));
+    public void drawLilypad(int row, int col, Color lilypadColor, float rotation) {
+        ColorScale scale = new ColorScale(lilypadColor);
         BufferedImage origin = this.boardImages[row][col];
 //        System.out.printf("X %s Y %s \n", row, col);
 //        System.out.println("origin esta nulo ?" + (origin != null ? "Nao" : "Sim"));

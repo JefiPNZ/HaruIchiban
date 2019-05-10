@@ -51,6 +51,17 @@ public class MainFrame extends JFrame {
     }
 
     /**
+     * Método principal da aplicação.
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        GameController controller = GameController.getInstance();
+        controller.begin();
+        new MainFrame().initializeFrameProperties();
+    }
+
+    /**
      * (Re)Inicializa as propriedades da tela atualizando esta de acordo.
      */
     public final void initializeFrameProperties() {

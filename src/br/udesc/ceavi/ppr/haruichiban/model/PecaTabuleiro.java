@@ -1,5 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
+import java.awt.Color;
+
 /**
  * Representa a peca do jogo
  *
@@ -7,31 +9,26 @@ package br.udesc.ceavi.ppr.haruichiban.model;
  * @since 09/05/2019
  *
  */
-public class PecaTabuleiro {
+public abstract class PecaTabuleiro {
 
-    protected int x, y;
     protected float rotacao;
+    private Color cor;
 
-    public PecaTabuleiro(int x, int y, float rotacao) {
-        this.x = x;
-        this.y = y;
+    public PecaTabuleiro(float rotacao, Color cor) {
         this.rotacao = rotacao;
-    }
-
-    public int getX() {
-        return x;
     }
 
     public float getRotacao() {
         return rotacao;
     }
 
-    public int getY() {
-        return y;
+    public Color getCor() {
+        return cor;
     }
 
-    public void setPosicao(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public void setCor(Color cor) {
+        this.cor = cor;
     }
+    
+    public abstract TipoPeca getTipo();
 }

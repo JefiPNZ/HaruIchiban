@@ -19,10 +19,10 @@ public interface BoardObserver {
      * Realiza o desenho de uma vitoria régia no tabuleiro.
      * @param row
      * @param col
-     * @param isDark
+     * @param lilypadColor
      * @param rotation
      */
-    public void drawLilypad(int row, int col, boolean isDark, float rotation);
+    public void drawLilypad(int row, int col, Color lilypadColor, float rotation);
     
     /**
      * Desenha um ovo de sapo com a cor informada.

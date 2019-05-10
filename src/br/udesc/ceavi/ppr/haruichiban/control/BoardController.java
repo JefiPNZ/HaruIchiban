@@ -1,11 +1,8 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
-import br.udesc.ceavi.ppr.haruichiban.model.Flor;
-import br.udesc.ceavi.ppr.haruichiban.model.Sapo;
-import br.udesc.ceavi.ppr.haruichiban.model.abstractFactory.FactoryNenufare;
-import br.udesc.ceavi.ppr.haruichiban.model.abstractFactory.Nenufare;
-import br.udesc.ceavi.ppr.haruichiban.model.abstractFactory.NenufareEgg;
-import java.awt.Color;
+import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
+import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
+import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +12,7 @@ import java.util.List;
  */
 public class BoardController implements IBoardController {
 
+    // @todo Remover
     private boolean[][] board = {
         {true, false, true, false, true},
         {false, true, true, true, false},
@@ -24,32 +22,13 @@ public class BoardController implements IBoardController {
     };
 
     private List<BoardObserver> observers;
-    private Nenufare[][] listaNenufare;
+    private ModelBoardTile[][] tabuleiro;
 
     public BoardController() {
         this.observers = new ArrayList<>();
         initTabuleiro();
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    @Override
-//    public void startBoard(){
-//        for (int row = 0; row < board.length; row++) {
-//            for (int column = 0; column < board[row].length; column++) {
-//                for (BoardObserver observer : observers) {
-//                    observer.clearTile(row, column);
-//                    if(board[row][column]){
-//                        observer.drawLilypad(row, column, false, GameController.getInstance().getRandomizer().nextFloat() * 360);
-//                        if(row == 2){
-//                            observer.drawFlower(row, column, new Color(255, 15, 35));
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
     /**
      * {@inheritdoc}
      */
@@ -63,32 +42,30 @@ public class BoardController implements IBoardController {
      */
     @Override
     public void startBoard() {
-        for (int row = 0; row < listaNenufare.length; row++) {
-            for (int column = 0; column < listaNenufare[row].length; column++) {
+        for (int row = 0; row < tabuleiro.length; row++) {
+            for (int column = 0; column < tabuleiro[row].length; column++) {
                 for (BoardObserver observer : observers) {
                     observer.clearTile(row, column);
                     //Desenha a Nenufare
-                    if (listaNenufare[row][column] != null) {
-                        Nenufare nenufare = listaNenufare[row][column];
-                        observer.drawLilypad(nenufare.getX(), nenufare.getY(),
-                                nenufare.isShowYouDarkSide(),
-                                nenufare.getRotacao());
+                    if (tabuleiro[row][column].hasNenufera()) {
+                        Nenufera nenufera = tabuleiro[row][column].getNenufera();
+                        observer.drawLilypad(row, column, nenufera.getCor(), nenufera.getRotacao());
 
                         //Verifica se essa tem uma peca
-                        if (nenufare.getPeca() != null) {
+                        if (nenufera.hasPeca()) {
                             //Se tem sapo
-                            if (nenufare.getPeca().getClass().getSimpleName().equals("Sapo")) {
-                                observer.drawFrog(row, row, ((Sapo) nenufare.getPeca()).getCor());
+                            if (nenufera.getPeca().getTipo() == TipoPeca.SAPO) {
+                                observer.drawFrog(row, column, nenufera.getPeca().getCor());
                                 //Se tem flor
-                            } else if (nenufare.getPeca().getClass().getSimpleName().equals("Flor")) {
-                                observer.drawFlower(row, row, ((Flor) nenufare.getPeca()).getCor());
+                            } else if (nenufera.getPeca().getTipo() == TipoPeca.FLOR) {
+                                observer.drawFlower(row, column, nenufera.getPeca().getCor());
                             }
 
                             //Verifica se esta tem ovos 
-                        } else if (nenufare.getClass().getSimpleName().equals("NenufareEgg")) {
+                        } else if (nenufera.hasOvo()) {
                             
                             //Quebra do padrao AbstrocFactory ????
-                            observer.drawEgg(row, row, ((NenufareEgg) nenufare).getColor());
+                            observer.drawEgg(row, column, null);
                         }
                     }
                 }
@@ -97,27 +74,16 @@ public class BoardController implements IBoardController {
     }
 
     private void initTabuleiro() {
-        FactoryNenufare factoryNenufare = new FactoryNenufare();
-        listaNenufare = new Nenufare[5][5];
-        listaNenufare[0][0] = factoryNenufare.createNenufareComum(0, 0, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[0][2] = factoryNenufare.createNenufareComum(0, 2, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[0][4] = factoryNenufare.createNenufareEggYellow(0, 4, GameController.getInstance().getRandomizer().nextFloat() * 360);
-
-        listaNenufare[1][1] = factoryNenufare.createNenufareComum(1, 1, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[1][2] = factoryNenufare.createNenufareComum(1, 2, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[1][3] = factoryNenufare.createNenufareComum(1, 3, GameController.getInstance().getRandomizer().nextFloat() * 360);
-
-        listaNenufare[2][0] = factoryNenufare.createNenufareComum(2, 0, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[2][1] = factoryNenufare.createNenufareComum(2, 1, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[2][3] = factoryNenufare.createNenufareTwoSideDark(2, 3, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[2][4] = factoryNenufare.createNenufareComum(2, 4, GameController.getInstance().getRandomizer().nextFloat() * 360);
-
-        listaNenufare[3][1] = factoryNenufare.createNenufareComum(3, 1, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[3][2] = factoryNenufare.createNenufareComum(3, 2, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[3][3] = factoryNenufare.createNenufareEggRed(3, 3, GameController.getInstance().getRandomizer().nextFloat() * 360);
-
-        listaNenufare[4][0] = factoryNenufare.createNenufareComum(4, 0, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[4][2] = factoryNenufare.createNenufareComum(4, 2, GameController.getInstance().getRandomizer().nextFloat() * 360);
-        listaNenufare[4][4] = factoryNenufare.createNenufareComum(4, 4, GameController.getInstance().getRandomizer().nextFloat() * 360);
+        tabuleiro = new ModelBoardTile[5][];
+        //@todo será feito pelo builder
+        for (int i = 0; i < 5; i++) {
+            tabuleiro[i] = new ModelBoardTile[5];
+            for (int j = 0; j < 5; j++) {
+                tabuleiro[i][j] = new ModelBoardTile();
+                if(board[i][j]){
+                    tabuleiro[i][j].addNenufera(GameController.getInstance().getFactoryPecas().createNenufera());
+                }
+            }
+        }
     }
 }
