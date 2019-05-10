@@ -1,9 +1,17 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
-import br.udesc.ceavi.ppr.haruichiban.model.FactoryPecas;
-import br.udesc.ceavi.ppr.haruichiban.model.FactoryPecasPrimavera;
+import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecas;
+import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasInverno;
+import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasPrimavera;
 import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.util.Properties;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
@@ -51,13 +59,28 @@ public class GameController {
     /**
      * Classe para criação da instância do Singleton.
      */
-    private GameController() {
+    private GameController() throws Exception {
         this.gameStarted = false;
         this.randomizer = new Random();
         this.fixedSeed = this.randomizer.nextLong();
-        //@todo criar a fábrica de peças com base em config
-        this.factoryPecas = new FactoryPecasPrimavera();
+        initFabricaPecas();
+    }
 
+    private void initFabricaPecas() throws Exception {
+        //@todo criar a fábrica de peças com base em config
+        Properties props = new Properties();
+        props.load(new InputStreamReader(new FileInputStream(new File("conf.properties"))));
+        String tabuleiro = props.getProperty("tabuleiro");
+        switch (tabuleiro) {
+            case "FactoryPecasPrimavera":
+                this.factoryPecas = new FactoryPecasPrimavera();
+                break;
+            case "FactoryPecasInverno":
+                this.factoryPecas = new FactoryPecasInverno();
+                break;
+            default:
+                throw new Exception("Tabuleiro Na Indentificado");
+        }
     }
 
     /**
@@ -71,8 +94,13 @@ public class GameController {
      * @return A instância existente ou uma nova instância do jogo.
      */
     public synchronized static GameController getInstance() {
-        if (instance == null) {
-            instance = new GameController();
+        try {
+            if (instance == null) {
+                instance = new GameController();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(0);
         }
         return instance;
     }

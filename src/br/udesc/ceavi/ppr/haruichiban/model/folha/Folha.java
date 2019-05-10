@@ -1,7 +1,10 @@
-package br.udesc.ceavi.ppr.haruichiban.model;
+package br.udesc.ceavi.ppr.haruichiban.model.folha;
 
 import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
+import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
+import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
+import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Color;
 
 /**
@@ -10,37 +13,37 @@ import java.awt.Color;
  * @since 09/05/2019
  *
  */
-public class Nenufera extends PecaTabuleiro {
+public abstract class Folha extends PecaTabuleiro {
 
-    private boolean showDarkSide;
-    private PecaTabuleiro peca;
-    private Ovo ovo;
+    protected boolean isShowDarkSide;
+    protected PecaTabuleiro peca;
+    protected Filhote filhote;
 
-    public Nenufera(float rotacao) {
+    public Folha(float rotacao) {
         super(rotacao, null);
-        this.showDarkSide = false;
+        this.isShowDarkSide = false;
     }
 
-    public void setOvo(Ovo ovo) {
-        this.ovo = ovo;
+    public void setFilhote(Filhote filhote) {
+        this.filhote = filhote;
     }
 
     /**
-     * Retorna a nenufera esta mostrando seu lado escuro
+     * Retorna se a folha esta mostrando seu lado escuro
      *
      * @return true esta mostrando,false se não esta mostrando
      */
     public boolean isEscura() {
-        return showDarkSide;
+        return isShowDarkSide;
     }
 
     /**
-     * Retorna se tem um ovo
+     * Retorna se tem um filhote
      *
-     * @return true se há um ovo,false se não há
+     * @return true se há um filhote,false se não há
      */
-    public boolean hasOvo() {
-        return ovo != null;
+    public boolean hasFilhote() {
+        return filhote != null;
     }
 
     /**
@@ -60,10 +63,10 @@ public class Nenufera extends PecaTabuleiro {
      * @throws CanNotChangeSideNenufareException
      */
     public void virarNenufare() throws CanNotChangeSideNenufareException {
-        if (showDarkSide) {
+        if (isShowDarkSide) {
             throw new CanNotChangeSideNenufareException();
         }
-        showDarkSide = true;
+        isShowDarkSide = true;
     }
 
     /**
@@ -74,7 +77,7 @@ public class Nenufera extends PecaTabuleiro {
      * @param peca
      * @throws NenufareJaPossuiUmaPecaEmCimaException
      */
-    public void colocarPecaEmNenufare(PecaTabuleiro peca) throws NenufareJaPossuiUmaPecaEmCimaException {
+    public void colocarPecaNaFolha(PecaTabuleiro peca) throws NenufareJaPossuiUmaPecaEmCimaException {
         if (hasPeca()) {
             throw new NenufareJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
         }
@@ -103,20 +106,20 @@ public class Nenufera extends PecaTabuleiro {
 
     @Override
     public TipoPeca getTipo() {
-        return TipoPeca.NENUFERA;
+        return TipoPeca.FOLHA;
     }
 
-    public Ovo getOvo() {
-        return ovo;
+    public Filhote getFilhote() {
+        return filhote;
     }
 
     /**
-     * Retorna se tem Um Sapo
+     * Retorna se tem Um Animal
      *
-     * @return true se tem um sapo,false se nao
+     * @return true se tem um Animal,false se nao
      */
-    public boolean hasSapo() {
-        return hasPeca() && peca.getTipo() == TipoPeca.SAPO;
+    public boolean hasAnimal() {
+        return hasPeca() && peca.getTipo() == TipoPeca.ANIMAL;
     }
 
 }

@@ -1,7 +1,7 @@
-package br.udesc.ceavi.ppr.haruichiban.control.command;
+package br.udesc.ceavi.ppr.haruichibanl.command;
 
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
-import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
+import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 
 /**
  *
@@ -11,9 +11,9 @@ import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
  */
 public class SetNewBlackNenufar implements Command{
 
-    private final Nenufera nenufara;
+    private final Folha nenufara;
 
-    public SetNewBlackNenufar(Nenufera nenufara) {
+    public SetNewBlackNenufar(Folha nenufara) {
         this.nenufara = nenufara;
     }
     

@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
+import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 
 /**
@@ -9,7 +10,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.GameController;
  */
 public class ModelBoardTile {
 
-    private Nenufera nenufera;
+    private Folha folha;
     private final int rotation;
 
     /**
@@ -17,36 +18,36 @@ public class ModelBoardTile {
      */
     public ModelBoardTile() {
         this.rotation = GameController.getInstance().getRandomizer().nextInt(360);
-        this.nenufera = null;
+        this.folha = null;
     }
 
     /**
-     * Adiciona uma nenufera para a célula.
+     * Adiciona uma folha para a célula.
      *
-     * @param nenufera
+     * @param folha
      */
-    public void addNenufera(Nenufera nenufera) {
-        this.nenufera = nenufera;
+    public void addFolha(Folha folha) {
+        this.folha = folha;
     }
 
     /**
-     * Remove uma a nenufera da peça.
+     * Remove a folha da peça.
      */
-    public void removeNenufera() {
-        this.nenufera = null;
+    public void removeFolha() {
+        this.folha = null;
     }
 
     /**
-     * Retorna se tem ou não uma vitória régia.
+     * Retorna se tem ou não uma folha
      *
      * @return true tem, false não tem
      */
-    public boolean hasNenufera() {
-        return this.nenufera != null;
+    public boolean hasFolha() {
+        return this.folha != null;
     }
 
-    public Nenufera getNenufera() {
-        return this.nenufera;
+    public Folha getFolha() {
+        return this.folha;
     }
 
 }

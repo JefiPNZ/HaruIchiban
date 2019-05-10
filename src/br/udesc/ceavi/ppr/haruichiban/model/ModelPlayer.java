@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
+import br.udesc.ceavi.ppr.haruichiban.model.Flor.Flor;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import java.awt.Color;
 import java.util.ArrayList;
