@@ -1,6 +1,5 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
-import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
 import java.awt.Color;
 
 /**

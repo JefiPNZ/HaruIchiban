@@ -1,5 +1,8 @@
 package br.udesc.ceavi.ppr.haruichiban.control.command;
 
+import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
+import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
+
 /**
  *
  * @author GustavoSantos
@@ -8,9 +11,19 @@ package br.udesc.ceavi.ppr.haruichiban.control.command;
  */
 public class SetNewBlackNenufar implements Command{
 
+    private final Nenufera nenufara;
+
+    public SetNewBlackNenufar(Nenufera nenufara) {
+        this.nenufara = nenufara;
+    }
+    
     @Override
     public void execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            nenufara.virarNenufare();
+        } catch (CanNotChangeSideNenufareException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
     }
 
 }

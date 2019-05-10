@@ -2,9 +2,6 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 
 import br.udesc.ceavi.ppr.haruichiban.model.FactoryPecas;
 import br.udesc.ceavi.ppr.haruichiban.model.FactoryPecasPrimavera;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor;
-import br.udesc.ceavi.ppr.haruichiban.model.Sapo;
-import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
 import java.awt.Color;
 import java.util.Random;
 
@@ -48,7 +45,7 @@ public class GameController {
      * Situação do jogo (se já foi ou não inicializado).
      */
     private boolean gameStarted;
-    
+
     private FactoryPecas factoryPecas;
 
     /**
@@ -60,9 +57,7 @@ public class GameController {
         this.fixedSeed = this.randomizer.nextLong();
         //@todo criar a fábrica de peças com base em config
         this.factoryPecas = new FactoryPecasPrimavera();
-        
-//        System.out.println(topPlayer.getPlay().toString());
-//        System.out.println(bottomPlayer.getPlay().toString());
+
     }
 
     /**
@@ -88,6 +83,8 @@ public class GameController {
     public void begin() {
         topPlayer = new PlayerController(new Color(255, 210, 65));
         bottomPlayer = new PlayerController(new Color(255, 15, 35));
+        System.out.println(topPlayer.getPlay().toString());
+        System.out.println(bottomPlayer.getPlay().toString());
         this.gameStarted = true;
     }
 

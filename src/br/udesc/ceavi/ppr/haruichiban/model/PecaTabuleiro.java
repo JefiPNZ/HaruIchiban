@@ -16,6 +16,7 @@ public abstract class PecaTabuleiro {
 
     public PecaTabuleiro(float rotacao, Color cor) {
         this.rotacao = rotacao;
+        this.cor = cor;
     }
 
     public float getRotacao() {
@@ -29,6 +30,6 @@ public abstract class PecaTabuleiro {
     public void setCor(Color cor) {
         this.cor = cor;
     }
-    
+
     public abstract TipoPeca getTipo();
 }
