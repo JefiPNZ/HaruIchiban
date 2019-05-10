@@ -10,15 +10,13 @@ import java.awt.Color;
  */
 public class Sapo extends PecaTabuleiro {
 
-    private final Color cor;
-
-    public Sapo(int x, int y, float rotacao, Color cor) {
-        super(x, y, rotacao);
-        this.cor = cor;
+    public Sapo(float rotacao, Color cor) {
+        super(rotacao, cor);
     }
 
-    public Color getCor() {
-        return cor;
+    @Override
+    public TipoPeca getTipo() {
+        return TipoPeca.SAPO;
     }
 
 }

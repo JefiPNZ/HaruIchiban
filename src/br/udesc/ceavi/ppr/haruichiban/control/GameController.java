@@ -1,9 +1,12 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
-import br.udesc.ceavi.ppr.haruichiban.view.MainFrame;
+import br.udesc.ceavi.ppr.haruichiban.model.FactoryPecas;
+import br.udesc.ceavi.ppr.haruichiban.model.FactoryPecasPrimavera;
+import br.udesc.ceavi.ppr.haruichiban.model.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.Sapo;
+import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
 import java.awt.Color;
 import java.util.Random;
-import javax.swing.SwingUtilities;
 
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
@@ -20,11 +23,6 @@ public class GameController {
      * Constante para o nome do jogo.
      */
     public static final String GAME_NAME = "Haru Ichiban";
-
-    /**
-     * Tela do jogo.
-     */
-    private MainFrame gameFrame;
 
     /**
      * Responsável por gerar dados aleatórios.
@@ -50,6 +48,8 @@ public class GameController {
      * Situação do jogo (se já foi ou não inicializado).
      */
     private boolean gameStarted;
+    
+    private FactoryPecas factoryPecas;
 
     /**
      * Classe para criação da instância do Singleton.
@@ -58,13 +58,9 @@ public class GameController {
         this.gameStarted = false;
         this.randomizer = new Random();
         this.fixedSeed = this.randomizer.nextLong();
-
-        SwingUtilities.invokeLater(() -> {
-            this.gameFrame = new MainFrame();
-        });
-
-        topPlayer = new PlayerController(new Color(255, 210, 65));
-        bottomPlayer = new PlayerController(new Color(255, 15, 35));
+        //@todo criar a fábrica de peças com base em config
+        this.factoryPecas = new FactoryPecasPrimavera();
+        
 //        System.out.println(topPlayer.getPlay().toString());
 //        System.out.println(bottomPlayer.getPlay().toString());
     }
@@ -87,21 +83,11 @@ public class GameController {
     }
 
     /**
-     * Método principal da aplicação.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        GameController.getInstance().begin();
-    }
-
-    /**
      * Para a execução da lógica do jogo.
      */
     public void begin() {
-        SwingUtilities.invokeLater(() -> {
-            this.gameFrame.initializeFrameProperties();
-        });
+        topPlayer = new PlayerController(new Color(255, 210, 65));
+        bottomPlayer = new PlayerController(new Color(255, 15, 35));
         this.gameStarted = true;
     }
 
@@ -146,6 +132,10 @@ public class GameController {
 
     public PlayerController getTopPlayer() {
         return topPlayer;
+    }
+
+    public FactoryPecas getFactoryPecas() {
+        return factoryPecas;
     }
 
 }

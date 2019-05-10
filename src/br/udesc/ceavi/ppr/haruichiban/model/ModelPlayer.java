@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ModelPlayer {
 
     private void initHand() {
         for (int i = 1; i < 9; i++) {
-            listaDeFlores.add(new Flor(0, 0, 0, myColor, i, this));
+            listaDeFlores.add(GameController.getInstance().getFactoryPecas().createFlor(myColor, i, this));
         }
     }
 

@@ -1,15 +1,15 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import javax.swing.ImageIcon;
+import br.udesc.ceavi.ppr.haruichiban.model.Nenufera;
 
 /**
- * Representa uma peça no tabuleiro.
+ * Representa uma célula no tabuleiro.
  * @author Jeferson Penz
  */
 public class ModelBoardTile {
     
-    private boolean lilypad;
+    private Nenufera nenufera;
     private final int rotation;
 
     /**
@@ -17,33 +17,34 @@ public class ModelBoardTile {
      */
     public ModelBoardTile() {
         this.rotation = GameController.getInstance().getRandomizer().nextInt(360);
-        this.lilypad  = false;
+        this.nenufera  = null;
     }
     
     /**
-     * Adiciona uma vitória regia para a peça.
+     * Adiciona uma nenufera para a célula.
+     * @param nenufera
      */
-    public void addLilypad(){
-        this.lilypad = true;
+    public void addNenufera(Nenufera nenufera){
+        this.nenufera = nenufera;
     }
     
     /**
-     * Remove uma vitória regia para a peça.
+     * Remove uma a nenufera da peça.
      */
-    public void removeLilypad(){
-        this.lilypad = false;
+    public void removeNenufera(){
+        this.nenufera = null;
     }
     
     /**
-     * Retorna a imagem da peça para exibição.
-     * @param sizeX
-     * @param sizeY
-     * @param isSelected
+     * Retorna se tem ou não uma vitória régia.
      * @return 
      */
-    public ImageIcon getImage(int sizeX, int sizeY, boolean isSelected){
-          // TODO: MOVER PARA A VIEW
-        return null;
+    public boolean hasNenufera(){
+        return this.nenufera != null;
+    }
+    
+    public Nenufera getNenufera(){
+        return this.nenufera;
     }
     
 }

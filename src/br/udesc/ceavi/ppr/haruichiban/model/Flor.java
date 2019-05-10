@@ -10,23 +10,21 @@ import java.awt.Color;
  */
 public class Flor extends PecaTabuleiro {
 
-    private final Color cor;
     private final int valor;
-    private ModelPlayer playAQuePertenco;
+    private ModelPlayer playerOrigem;
 
-    public Flor(int x, int y, float rotacao, Color cor, int valor,ModelPlayer playAQuePertenco) {
-        super(x, y, rotacao);
-        this.cor = cor;
+    public Flor(float rotacao, Color cor, int valor,ModelPlayer playerOrigem) {
+        super(rotacao, cor);
         this.valor = valor;
-        this.playAQuePertenco = playAQuePertenco;
-    }
-
-    public Color getCor() {
-        return cor;
+        this.playerOrigem = playerOrigem;
     }
 
     public int getValor() {
         return valor;
+    }
+    
+    public TipoPeca getTipo(){
+        return TipoPeca.FLOR;
     }
 
 }
