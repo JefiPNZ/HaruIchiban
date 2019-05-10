@@ -1,6 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
 import br.udesc.ceavi.ppr.haruichiban.view.MainFrame;
+import java.awt.Color;
 import java.util.Random;
 import javax.swing.SwingUtilities;
 
@@ -62,11 +63,10 @@ public class GameController {
             this.gameFrame = new MainFrame();
         });
 
-        //O boolean passado visa apenas modificar a cor da flor!
-        topPlayer = new PlayerController(true);
-        bottomPlayer = new PlayerController(false);
-        System.out.println(topPlayer.getPlay().toString());
-        System.out.println(bottomPlayer.getPlay().toString());
+        topPlayer = new PlayerController(new Color(255, 210, 65));
+        bottomPlayer = new PlayerController(new Color(255, 15, 35));
+//        System.out.println(topPlayer.getPlay().toString());
+//        System.out.println(bottomPlayer.getPlay().toString());
     }
 
     /**

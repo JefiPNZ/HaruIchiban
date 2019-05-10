@@ -11,23 +11,23 @@ import java.util.List;
 public class ModelPlayer {
 
     private int points;
-    private boolean topPlay;
     private final List<Flor> listaDeFlores;
     private List<Flor> listaMao;
+    private Color myColor;
 
-    public ModelPlayer(boolean jogadorDoTop) {
+    public ModelPlayer(Color cor) {
         this.points = 0;
         listaDeFlores = new ArrayList<>();
         listaMao = new ArrayList<>();
-        this.topPlay = jogadorDoTop;
-        for (int i = 1; i < 9; i++) {
-            if (jogadorDoTop) {
-                listaDeFlores.add(new Flor(0, 0, 0, Color.yellow, i));
-            } else {
-                listaDeFlores.add(new Flor(0, 0, 0, Color.red, i));
-            }
-        }
+        this.myColor = cor;
+        initHand();
         controlHand();
+    }
+
+    private void initHand() {
+        for (int i = 1; i < 9; i++) {
+            listaDeFlores.add(new Flor(0, 0, 0, myColor, i, this));
+        }
     }
 
     public void addPontos(int newPoints) {
@@ -75,12 +75,12 @@ public class ModelPlayer {
         return listaMao;
     }
 
-    public boolean isTop() {
-        return topPlay;
-    }
-    
-    public Flor getFlorFromHand(int i){
+    public Flor getFlorFromHand(int i) {
         return listaMao.get(i);
+    }
+
+    public Color getColor() {
+        return myColor;
     }
 
 }

@@ -10,7 +10,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
-import br.udesc.ceavi.ppr.haruichiban.control.TestBoardController;
+import br.udesc.ceavi.ppr.haruichiban.control.BoardController;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Graphics2D;
@@ -26,18 +26,19 @@ import javax.swing.event.ListSelectionEvent;
 
 /**
  * Tabela para representação do tabuleiro do jogo.
+ *
  * @author Jeferson Penz
  */
-public class BoardTable extends JTable implements BoardObserver{
-    
-    private IBoardController  controller;
-    private BoardPanel        parentPanel;
+public class BoardTable extends JTable implements BoardObserver {
+
+    private IBoardController controller;
+    private BoardPanel parentPanel;
     private BufferedImage[][] boardImages;
-    private BufferedImage     tileImage;
-    private BufferedImage     lilypadImage;
-    private BufferedImage     eggImage;
-    private BufferedImage     flowerImage;
-    private BufferedImage     frogImage;
+    private BufferedImage tileImage;
+    private BufferedImage lilypadImage;
+    private BufferedImage eggImage;
+    private BufferedImage flowerImage;
+    private BufferedImage frogImage;
 
     /**
      * Modelo de dados para tabela.
@@ -72,14 +73,14 @@ public class BoardTable extends JTable implements BoardObserver{
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if(value != null){
+            if (value != null) {
                 BufferedImage img = (BufferedImage) value;
-                if(isSelected){
+                if (isSelected) {
                     ColorScale scale = new ColorScale(1.15f, 1.15f, 1.15f);
                     img = scale.convert(img);
                 }
-                AffineTransform transform  = AffineTransform.getScaleInstance((float)table.getColumnModel().getColumn(column).getWidth() / img.getWidth(),
-                                                                              (float)table.getRowHeight() / img.getHeight());
+                AffineTransform transform = AffineTransform.getScaleInstance((float) table.getColumnModel().getColumn(column).getWidth() / img.getWidth(),
+                        (float) table.getRowHeight() / img.getHeight());
                 AffineTransformOp operator = new AffineTransformOp(transform, AffineTransformOp.TYPE_BICUBIC);
                 this.setIcon(new ImageIcon(operator.filter(img, null)));
             }
@@ -105,6 +106,8 @@ public class BoardTable extends JTable implements BoardObserver{
     public void drawLilypad(int row, int col, boolean isDark, float rotation) {
         ColorScale scale = new ColorScale(isDark ? new Color(10, 125, 10) : new Color(15, 205, 15));
         BufferedImage origin = this.boardImages[row][col];
+//        System.out.printf("X %s Y %s \n", row, col);
+//        System.out.println("origin esta nulo ?" + (origin != null ? "Nao" : "Sim"));
         Graphics2D g = origin.createGraphics();
         g.rotate(Math.toRadians(rotation), origin.getWidth() / 2, origin.getHeight() / 2);
         g.drawImage(scale.convert(this.lilypadImage), 0, 0, null);
@@ -134,35 +137,37 @@ public class BoardTable extends JTable implements BoardObserver{
      */
     @Override
     public void drawFrog(int row, int col, Color frogColor) {
+        System.out.printf("Desenhar Sapo da cor : %s na possicao: %s,%s\n",frogColor,row,col);
     }
 
     /**
      * Cria uma nova tabela para servir de tabuleiro.
+     *
      * @param parent
      */
     public BoardTable(BoardPanel parent) {
-        this.controller  = new TestBoardController();
+        this.controller = new BoardController();
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[5][5];
-        
+
         try {
-            this.tileImage    = ImageIO.read(new File(Images.PECA_TABULEIRO));
+            this.tileImage = ImageIO.read(new File(Images.PECA_TABULEIRO));
             this.lilypadImage = ImageIO.read(new File(Images.VITORIA_REGIA));
-            this.eggImage     = null;
-            this.flowerImage  = ImageIO.read(new File(Images.JOGADOR_FLOR));
-            this.frogImage    = null;
+            this.eggImage = null;
+            this.flowerImage = ImageIO.read(new File(Images.JOGADOR_FLOR));
+            this.frogImage = null;
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
         this.initializeProperties();
         this.controller.startBoard();
     }
-    
+
     /**
      * Inicializa as propriedades da tabela.
      */
-    private void initializeProperties(){
+    private void initializeProperties() {
         this.setModel(new BoardTableModel());
         this.setDefaultRenderer(Object.class, new BoardTableRenderer());
         this.setBackground(new Color(0, 0, 0, 0));
@@ -175,26 +180,28 @@ public class BoardTable extends JTable implements BoardObserver{
         this.setOpaque(false);
         this.setShowGrid(false);
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if(!e.getValueIsAdjusting()){
+            if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
             }
         });
         this.getColumnModel().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if(!e.getValueIsAdjusting()){
+            if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
             }
         });
     }
-    
+
     private Point lastSelection = null;
+
     /**
      * Executa o evento de troca da seleção do tabuleiro.<br/>
-     * Como há dois eventos ouvindo (linha e coluna), é necessário garantir que apenas seja chamado o evento quando não
-     * houver a troca de posição.
-     * @param newSelection 
+     * Como há dois eventos ouvindo (linha e coluna), é necessário garantir que
+     * apenas seja chamado o evento quando não houver a troca de posição.
+     *
+     * @param newSelection
      */
-    protected void executeTableSelectionChange(Point newSelection){
-        if(!newSelection.equals(lastSelection)){
+    protected void executeTableSelectionChange(Point newSelection) {
+        if (!newSelection.equals(lastSelection)) {
             lastSelection = newSelection;
             System.out.println("Nova seleção: " + newSelection);
         }
@@ -210,7 +217,7 @@ public class BoardTable extends JTable implements BoardObserver{
             return new Dimension(0, 0);
         }
         size.height -= 20;
-        size.width  -= 20;
+        size.width -= 20;
         float scaleX = (float) size.getWidth();
         float scaleY = (float) size.getHeight();
         if (scaleX > scaleY) {

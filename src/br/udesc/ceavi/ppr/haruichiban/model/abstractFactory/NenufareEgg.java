@@ -1,6 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.model.abstractFactory;
 
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
+import br.udesc.ceavi.ppr.haruichiban.model.Sapo;
 import java.awt.Color;
 
 /**
@@ -38,6 +39,11 @@ public class NenufareEgg extends Nenufare {
 
     public void setColor(Color cor) {
         this.cor = cor;
+        this.peca = new Sapo(x, y, rotacao, cor);
+    }
+
+    public Color getColor() {
+        return cor;
     }
 
 }

@@ -7,6 +7,7 @@ import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.state.TitleOfGardener;
 import br.udesc.ceavi.ppr.haruichiban.state.UntitledGardener;
+import java.awt.Color;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,11 +34,11 @@ public class PlayerController implements IPlayerController {
 
     /**
      *
-     * @param jogadorDoTop identifica se é o jogador do top
+     * @param cor identifica a cor das flores do jogador
      */
-    public PlayerController(boolean jogadorDoTop) {
+    public PlayerController(Color cor) {
         this.title = new UntitledGardener();
-        this.play = new ModelPlayer(jogadorDoTop);
+        this.play = new ModelPlayer(cor);
     }
 
     public void throwFlower(int i) throws Exception {
@@ -87,11 +88,19 @@ public class PlayerController implements IPlayerController {
     public void selecionarFlor(int x) {
         //Tira da mao do play a flor para coloca-la em jogo
         florEmJogo = play.getFlorFromHand(x);
-        System.out.println("Flor em Jogo É " + florEmJogo.getValor() + " e pertence ao " + (play.isTop()?"Jogador do Top":"Jogador de Baixo"));
+        System.out.println("Flor em Jogo É " + florEmJogo.getValor() + " e cor ao " + florEmJogo.getCor());
         //Sera Necessario Tratamento de View Aqui
         /**
          * Logica de flores em jogo no GameControl
          **/        
+    }
+
+    public Flor getFlorEmJogo() {
+        return florEmJogo;
+    }
+    
+    public Color getColor(){
+        return play.getColor();
     }
 
 }

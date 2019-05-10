@@ -9,8 +9,8 @@ package br.udesc.ceavi.ppr.haruichiban.model;
  */
 public class PecaTabuleiro {
 
-    private int x, y;
-    private float rotacao;
+    protected int x, y;
+    protected float rotacao;
 
     public PecaTabuleiro(int x, int y, float rotacao) {
         this.x = x;

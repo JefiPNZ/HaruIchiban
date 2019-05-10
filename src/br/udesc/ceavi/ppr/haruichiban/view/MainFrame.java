@@ -68,10 +68,12 @@ public class MainFrame extends JFrame {
     private void initializeGameComponents() {
         this.gamePanel = new GamePanel();
         //Passo os devidos controladores para os PlayerPanel!
-        this.topPlayerPanel = new PlayerPanel(new Color(255, 210, 65), GameController.getInstance().getTopPlayer());
+        this.topPlayerPanel = new PlayerPanel(GameController.getInstance().getTopPlayer().getColor(),
+                GameController.getInstance().getTopPlayer());
         this.topPlayerPanel.setRotation(180);
         //Passo os devidos controladores para os PlayerPanel!
-        this.bottomPlayerPanel = new PlayerPanel(new Color(255, 15, 35), GameController.getInstance().getBottomPlayer());
+        this.bottomPlayerPanel = new PlayerPanel(GameController.getInstance().getBottomPlayer().getColor(),
+                GameController.getInstance().getBottomPlayer());
         this.boardPanel = new BoardPanel();
         this.scorePanel = new ScorePanel();
         this.menuPanel = new JPanel();
