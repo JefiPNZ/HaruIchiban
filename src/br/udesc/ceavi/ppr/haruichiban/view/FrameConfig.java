@@ -76,6 +76,7 @@ public class FrameConfig extends JFrame{
         content.add(this.corInferior, fullConstraints);
         JButton confirma = new JButton("Confirma");
         confirma.addActionListener((ActionEvent e) -> {
+            setVisible(false);
             origem.begin((String)variante.getSelectedItem(),(String) tamanho.getSelectedItem(), corSuperior.getColor(), corInferior.getColor());
         });
         content.add(confirma, fullConstraints);
