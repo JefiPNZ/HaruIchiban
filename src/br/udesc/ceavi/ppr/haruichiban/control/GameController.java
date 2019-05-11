@@ -3,24 +3,23 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecas;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasInverno;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasPrimavera;
+import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
+import br.udesc.ceavi.ppr.haruichiban.builder.BoardGigaBuilder;
+import br.udesc.ceavi.ppr.haruichiban.builder.BoardNormalBuilder;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
  *
  * @author Jeferson Penz
  *
- * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE
- * HAVER JOPTIONPANE NO CONTROLLER. - Quando adicionar um componente
- * transparente (como overlay por ex.), lembrar do setOpaque(false).
+ * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE HAVER JOPTIONPANE NO CONTROLLER. -
+ * Quando adicionar um componente transparente (como overlay por ex.), lembrar do setOpaque(false).
  */
 public class GameController {
 
@@ -38,6 +37,8 @@ public class GameController {
      * Semente fixa para geração estática de dados aleatórios.
      */
     private long fixedSeed;
+    
+    private BoardBuilder builderTabuleiro;
 
     /**
      * Representa o jogador do topo da tela.
@@ -63,24 +64,6 @@ public class GameController {
         this.gameStarted = false;
         this.randomizer = new Random();
         this.fixedSeed = this.randomizer.nextLong();
-        initFabricaPecas();
-    }
-
-    private void initFabricaPecas() throws Exception {
-        //@todo criar a fábrica de peças com base em config
-        Properties props = new Properties();
-        props.load(new InputStreamReader(new FileInputStream(new File("conf.properties"))));
-        String tabuleiro = props.getProperty("tabuleiro");
-        switch (tabuleiro) {
-            case "FactoryPecasPrimavera":
-                this.factoryPecas = new FactoryPecasPrimavera();
-                break;
-            case "FactoryPecasInverno":
-                this.factoryPecas = new FactoryPecasInverno();
-                break;
-            default:
-                throw new Exception("Tabuleiro Na Indentificado");
-        }
     }
 
     /**
@@ -107,12 +90,32 @@ public class GameController {
 
     /**
      * Para a execução da lógica do jogo.
+     * @param varianteTabuleiro
+     * @param tamanhoTabuleiro
+     * @param corJogadorTopo
+     * @param corJogadorBase
      */
-    public void begin() {
-        topPlayer = new PlayerController(new Color(255, 210, 65));
-        bottomPlayer = new PlayerController(new Color(255, 15, 35));
-        System.out.println(topPlayer.getPlay().toString());
-        System.out.println(bottomPlayer.getPlay().toString());
+    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
+        switch (varianteTabuleiro) {
+            default:
+            case "Primavera":
+                this.factoryPecas = new FactoryPecasPrimavera();
+                break;
+            case "Inverno":
+                this.factoryPecas = new FactoryPecasInverno();
+                break;
+        }
+        switch (tamanhoTabuleiro) {
+            default:
+            case "Giga":
+                this.builderTabuleiro = new BoardGigaBuilder();
+                break;
+            case "Normal":
+                this.builderTabuleiro = new BoardNormalBuilder();
+                break;
+        }
+        topPlayer = new PlayerController(corJogadorTopo);
+        bottomPlayer = new PlayerController(corJogadorBase);
         this.gameStarted = true;
     }
 
@@ -142,8 +145,7 @@ public class GameController {
     }
 
     /**
-     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre
-     * os mesmo valores quando é criado.
+     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre os mesmo valores quando é criado.
      *
      * @return
      */
@@ -161,6 +163,10 @@ public class GameController {
 
     public FactoryPecas getFactoryPecas() {
         return factoryPecas;
+    }
+
+    public BoardBuilder getBuilder() {
+        return builderTabuleiro;
     }
 
 }

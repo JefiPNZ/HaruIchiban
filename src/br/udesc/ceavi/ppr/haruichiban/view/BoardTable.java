@@ -47,12 +47,12 @@ public class BoardTable extends JTable implements BoardObserver {
 
         @Override
         public int getColumnCount() {
-            return 5;
+            return controller.getAlturaTabuleiro();
         }
 
         @Override
         public int getRowCount() {
-            return 5;
+            return controller.getLarguraTabuleiro();
         }
 
         @Override
@@ -106,8 +106,6 @@ public class BoardTable extends JTable implements BoardObserver {
     public void drawLilypad(int row, int col, Color lilypadColor, float rotation) {
         ColorScale scale = new ColorScale(lilypadColor);
         BufferedImage origin = this.boardImages[row][col];
-//        System.out.printf("X %s Y %s \n", row, col);
-//        System.out.println("origin esta nulo ?" + (origin != null ? "Nao" : "Sim"));
         Graphics2D g = origin.createGraphics();
         g.rotate(Math.toRadians(rotation), origin.getWidth() / 2, origin.getHeight() / 2);
         g.drawImage(scale.convert(this.lilypadImage), 0, 0, null);
@@ -149,7 +147,7 @@ public class BoardTable extends JTable implements BoardObserver {
         this.controller = new BoardController();
         this.controller.addObserver(this);
         this.parentPanel = parent;
-        this.boardImages = new BufferedImage[5][5];
+        this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
 
         try {
             this.tileImage = ImageIO.read(new File(Images.PECA_TABULEIRO));

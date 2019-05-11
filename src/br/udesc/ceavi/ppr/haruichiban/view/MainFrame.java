@@ -47,7 +47,6 @@ public class MainFrame extends JFrame {
      */
     public MainFrame() {
         super(GameController.GAME_NAME);
-        this.initializeGameComponents();
     }
 
     /**
@@ -56,9 +55,15 @@ public class MainFrame extends JFrame {
      * @param args
      */
     public static void main(String[] args) {
-        GameController controller = GameController.getInstance();
-        controller.begin();
-        new MainFrame().initializeFrameProperties();
+        GameController.getInstance();
+        FrameConfig frameConfig = new FrameConfig(new MainFrame());
+        frameConfig.initializeFrameProperties();
+    }
+    
+    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase){
+        GameController.getInstance().begin(varianteTabuleiro, tamanhoTabuleiro, corJogadorTopo, corJogadorBase);
+        this.initializeGameComponents();
+        this.initializeFrameProperties();
     }
 
     /**
@@ -66,7 +71,6 @@ public class MainFrame extends JFrame {
      */
     public final void initializeFrameProperties() {
         this.setVisible(false);
-        this.setSize(new Dimension(1024, 768));
         this.setUndecorated(true);
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);

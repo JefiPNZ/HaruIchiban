@@ -1,15 +1,15 @@
 package br.udesc.ceavi.ppr.haruichiban.abstractfactory;
 
-import br.udesc.ceavi.ppr.haruichiban.model.Flor.FlorDeInverno;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.FolhaSeca;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Pinguim;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.OvoDePinguin;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
+import br.udesc.ceavi.ppr.haruichiban.model.FlorDeInverno;
 import java.awt.Color;
 
 /**

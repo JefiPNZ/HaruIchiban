@@ -20,7 +20,7 @@ public class SetNewBlackNenufar implements Command{
     @Override
     public void execute() {
         try {
-            nenufara.virarNenufare();
+            nenufara.virarFolha();
         } catch (CanNotChangeSideNenufareException ex) {
             throw new RuntimeException(ex.getMessage());
         }

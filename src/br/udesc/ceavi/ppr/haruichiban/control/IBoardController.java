@@ -19,4 +19,7 @@ public interface IBoardController {
      */
     public void addObserver(BoardObserver observer);
     
+    public int getAlturaTabuleiro();
+    public int getLarguraTabuleiro();
+    
 }

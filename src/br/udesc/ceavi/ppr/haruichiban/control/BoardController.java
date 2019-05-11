@@ -1,9 +1,11 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
+import br.udesc.ceavi.ppr.haruichiban.builder.BoardDirector;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PosicaoEmTabuleiroOcupadaException;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
@@ -18,15 +20,6 @@ import java.util.List;
  * @author Jeferson Penz
  */
 public class BoardController implements IBoardController {
-
-    // @todo Remover
-    private boolean[][] board = {
-        {true, false, true, false, true},
-        {false, true, true, true, false},
-        {true, true, false, true, true},
-        {false, true, true, true, false},
-        {true, false, true, false, true}
-    };
 
     private List<BoardObserver> observers;
     private ModelBoardTile[][] tabuleiro;
@@ -54,7 +47,7 @@ public class BoardController implements IBoardController {
                 for (BoardObserver observer : observers) {
                     observer.clearTile(row, column);
                     //Desenha a Nenufare
-                    if (tabuleiro[row][column].hasFolha()) {
+                    if (getCampoTabuleiro(row, column).hasFolha()) {
                         Folha folha = getCampoTabuleiro(row, column).getFolha();
                         observer.drawLilypad(row, column, folha.getCor(), folha.getRotacao());
 
@@ -79,18 +72,14 @@ public class BoardController implements IBoardController {
     }
 
     private void initTabuleiro() {
-        tabuleiro = new ModelBoardTile[5][5];
-        //@todo será feito pelo builder
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                tabuleiro[i][j] = new ModelBoardTile();
-            }
-        }
-        visualizarTabuleiro();
+        BoardBuilder builder = GameController.getInstance().getBuilder();
+        BoardDirector director = new BoardDirector(builder);
+        director.contruir();
+        this.tabuleiro = builder.getProduto();
     }
 
     public ModelBoardTile getCampoTabuleiro(int x, int y) {
-        return tabuleiro[x][x];
+        return tabuleiro[x][y];
     }
 
     public boolean changeNenufarTo(ModelBoardTile campoDe,
@@ -117,7 +106,7 @@ public class BoardController implements IBoardController {
         ModelBoardTile campoEmUso = getCampoTabuleiro(x, y);
 
         if (campoEmUso.hasFolha() && !campoEmUso.getFolha().isEscura()) {
-            campoEmUso.getFolha().virarNenufare();
+            campoEmUso.getFolha().virarFolha();
             return true;
         }
         return false;
@@ -156,12 +145,13 @@ public class BoardController implements IBoardController {
         return true;
     }
 
-    private void visualizarTabuleiro() {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.print((getCampoTabuleiro(i, j).hasFolha())? "Tem Flor, ":"Nao Tem Flor, ");
-            }
-            System.out.println("");
-        }
+    @Override
+    public int getAlturaTabuleiro() {
+        return this.tabuleiro[0].length;
+    }
+
+    @Override
+    public int getLarguraTabuleiro() {
+        return this.tabuleiro.length;
     }
 }

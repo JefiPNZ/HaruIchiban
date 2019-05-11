@@ -1,7 +1,6 @@
-package br.udesc.ceavi.ppr.haruichiban.model.Flor;
+package br.udesc.ceavi.ppr.haruichiban.model;
 
-import br.udesc.ceavi.ppr.haruichiban.model.Flor.Flor;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import java.awt.Color;
 

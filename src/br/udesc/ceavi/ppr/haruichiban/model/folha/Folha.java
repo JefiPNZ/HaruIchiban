@@ -24,10 +24,6 @@ public abstract class Folha extends PecaTabuleiro {
         this.isShowDarkSide = false;
     }
 
-    public void setFilhote(Filhote filhote) {
-        this.filhote = filhote;
-    }
-
     /**
      * Retorna se a folha esta mostrando seu lado escuro
      *
@@ -62,7 +58,7 @@ public abstract class Folha extends PecaTabuleiro {
      *
      * @throws CanNotChangeSideNenufareException
      */
-    public void virarNenufare() throws CanNotChangeSideNenufareException {
+    public void virarFolha() throws CanNotChangeSideNenufareException {
         if (isShowDarkSide) {
             throw new CanNotChangeSideNenufareException();
         }
@@ -82,6 +78,13 @@ public abstract class Folha extends PecaTabuleiro {
             throw new NenufareJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
         }
         this.peca = peca;
+    }
+    
+    public void colocarFilhoteNaFolha(Filhote filhote) throws NenufareJaPossuiUmaPecaEmCimaException {
+        if (hasFilhote()) {
+            throw new NenufareJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
+        }
+        this.filhote = filhote;
     }
 
     /**
