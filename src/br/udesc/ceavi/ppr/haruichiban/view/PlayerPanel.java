@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
+import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 
 /**
  * Painel para representação dos dados de um jogador.
@@ -27,10 +28,10 @@ public class PlayerPanel extends JPanel{
     
     private IPlayerController controller;
     private BufferedImage         floorImg;
+    private BufferedImage         flowerImg;
     private BufferedImage         baseImg;
     private BufferedImage         clothImg;
     private BufferedImage         faceImg;
-    private BufferedImage         flowerImg;
     private PlayerHandTable       playerHand;
     private int                   rotation;
 
@@ -45,9 +46,14 @@ public class PlayerPanel extends JPanel{
         try {
             this.floorImg  = ImageIO.read(new File(Images.JOGADOR_TABUA));
             this.baseImg   = ImageIO.read(new File(Images.JOGADOR_BASE));
+            try {
+                Flor flor = GameController.getInstance().getFactoryPecas().createFlor(null, 0, null);
+                this.flowerImg = scale.convert(flor.getImagem());
+            } catch (IOException ex){
+                JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            }
             this.clothImg  = scale.convert(Images.JOGADOR_ROUPA);
             this.faceImg   = ImageIO.read(new File(Images.JOGADOR_ROSTO));
-            this.flowerImg = scale.convert(Images.JOGADOR_FLOR);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
@@ -121,10 +127,10 @@ public class PlayerPanel extends JPanel{
      */
     private void drawPile(Graphics g){
         Random rand = GameController.getInstance().getFixedRandomizer();
-        int displacement = this.getHeight() / 2 - flowerImg.getHeight() / 2;
+        int displacement = this.getHeight() / 2 - getFlowerImg().getHeight() / 2;
         for (int i = 0; i < controller.getPileSize(); i++) {
-            g.drawImage(flowerImg,
-                        this.getWidth() - flowerImg.getWidth() - 15 - i * (rand.nextInt(10) + 25),
+            g.drawImage(getFlowerImg(),
+                        this.getWidth() - getFlowerImg().getWidth() - 15 - i * (rand.nextInt(10) + 25),
                         displacement + rand.nextInt(displacement / 2) - displacement / 4,
                         null);
         }

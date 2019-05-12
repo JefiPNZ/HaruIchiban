@@ -1,7 +1,12 @@
 package br.udesc.ceavi.ppr.haruichiban.model.filhote;
 
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
+import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -15,5 +20,13 @@ public class OvoDePinguin extends Filhote {
         super(rotacao, cor);
     }
 
+    private static BufferedImage imagem;
+    @Override
+    public BufferedImage getImagem() throws IOException{
+        if(imagem == null){
+            imagem = ImageIO.read(new File(Images.OVO_PINGUIM));
+        }
+        return imagem;
+    }
 
 }

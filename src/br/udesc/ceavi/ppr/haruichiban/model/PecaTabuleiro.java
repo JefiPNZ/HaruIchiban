@@ -1,6 +1,8 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Representa a peca do jogo
@@ -10,7 +12,7 @@ import java.awt.Color;
  *
  */
 public abstract class PecaTabuleiro {
-
+    
     protected float rotacao;
     private Color cor;
 
@@ -32,4 +34,6 @@ public abstract class PecaTabuleiro {
     }
 
     public abstract TipoPeca getTipo();
+    
+    public abstract BufferedImage getImagem() throws IOException;
 }

@@ -8,6 +8,7 @@ import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.state.TitleOfGardener;
 import br.udesc.ceavi.ppr.haruichiban.state.UntitledGardener;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,9 +37,9 @@ public class PlayerController implements IPlayerController {
      *
      * @param cor identifica a cor das flores do jogador
      */
-    public PlayerController(Color cor) {
+    public PlayerController(Color cor, int tamanhoDeck) {
         this.title = new UntitledGardener();
-        this.play = new ModelPlayer(cor);
+        this.play = new ModelPlayer(cor, tamanhoDeck);
     }
 
     public void throwFlower(int i) throws Exception {

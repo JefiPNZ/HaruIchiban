@@ -8,11 +8,11 @@ import java.util.List;
  *
  * @author Gustavo C Santos
  */
-public class BoardDirector {
+public class BuilderDirector {
 
     private BoardBuilder builder;
 
-    public BoardDirector(BoardBuilder builder) {
+    public BuilderDirector(BoardBuilder builder) {
         this.builder = builder;
     }
 

@@ -26,6 +26,7 @@ public abstract class Flor extends PecaTabuleiro {
         return valor;
     }
     
+    @Override
     public TipoPeca getTipo(){
         return TipoPeca.FLOR;
     }

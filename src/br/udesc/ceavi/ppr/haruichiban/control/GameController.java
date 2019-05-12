@@ -105,17 +105,20 @@ public class GameController {
                 this.factoryPecas = new FactoryPecasInverno();
                 break;
         }
+        int tamanhoDeck;
         switch (tamanhoTabuleiro) {
             default:
             case "Giga":
                 this.builderTabuleiro = new BoardGigaBuilder();
+                tamanhoDeck = 13;
                 break;
             case "Normal":
                 this.builderTabuleiro = new BoardNormalBuilder();
+                tamanhoDeck = 9;
                 break;
         }
-        topPlayer = new PlayerController(corJogadorTopo);
-        bottomPlayer = new PlayerController(corJogadorBase);
+        topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
+        bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.gameStarted = true;
     }
 

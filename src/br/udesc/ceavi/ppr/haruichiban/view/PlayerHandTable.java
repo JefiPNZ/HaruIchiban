@@ -122,7 +122,7 @@ public class PlayerHandTable extends JTable {
         if (size.getWidth() <= 0 || size.getHeight() <= 0) {
             return new Dimension(0, 0);
         }
-        size.width = size.width > 300 ? 300 : size.width;
+        size.width = size.width > 350 ? 350 : size.width;
         size.height = size.width / this.getModel().getColumnCount();
         this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());
         return size;

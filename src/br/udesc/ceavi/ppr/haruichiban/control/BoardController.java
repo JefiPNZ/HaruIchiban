@@ -1,7 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
-import br.udesc.ceavi.ppr.haruichiban.builder.BoardDirector;
+import br.udesc.ceavi.ppr.haruichiban.builder.BuilderDirector;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PosicaoEmTabuleiroOcupadaException;
@@ -10,8 +10,8 @@ import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Nenufera;
-import java.awt.Color;
+import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,29 +41,31 @@ public class BoardController implements IBoardController {
      * {@inheritdoc}
      */
     @Override
-    public void startBoard() {
+    public void renderBoard() {
         for (int row = 0; row < tabuleiro.length; row++) {
             for (int column = 0; column < tabuleiro[row].length; column++) {
                 for (BoardObserver observer : observers) {
                     observer.clearTile(row, column);
                     //Desenha a Nenufare
                     if (getCampoTabuleiro(row, column).hasFolha()) {
-                        Folha folha = getCampoTabuleiro(row, column).getFolha();
-                        observer.drawLilypad(row, column, folha.getCor(), folha.getRotacao());
-
-                        //Verifica se essa tem uma peca
-                        if (folha.hasPeca()) {
-                            //Se tem sapo
-                            if (folha.getPeca().getTipo() == TipoPeca.ANIMAL) {
-                                observer.drawFrog(row, column, folha.getPeca().getCor());
-                                //Se tem flor
-                            } else if (folha.getPeca().getTipo() == TipoPeca.FLOR) {
-                                observer.drawFlower(row, column, folha.getPeca().getCor());
+                        try {
+                            Folha folha = getCampoTabuleiro(row, column).getFolha();
+                            observer.drawImage(row, column, folha.getCor(), folha.getRotacao(), folha.getImagem());
+                            //Verifica se esta tem filhotes 
+                            if (folha.hasFilhote()) {
+                                observer.drawImage(row, column, folha.getFilhote().getCor(), null, folha.getFilhote().getImagem());
                             }
+                            //Verifica se essa tem uma peca
+                            if (folha.hasPeca()) {
+                                //Se tem animal
+                                if (folha.getPeca().getTipo() == TipoPeca.ANIMAL) {
+                                    observer.drawImage(row, column, folha.getCor(), folha.getPeca().getRotacao(), Animal.getImagemPlataforma());
+                                }
+                                observer.drawImage(row, column, folha.getPeca().getCor(), folha.getPeca().getRotacao(), folha.getPeca().getImagem());
 
-                            //Verifica se esta tem ovos 
-                        } else if (folha.hasFilhote()) {
-                            observer.drawEgg(row, column, folha.getFilhote().getCor());
+                            }
+                        } catch(IOException ex){
+                            
                         }
                     }
                 }
@@ -73,7 +75,7 @@ public class BoardController implements IBoardController {
 
     private void initTabuleiro() {
         BoardBuilder builder = GameController.getInstance().getBuilder();
-        BoardDirector director = new BoardDirector(builder);
+        BuilderDirector director = new BuilderDirector(builder);
         director.contruir();
         this.tabuleiro = builder.getProduto();
     }

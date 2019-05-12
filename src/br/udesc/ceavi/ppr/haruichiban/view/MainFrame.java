@@ -73,6 +73,7 @@ public class MainFrame extends JFrame {
         this.setVisible(false);
         this.setUndecorated(true);
         this.setExtendedState(MAXIMIZED_BOTH);
+        this.setSize(1024, 750);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }

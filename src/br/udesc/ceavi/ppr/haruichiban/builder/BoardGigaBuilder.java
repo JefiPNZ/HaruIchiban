@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class BoardGigaBuilder extends BoardBuilder{
 
     private final Point POSICAO_ANIMAL_TOPO = new Point(1, 1);
-    private final Point POSICAO_ANIMAL_BASE = new Point(3, 4);
+    private final Point POSICAO_ANIMAL_BASE = new Point(3, 5);
     private final Point POSICAO_FOLHA_PRETA = new Point(3, 1);
     private final boolean[][] TABULEIRO = { 
         {true,  false, false,  true, false, false,  true},
@@ -64,7 +64,7 @@ public class BoardGigaBuilder extends BoardBuilder{
                     else if(POSICAO_ANIMAL_BASE.equals(pos)){
                         try {
                             folha.colocarFilhoteNaFolha(gcInstance.getFactoryPecas().createFilhote(gcInstance.getBottomPlayer().getColor()));
-                            folha.colocarPecaNaFolha(gcInstance.getFactoryPecas().createAnimal(gcInstance.getTopPlayer().getColor()));
+                            folha.colocarPecaNaFolha(gcInstance.getFactoryPecas().createAnimal(gcInstance.getBottomPlayer().getColor()));
                         } catch (NenufareJaPossuiUmaPecaEmCimaException ex) {}
                         
                     }

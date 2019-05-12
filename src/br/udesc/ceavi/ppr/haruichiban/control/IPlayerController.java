@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
