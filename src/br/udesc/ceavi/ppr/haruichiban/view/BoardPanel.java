@@ -2,7 +2,6 @@ package br.udesc.ceavi.ppr.haruichiban.view;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.BorderFactory;

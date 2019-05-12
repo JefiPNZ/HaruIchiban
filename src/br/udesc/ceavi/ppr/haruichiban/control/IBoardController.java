@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import java.awt.image.BufferedImage;
 
 /**
@@ -21,5 +22,7 @@ public interface IBoardController {
     
     public int getAlturaTabuleiro();
     public int getLarguraTabuleiro();
+
+    public Folha getFolhaEscura();
     
 }

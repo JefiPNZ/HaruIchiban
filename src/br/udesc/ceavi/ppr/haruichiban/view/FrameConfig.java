@@ -3,13 +3,10 @@ package br.udesc.ceavi.ppr.haruichiban.view;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import java.awt.Color;
 import java.awt.Dimension;
-import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -44,6 +41,7 @@ public class FrameConfig extends JFrame{
         this.setResizable(false);
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
     
     private void initComponentes(){

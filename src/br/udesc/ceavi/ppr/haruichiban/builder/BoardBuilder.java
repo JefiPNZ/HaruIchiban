@@ -1,10 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.builder;
 
-import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import java.awt.Point;
 
 /**
@@ -12,7 +8,7 @@ import java.awt.Point;
  * @author Jeferson Penz
  */
 public abstract class BoardBuilder {
-    
+
     protected Point posicaoAnimalTopo = null;
     protected Point posicaoAnimalBaixo = null;
     protected Point posicaoVitoriaPreta = null;
@@ -23,8 +19,10 @@ public abstract class BoardBuilder {
         return board;
     }
 
+    public abstract Point getBlack();
+
     public abstract void reset();
 
     public abstract void constroiPartes();
-    
+
 }

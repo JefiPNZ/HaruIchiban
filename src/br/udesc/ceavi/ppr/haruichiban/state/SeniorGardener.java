@@ -1,8 +1,10 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
+import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 
 /**
  *
@@ -11,21 +13,6 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorExcept
  *
  */
 public class SeniorGardener implements TitleOfGardener {
-
-    @Override
-    public void throwFlower() {
-        //Codigo que vai colocar a flor no tabuleiro permitindo que esse escolha o local
-    }
-
-    @Override
-    public void moveNenufares() throws Exception {
-        throw new Exception("The Play is a GardenerSenior, he can not move Nenufares");
-    }
-
-    @Override
-    public void chooseNewDarkNenufares() {
-        //Codigo que permitir que o usuario escolha o novo nenufar escuro
-    }
 
     @Override
     public void becomeUntitledGardener(PlayerController aThis) {
@@ -38,8 +25,30 @@ public class SeniorGardener implements TitleOfGardener {
     }
 
     @Override
-    public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException{
+    public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException {
         throw new PlayNaoPodeSeTornarSeniorException("Este usuario já é um Senior");
+    }
+
+    @Override
+    public void getFolhaNoTabuleiroParaFlor(PlayerController aThis) throws Exception {
+        //Requerindo Ao Jogador Que Escolha Um Local Apropriado
+        aThis.requerirAoJogadorQueEsteEscolhaUmFolhaParaColocarAFlor();
+    }
+
+    @Override
+    public void colocandoFlorNaFolha(PlayerController aThis, Folha flor) throws Exception {
+        flor.colocarPecaNaFolha(aThis.removerFlorEmJogo());
+        GameController.getInstance().florColocadaNoTabuleiro();
+    }
+
+    @Override
+    public void chamarPrimeiroVentoDaPrimaveira(PlayerController aThis) {
+        //Não Faz Nada
+    }
+
+    @Override
+    public void escolhaANovaFolhaEscura(PlayerController aThis) throws Exception {
+        aThis.requerirAoJogadorQueEsteEscolhaUmFolhaParaSerVirada();
     }
 
 }

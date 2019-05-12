@@ -10,20 +10,23 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
+import br.udesc.ceavi.ppr.haruichiban.control.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * Tabela para a mão atual do jogador.
  *
  * @author Jeferson Penz
  */
-public class PlayerHandTable extends JTable {
+public class PlayerHandTable extends JTable implements PlayerPanelObserver {
 
     private IPlayerController controller;
     private PlayerPanel parentPanel;
+    ListSelectionListener listener;
 
     /**
      * Modelo de dados para tabela.
@@ -65,7 +68,11 @@ public class PlayerHandTable extends JTable {
                     img = scale.convert(img);
                 }
                 this.setIcon(new ImageIcon(img));
-                this.setText(controller.getHand().get(column).toString());
+                if ((Integer) controller.getHand().get(column) == -1) {
+                    this.setText("");
+                } else {
+                    this.setText(controller.getHand().get(column).toString());
+                }
             }
             return this;
         }
@@ -80,6 +87,7 @@ public class PlayerHandTable extends JTable {
     public PlayerHandTable(PlayerPanel parent, IPlayerController controller) {
         this.parentPanel = parent;
         this.controller = controller;
+        this.controller.addObserver(this);
         this.setModel(new PlayerHandTableModel());
         this.setDefaultRenderer(Object.class, new PlayerHandTableRenderer());
         this.setBackground(new Color(0, 0, 0, 0));
@@ -92,11 +100,11 @@ public class PlayerHandTable extends JTable {
         this.setOpaque(false);
         this.setShowGrid(false);
         this.setForeground(Color.WHITE);
-        this.getColumnModel().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+        listener = (e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
             }
-        });
+        };
     }
 
     /**
@@ -105,12 +113,9 @@ public class PlayerHandTable extends JTable {
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        System.out.println("Nova seleção para mão do jogador: " + newSelection);
-
-        /**
-         * Passando ao controlador(PlayerController) da mao o index flor selecionada
-         */
-        controller.selecionarFlor(newSelection.x);
+        System.out.println("oi");
+        controller.selecionarFlor(getSelectedColumn());
+        this.getColumnModel().getSelectionModel().removeListSelectionListener(listener);
     }
 
     @Override
@@ -128,4 +133,15 @@ public class PlayerHandTable extends JTable {
         return size;
     }
 
+    @Override
+    public void notificarRenderizeOsValoresDaMao() {
+        System.out.println(this.getClass().getSimpleName() + " Repintar");
+        this.repaint();
+    }
+
+    @Override
+    public void notifyJogadorEscolhaUmaFlor() {
+        System.out.println(this.getClass().getSimpleName() + " notifyJogadorEscolhaUmaFlor");
+        this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
+    }
 }

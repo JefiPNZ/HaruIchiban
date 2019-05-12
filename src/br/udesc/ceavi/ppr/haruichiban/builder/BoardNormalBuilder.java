@@ -69,4 +69,9 @@ public class BoardNormalBuilder extends BoardBuilder{
         }
     }
 
+    @Override
+    public Point getBlack() {
+        return POSICAO_FOLHA_PRETA;
+    }
+
 }

@@ -10,7 +10,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
-import br.udesc.ceavi.ppr.haruichiban.control.BoardController;
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Graphics2D;
@@ -116,7 +116,7 @@ public class BoardTable extends JTable implements BoardObserver {
      */
     @Override
     public void drawEgg(int row, int col, Color eggColor) {
-        
+
     }
 
     /**
@@ -135,7 +135,7 @@ public class BoardTable extends JTable implements BoardObserver {
      */
     @Override
     public void drawFrog(int row, int col, Color frogColor) {
-        System.out.printf("Desenhar Sapo da cor : %s na possicao: %s,%s\n",frogColor,row,col);
+        System.out.printf("Desenhar Sapo da cor : %s na possicao: %s,%s\n", frogColor, row, col);
     }
 
     /**
@@ -144,7 +144,7 @@ public class BoardTable extends JTable implements BoardObserver {
      * @param parent
      */
     public BoardTable(BoardPanel parent) {
-        this.controller = new BoardController();
+        this.controller = GameController.getInstance().getBoardeController();
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
@@ -177,11 +177,13 @@ public class BoardTable extends JTable implements BoardObserver {
         this.setFillsViewportHeight(true);
         this.setOpaque(false);
         this.setShowGrid(false);
+
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
             }
         });
+
         this.getColumnModel().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));

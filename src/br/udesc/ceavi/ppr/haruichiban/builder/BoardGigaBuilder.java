@@ -6,8 +6,6 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaEx
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import java.awt.Point;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Controi um ModelBoardTile vaziu
@@ -20,6 +18,7 @@ public class BoardGigaBuilder extends BoardBuilder{
     private final Point POSICAO_ANIMAL_TOPO = new Point(1, 1);
     private final Point POSICAO_ANIMAL_BASE = new Point(3, 4);
     private final Point POSICAO_FOLHA_PRETA = new Point(3, 1);
+    
     private final boolean[][] TABULEIRO = { 
         {true,  false, false,  true, false, false,  true},
         {false,  true, false,  true, false,  true, false},
@@ -66,11 +65,15 @@ public class BoardGigaBuilder extends BoardBuilder{
                             folha.colocarFilhoteNaFolha(gcInstance.getFactoryPecas().createFilhote(gcInstance.getBottomPlayer().getColor()));
                             folha.colocarPecaNaFolha(gcInstance.getFactoryPecas().createAnimal(gcInstance.getTopPlayer().getColor()));
                         } catch (NenufareJaPossuiUmaPecaEmCimaException ex) {}
-                        
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public Point getBlack() {
+        return POSICAO_FOLHA_PRETA;
     }
 
 }

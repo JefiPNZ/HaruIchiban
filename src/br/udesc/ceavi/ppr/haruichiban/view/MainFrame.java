@@ -3,7 +3,6 @@ package br.udesc.ceavi.ppr.haruichiban.view;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;

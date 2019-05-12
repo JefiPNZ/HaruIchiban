@@ -7,11 +7,11 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaEx
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PosicaoEmTabuleiroOcupadaException;
 import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
+import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Nenufera;
-import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class BoardController implements IBoardController {
 
     private List<BoardObserver> observers;
     private ModelBoardTile[][] tabuleiro;
+    private Point folhaEscuraPosicao;
 
     public BoardController() {
         this.observers = new ArrayList<>();
@@ -50,7 +51,6 @@ public class BoardController implements IBoardController {
                     if (getCampoTabuleiro(row, column).hasFolha()) {
                         Folha folha = getCampoTabuleiro(row, column).getFolha();
                         observer.drawLilypad(row, column, folha.getCor(), folha.getRotacao());
-
                         //Verifica se essa tem uma peca
                         if (folha.hasPeca()) {
                             //Se tem sapo
@@ -60,7 +60,6 @@ public class BoardController implements IBoardController {
                             } else if (folha.getPeca().getTipo() == TipoPeca.FLOR) {
                                 observer.drawFlower(row, column, folha.getPeca().getCor());
                             }
-
                             //Verifica se esta tem ovos 
                         } else if (folha.hasFilhote()) {
                             observer.drawEgg(row, column, folha.getFilhote().getCor());
@@ -69,6 +68,7 @@ public class BoardController implements IBoardController {
                 }
             }
         }
+        GameController.getInstance().startGame();
     }
 
     private void initTabuleiro() {
@@ -76,6 +76,7 @@ public class BoardController implements IBoardController {
         BoardDirector director = new BoardDirector(builder);
         director.contruir();
         this.tabuleiro = builder.getProduto();
+        this.folhaEscuraPosicao = builder.getBlack();
     }
 
     public ModelBoardTile getCampoTabuleiro(int x, int y) {
@@ -153,5 +154,25 @@ public class BoardController implements IBoardController {
     @Override
     public int getLarguraTabuleiro() {
         return this.tabuleiro.length;
+    }
+
+    @Override
+    public Folha getFolhaEscura() {
+        return getCampoTabuleiro(folhaEscuraPosicao.x, folhaEscuraPosicao.y).getFolha();
+    }
+
+    public void setFolhaEscura(Point newFolhaEscura) {
+        this.folhaEscuraPosicao = newFolhaEscura;
+    }
+
+    public void verificarPontuacaoDosJogadores() {
+    }
+
+    public boolean hasWinner() {
+        return false;
+    }
+
+    public ModelPlayer getWinner() {
+        return null;
     }
 }

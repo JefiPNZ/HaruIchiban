@@ -22,4 +22,5 @@ public interface IPlayerController {
     
     public void selecionarFlor(int x);
     
+    public void addObserver(PlayerPanelObserver obs);
 }

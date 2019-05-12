@@ -2,7 +2,7 @@ package br.udesc.ceavi.ppr.haruichiban.state;
 
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
+import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 
 /**
  *
@@ -11,21 +11,6 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorExcept
  *
  */
 public class UntitledGardener implements TitleOfGardener {
-
-    @Override
-    public void throwFlower() throws Exception {
-        throw new Exception("The UntitledGardener can not throw Flower");
-    }
-
-    @Override
-    public void moveNenufares() throws Exception {
-        throw new Exception("The UntitledGardener can not move Nenufares");
-    }
-
-    @Override
-    public void chooseNewDarkNenufares() throws Exception {
-        throw new Exception("The UntitledGardener can choose New Dark Nenufares");
-    }
 
     @Override
     public void becomeUntitledGardener(PlayerController aThis) throws PlayNaoPodeSeTornarUntitledGardenerException {
@@ -40,6 +25,26 @@ public class UntitledGardener implements TitleOfGardener {
     @Override
     public void becomeSeniorGardener(PlayerController aThis) {
         aThis.setTitle(new SeniorGardener());
+    }
+
+    @Override
+    public void getFolhaNoTabuleiroParaFlor(PlayerController aThis) throws Exception {
+        throw new Exception("O Jogador é um jardineiro Sem Titulo");
+    }
+
+    @Override
+    public void colocandoFlorNaFolha(PlayerController aThis, Folha flor) throws Exception {
+        throw new Exception("O Jogador é um jardineiro Sem Titulo");
+    }
+
+    @Override
+    public void chamarPrimeiroVentoDaPrimaveira(PlayerController aThis) throws Exception {
+        throw new Exception("O Jogador é um jardineiro Sem Titulo");
+    }
+
+    @Override
+    public void escolhaANovaFolhaEscura(PlayerController aThis) throws Exception {
+        throw new Exception("O Jogador é um jardineiro Sem Titulo");
     }
 
 }
