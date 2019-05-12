@@ -78,9 +78,8 @@ public class MainFrame extends JFrame implements GameStateObserver{
      */
     public final void initializeFrameProperties() {
         this.setVisible(false);
-//        this.setUndecorated(true);
-//        this.setExtendedState(MAXIMIZED_BOTH);
-        this.setSize(1024, 750);
+        this.setUndecorated(true);
+        this.setExtendedState(MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
