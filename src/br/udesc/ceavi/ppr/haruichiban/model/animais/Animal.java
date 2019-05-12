@@ -2,7 +2,12 @@ package br.udesc.ceavi.ppr.haruichiban.model.animais;
 
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
+import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -21,4 +26,11 @@ public abstract class Animal extends PecaTabuleiro {
         return TipoPeca.ANIMAL;
     }
 
+    private static BufferedImage imagemPlataforma;
+    public static BufferedImage getImagemPlataforma() throws IOException{
+        if(imagemPlataforma == null){
+            imagemPlataforma = ImageIO.read(new File(Images.ANIMAL_PLATAFORMA));
+        }
+        return imagemPlataforma;
+    }
 }

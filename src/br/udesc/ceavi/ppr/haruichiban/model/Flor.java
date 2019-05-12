@@ -1,8 +1,5 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
-import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
-import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Color;
 
 /**
@@ -26,6 +23,7 @@ public abstract class Flor extends PecaTabuleiro {
         return valor;
     }
     
+    @Override
     public TipoPeca getTipo(){
         return TipoPeca.FLOR;
     }

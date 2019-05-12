@@ -12,21 +12,21 @@ import java.util.List;
 public class ModelPlayer {
 
     private int points;
-    private final List<Flor> listaDeFlores;
+    private List<Flor> listaDeFlores;
     private List<Flor> listaMao;
     private Color myColor;
 
-    public ModelPlayer(Color cor) {
+    public ModelPlayer(Color cor, int tamanhoDeck) {
         this.points = 0;
         listaDeFlores = new ArrayList<>();
         listaMao = new ArrayList<>();
         this.myColor = cor;
-        initHand();
+        initDeck(tamanhoDeck);
         controlHand();
     }
 
-    private void initHand() {
-        for (int i = 1; i < 9; i++) {
+    private void initDeck(int tamanho) {
+        for (int i = 1; i < tamanho; i++) {
             listaDeFlores.add(GameController.getInstance().getFactoryPecas().createFlor(myColor, i, this));
         }
     }
@@ -37,29 +37,6 @@ public class ModelPlayer {
 
     public int getPoints() {
         return points;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("Fores: {");
-        for (Flor listaDeFlore : listaDeFlores) {
-            sb.append("[");
-            sb.append("Valor: \"").append(listaDeFlore.getValor());
-            sb.append("\",");
-            sb.append("Cor: \"").append(listaDeFlore.getCor());
-            sb.append("\"]");
-        }
-        sb.append("}");
-        StringBuilder sb2 = new StringBuilder("Fores: {");
-        for (Flor mao : listaMao) {
-            sb2.append("[");
-            sb2.append("Valor: \"").append(mao.getValor());
-            sb2.append("\",");
-            sb2.append("Cor: \"").append(mao.getCor());
-            sb2.append("\"]");
-        }
-        sb2.append("}");
-        return "ModelPlayer{" + "points=" + points + "\nListaDeFlores=" + sb.toString() + "\nMao: " + sb2.toString() + '}';
     }
 
     public void controlHand() {

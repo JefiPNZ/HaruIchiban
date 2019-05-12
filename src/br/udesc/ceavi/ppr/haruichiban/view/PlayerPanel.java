@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
+import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasInverno;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
@@ -18,7 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
-import br.udesc.ceavi.ppr.haruichiban.control.PlayerPanelObserver;
 
 /**
  * Painel para representação dos dados de um jogador.
@@ -29,13 +29,18 @@ public class PlayerPanel extends JPanel {
 
     private IPlayerController controller;
     private BufferedImage floorImg;
+    private BufferedImage flowerImg;
     private BufferedImage baseImg;
     private BufferedImage clothImg;
     private BufferedImage faceImg;
-    private BufferedImage flowerImg;
     private PlayerHandTable playerHand;
     private int rotation;
 
+    /**
+     * Cria um novo painel para o jogador com a cor desejada.
+     *
+     * @param color Cor do jogador.
+     */
     /**
      * Cria um novo painel para o jogador com a cor desejada.
      *
@@ -50,8 +55,15 @@ public class PlayerPanel extends JPanel {
             this.baseImg = ImageIO.read(new File(Images.JOGADOR_BASE));
             this.clothImg = scale.convert(Images.JOGADOR_ROUPA);
             this.faceImg = ImageIO.read(new File(Images.JOGADOR_ROSTO));
-            this.flowerImg = scale.convert(Images.JOGADOR_FLOR);
+            if (GameController.getInstance().getFactoryPecas().getClass().getSimpleName()
+                    .equals(FactoryPecasInverno.class.getSimpleName())) {
+                this.flowerImg = scale.convert(Images.JOGADOR_FLOR_INV);
+            } else {
+                this.flowerImg = scale.convert(Images.JOGADOR_FLOR_PRIM);
+
+            }
         } catch (IOException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
         this.rotation = 0;
@@ -128,10 +140,10 @@ public class PlayerPanel extends JPanel {
      */
     private void drawPile(Graphics g) {
         Random rand = GameController.getInstance().getFixedRandomizer();
-        int displacement = this.getHeight() / 2 - flowerImg.getHeight() / 2;
+        int displacement = this.getHeight() / 2 - getFlowerImg().getHeight() / 2;
         for (int i = 0; i < controller.getPileSize(); i++) {
-            g.drawImage(flowerImg,
-                    this.getWidth() - flowerImg.getWidth() - 15 - i * (rand.nextInt(10) + 25),
+            g.drawImage(getFlowerImg(),
+                    this.getWidth() - getFlowerImg().getWidth() - 15 - i * (rand.nextInt(10) + 25),
                     displacement + rand.nextInt(displacement / 2) - displacement / 4,
                     null);
         }

@@ -5,11 +5,11 @@ import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
-import br.udesc.ceavi.ppr.haruichiban.model.FlorDePrimaveira;
+import br.udesc.ceavi.ppr.haruichiban.model.FlorPrimavera;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Nenufera;
-import br.udesc.ceavi.ppr.haruichiban.model.filhote.OvoDeSapo;
+import br.udesc.ceavi.ppr.haruichiban.model.folha.VitoriaRegia;
+import br.udesc.ceavi.ppr.haruichiban.model.filhote.OvoSapo;
 import java.awt.Color;
 
 /**
@@ -25,12 +25,12 @@ public class FactoryPecasPrimavera extends FactoryPecas{
     
     @Override
     public Flor createFlor(Color cor, int valor, ModelPlayer playerOrigem) {
-        return new FlorDePrimaveira(GameController.getInstance().getRandomizer().nextFloat() * 20, cor, valor, playerOrigem);
+        return new FlorPrimavera(GameController.getInstance().getRandomizer().nextFloat() * 20, cor, valor, playerOrigem);
     }
 
     @Override
     public Folha createFolha() {
-        return new Nenufera(GameController.getInstance().getRandomizer().nextFloat() * 360);
+        return new VitoriaRegia(GameController.getInstance().getRandomizer().nextFloat() * 360);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class FactoryPecasPrimavera extends FactoryPecas{
 
     @Override
     public Filhote createFilhote(Color cor) {
-        return new OvoDeSapo(GameController.getInstance().getRandomizer().nextFloat() * 360, cor);
+        return new OvoSapo(GameController.getInstance().getRandomizer().nextFloat() * 360, cor);
     }
     
 }

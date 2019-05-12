@@ -1,4 +1,4 @@
-package br.udesc.ceavi.ppr.haruichiban.command;
+package br.udesc.ceavi.ppr.haruichibanl.command;
 
 import java.util.ArrayList;
 import java.util.List;

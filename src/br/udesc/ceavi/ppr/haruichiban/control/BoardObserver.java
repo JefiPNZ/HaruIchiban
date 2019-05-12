@@ -1,6 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -21,31 +22,8 @@ public interface BoardObserver {
      * @param col
      * @param lilypadColor
      * @param rotation
+     * @param classeName
      */
-    public void drawLilypad(int row, int col, Color lilypadColor, float rotation);
-    
-    /**
-     * Desenha um ovo de sapo com a cor informada.
-     * @param row
-     * @param col
-     * @param eggColor 
-     */
-    public void drawEgg(int row, int col, Color eggColor);
-    
-    /**
-     * Desenha uma flor com a cor informada.
-     * @param row
-     * @param col
-     * @param flowerColor 
-     */
-    public void drawFlower(int row, int col, Color flowerColor);
-    
-    /**
-     * Desenha um sapo com a cor informada.
-     * @param row
-     * @param col
-     * @param frogColor 
-     */
-    public void drawFrog(int row, int col, Color frogColor);
+    public void drawImage(int row, int col, Color lilypadColor, Float rotation, String classeName);
     
 }

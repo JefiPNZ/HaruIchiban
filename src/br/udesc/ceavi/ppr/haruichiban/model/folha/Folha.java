@@ -6,6 +6,7 @@ import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 /**
  *

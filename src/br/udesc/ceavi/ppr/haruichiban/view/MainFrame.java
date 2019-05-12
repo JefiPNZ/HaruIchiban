@@ -3,6 +3,7 @@ package br.udesc.ceavi.ppr.haruichiban.view;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -72,6 +73,7 @@ public class MainFrame extends JFrame {
         this.setVisible(false);
         this.setUndecorated(true);
         this.setExtendedState(MAXIMIZED_BOTH);
+        this.setSize(1024, 750);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }

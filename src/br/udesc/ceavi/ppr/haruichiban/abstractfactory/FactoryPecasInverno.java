@@ -2,14 +2,14 @@ package br.udesc.ceavi.ppr.haruichiban.abstractfactory;
 
 import br.udesc.ceavi.ppr.haruichiban.model.folha.FolhaSeca;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Pinguim;
-import br.udesc.ceavi.ppr.haruichiban.model.filhote.OvoDePinguin;
+import br.udesc.ceavi.ppr.haruichiban.model.filhote.OvoPinguim;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.model.FlorDeInverno;
+import br.udesc.ceavi.ppr.haruichiban.model.FlorInverno;
 import java.awt.Color;
 
 /**
@@ -25,7 +25,7 @@ public class FactoryPecasInverno extends FactoryPecas{
     
     @Override
     public Flor createFlor(Color cor, int valor, ModelPlayer playerOrigem) {
-        return new FlorDeInverno(GameController.getInstance().getRandomizer().nextFloat() * 20, cor, valor, playerOrigem);
+        return new FlorInverno(GameController.getInstance().getRandomizer().nextFloat() * 20, cor, valor, playerOrigem);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class FactoryPecasInverno extends FactoryPecas{
 
     @Override
     public Filhote createFilhote(Color cor) {
-        return new OvoDePinguin(GameController.getInstance().getRandomizer().nextFloat() * 360, cor);
+        return new OvoPinguim(GameController.getInstance().getRandomizer().nextFloat() * 360, cor);
     }
     
 }

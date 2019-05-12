@@ -20,7 +20,7 @@ public abstract class Filhote extends PecaTabuleiro{
 
     @Override
     public TipoPeca getTipo() {
-        return TipoPeca.FINHOTE;
+        return TipoPeca.FILHOTE;
     }
 
 }

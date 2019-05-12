@@ -1,4 +1,4 @@
-package br.udesc.ceavi.ppr.haruichiban.command;
+package br.udesc.ceavi.ppr.haruichibanl.command;
 
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;

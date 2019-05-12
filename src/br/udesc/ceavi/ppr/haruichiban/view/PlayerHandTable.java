@@ -26,7 +26,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
 
     private IPlayerController controller;
     private PlayerPanel parentPanel;
-    ListSelectionListener listener;
+    private ListSelectionListener listener;
 
     /**
      * Modelo de dados para tabela.
@@ -100,7 +100,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         this.setOpaque(false);
         this.setShowGrid(false);
         this.setForeground(Color.WHITE);
-        listener = (e) -> {
+        this.listener = (e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
             }
@@ -113,7 +113,6 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        System.out.println("oi");
         controller.selecionarFlor(getSelectedColumn());
         this.getColumnModel().getSelectionModel().removeListSelectionListener(listener);
     }
@@ -127,7 +126,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         if (size.getWidth() <= 0 || size.getHeight() <= 0) {
             return new Dimension(0, 0);
         }
-        size.width = size.width > 300 ? 300 : size.width;
+        size.width = size.width > 350 ? 350 : size.width;
         size.height = size.width / this.getModel().getColumnCount();
         this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());
         return size;

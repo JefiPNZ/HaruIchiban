@@ -6,9 +6,9 @@ package br.udesc.ceavi.ppr.haruichiban.model.folha;
  * @since 10/05/2019
  * 
  */
-public class Nenufera extends Folha{
+public class VitoriaRegia extends Folha{
 
-    public Nenufera(float rotacao) {
+    public VitoriaRegia(float rotacao) {
         super(rotacao);
     }
 

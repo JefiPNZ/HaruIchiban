@@ -35,10 +35,6 @@ public class BoardTable extends JTable implements BoardObserver {
     private BoardPanel parentPanel;
     private BufferedImage[][] boardImages;
     private BufferedImage tileImage;
-    private BufferedImage lilypadImage;
-    private BufferedImage eggImage;
-    private BufferedImage flowerImage;
-    private BufferedImage frogImage;
 
     /**
      * Modelo de dados para tabela.
@@ -103,39 +99,19 @@ public class BoardTable extends JTable implements BoardObserver {
      * {@inheritdoc}
      */
     @Override
-    public void drawLilypad(int row, int col, Color lilypadColor, float rotation) {
+    public void drawImage(int row, int col, Color lilypadColor, Float rotation, String imagem) {
         ColorScale scale = new ColorScale(lilypadColor);
         BufferedImage origin = this.boardImages[row][col];
         Graphics2D g = origin.createGraphics();
-        g.rotate(Math.toRadians(rotation), origin.getWidth() / 2, origin.getHeight() / 2);
-        g.drawImage(scale.convert(this.lilypadImage), 0, 0, null);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    @Override
-    public void drawEgg(int row, int col, Color eggColor) {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    @Override
-    public void drawFlower(int row, int col, Color flowerColor) {
-        ColorScale scale = new ColorScale(flowerColor);
-        BufferedImage origin = this.boardImages[row][col];
-        Graphics2D g = origin.createGraphics();
-        g.drawImage(scale.convert(this.flowerImage), 10, 10, null);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    @Override
-    public void drawFrog(int row, int col, Color frogColor) {
-        System.out.printf("Desenhar Sapo da cor : %s na possicao: %s,%s\n", frogColor, row, col);
+        if (rotation != null) {
+            g.rotate(Math.toRadians(rotation), origin.getWidth() / 2, origin.getHeight() / 2);
+        }
+        try {
+            g.drawImage(scale.convert("img/" + imagem + ".png"), 0, 0, null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.exit(0);
+        }
     }
 
     /**
@@ -148,18 +124,17 @@ public class BoardTable extends JTable implements BoardObserver {
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
-
         try {
             this.tileImage = ImageIO.read(new File(Images.PECA_TABULEIRO));
-            this.lilypadImage = ImageIO.read(new File(Images.VITORIA_REGIA));
-            this.eggImage = null;
-            this.flowerImage = ImageIO.read(new File(Images.JOGADOR_FLOR));
-            this.frogImage = null;
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
         this.initializeProperties();
-        this.controller.startBoard();
+        try {
+            this.controller.renderBoard();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+        }
     }
 
     /**
@@ -177,13 +152,11 @@ public class BoardTable extends JTable implements BoardObserver {
         this.setFillsViewportHeight(true);
         this.setOpaque(false);
         this.setShowGrid(false);
-
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
             }
         });
-
         this.getColumnModel().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));

@@ -2,6 +2,7 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Interface para classes que realizam o controle do tabuleiro
@@ -12,7 +13,7 @@ public interface IBoardController {
     /**
      * Inicia o tabuleiro.
      */
-    public void startBoard();
+    public void renderBoard() throws IOException;
 
     /**
      * Adiciona um observador para o controller.

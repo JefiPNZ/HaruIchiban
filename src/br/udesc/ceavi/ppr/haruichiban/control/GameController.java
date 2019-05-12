@@ -19,9 +19,8 @@ import java.util.Random;
  *
  * @author Jeferson Penz
  *
- * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE
- * HAVER JOPTIONPANE NO CONTROLLER. - Quando adicionar um componente
- * transparente (como overlay por ex.), lembrar do setOpaque(false).
+ * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE HAVER JOPTIONPANE NO CONTROLLER. -
+ * Quando adicionar um componente transparente (como overlay por ex.), lembrar do setOpaque(false).
  */
 public class GameController {
 
@@ -39,7 +38,7 @@ public class GameController {
      * Semente fixa para geração estática de dados aleatórios.
      */
     private long fixedSeed;
-
+    
     private BoardBuilder builderTabuleiro;
 
     /**
@@ -58,7 +57,7 @@ public class GameController {
     private boolean gameStarted;
 
     private FactoryPecas factoryPecas;
-
+    
     private BoardController controllerBoard;
 
     /**
@@ -94,14 +93,12 @@ public class GameController {
 
     /**
      * Para a execução da lógica do jogo.
-     *
      * @param varianteTabuleiro
      * @param tamanhoTabuleiro
      * @param corJogadorTopo
      * @param corJogadorBase
      */
-    public void begin(String varianteTabuleiro,
-            String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
+    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
         switch (varianteTabuleiro) {
             default:
             case "Primavera":
@@ -111,19 +108,22 @@ public class GameController {
                 this.factoryPecas = new FactoryPecasInverno();
                 break;
         }
+        int tamanhoDeck;
         switch (tamanhoTabuleiro) {
             default:
             case "Giga":
                 this.builderTabuleiro = new BoardGigaBuilder();
+                tamanhoDeck = 13;
                 break;
             case "Normal":
                 this.builderTabuleiro = new BoardNormalBuilder();
+                tamanhoDeck = 9;
                 break;
         }
-
-        this.topPlayer = new PlayerController(corJogadorTopo);
-        this.bottomPlayer = new PlayerController(corJogadorBase);
+        topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
+        bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.controllerBoard = new BoardController();
+        this.gameStarted = true;
     }
 
     /**
@@ -152,8 +152,7 @@ public class GameController {
     }
 
     /**
-     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre
-     * os mesmo valores quando é criado.
+     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre os mesmo valores quando é criado.
      *
      * @return
      */
@@ -247,7 +246,6 @@ public class GameController {
     }
 
     public void folhaVirada(Point newFolhaEscura) {
-        this.controllerBoard.setFolhaEscura(newFolhaEscura);
         verificarPontuacao();
     }
 

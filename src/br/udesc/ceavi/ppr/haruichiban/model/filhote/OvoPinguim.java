@@ -8,9 +8,9 @@ import java.awt.Color;
  * @since 10/05/2019
  * 
  */
-public class OvoDeSapo extends Filhote{
+public class OvoPinguim extends Filhote {
 
-    public OvoDeSapo(float rotacao, Color cor) {
+    public OvoPinguim(float rotacao, Color cor) {
         super(rotacao, cor);
     }
 

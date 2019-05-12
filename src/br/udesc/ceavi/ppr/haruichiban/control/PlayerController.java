@@ -46,9 +46,9 @@ public class PlayerController implements IPlayerController {
      *
      * @param cor identifica a cor das flores do jogador
      */
-    public PlayerController(Color cor) {
+    public PlayerController(Color cor,int tamanhoDoDeck) {
         this.title = new UntitledGardener();
-        this.play = new ModelPlayer(cor);
+        this.play = new ModelPlayer(cor,tamanhoDoDeck);
         hideHandValue();
     }
 
@@ -57,13 +57,13 @@ public class PlayerController implements IPlayerController {
     }
 
     public void becomeJuniorGardener() throws PlayNaoPodeSeTornarJuniorException {
+        System.err.println("Me Tornei Junior");
         title.becomeJuniorGardener(this);
-        System.out.println("Me Tornei Junior");
     }
 
     public void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException {
+        System.err.println("Me Tornei Senior");
         title.becomeSeniorGardener(this);
-        System.out.println("Me Tornei Senior");
     }
 
     public void setTitle(TitleOfGardener title) {
@@ -97,7 +97,7 @@ public class PlayerController implements IPlayerController {
         //Tira da mao do play a flor para coloca-la em jogo
         this.florEmJogo = play.getFlorFromHand(x);
         if (florEmJogo != null) {
-            System.out.println("Selecionei");
+            System.out.println("Selecionei " + florEmJogo.getValor());
             GameController.getInstance().selecaoDeFlorFinalizada();
         }else{
             System.err.println("Falha Na selecao da Flor");

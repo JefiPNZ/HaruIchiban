@@ -1,6 +1,5 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
-import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import java.awt.Color;
 
 /**
@@ -9,10 +8,11 @@ import java.awt.Color;
  * @since 10/05/2019
  * 
  */
-public class FlorDePrimaveira extends Flor{
+public class FlorInverno extends Flor {
 
-    public FlorDePrimaveira(float rotacao, Color cor, int valor, ModelPlayer playerOrigem) {
+    public FlorInverno(float rotacao, Color cor, int valor, ModelPlayer playerOrigem) {
         super(rotacao, cor, valor, playerOrigem);
     }
+
 
 }

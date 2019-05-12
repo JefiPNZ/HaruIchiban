@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.model.folha;
 
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
+import java.awt.Color;
 
 /**
  *
@@ -14,5 +14,9 @@ public class FolhaSeca extends Folha {
         super(rotacao);
     }
 
+    @Override
+    public Color getCor() {
+        return this.isEscura() ? new Color(75, 128, 195) : new Color(176, 206, 255);
+    }
 
 }
