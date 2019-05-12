@@ -126,6 +126,6 @@ public class MenuPanel extends JPanel implements GameStateObserver{
     }
 
     @Override
-    public void notificaFimJogo() {}
+    public void notificaFimJogo(String mensagem) {}
     
 }

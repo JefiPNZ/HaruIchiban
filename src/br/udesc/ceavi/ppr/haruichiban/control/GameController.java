@@ -122,10 +122,11 @@ public class GameController {
 
     /**
      * Para a execução da lógica do jogo.
+     * @param mensagem
      */
-    public void stop() {
+    public void stop(String mensagem) {
         this.gameStateObserver.forEach((observer) -> {
-            observer.notificaFimJogo();
+            observer.notificaFimJogo(mensagem);
         });
         this.gameStateObserver = new ArrayList<>();
     }
@@ -261,9 +262,9 @@ public class GameController {
         if (controllerBoard.hasWinner()) {
             ModelPlayer winner = controllerBoard.getWinner();
             if (bottomPlayer.getPlay().equals(winner)) {
-                bottomPlayer.notifyYouWon();
+                this.stop("Jogador Inferior venceu!");
             } else if (topPlayer.getPlay().equals(winner)) {
-                topPlayer.notifyYouWon();
+                this.stop("Jogador Superior venceu!");
             }
         } else {
             novoTurno();

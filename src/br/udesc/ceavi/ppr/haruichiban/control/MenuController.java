@@ -8,7 +8,7 @@ public class MenuController implements IMenuController{
 
     @Override
     public void reiniciar() {
-        GameController.getInstance().stop();
+        GameController.getInstance().stop(null);
     }
 
     @Override

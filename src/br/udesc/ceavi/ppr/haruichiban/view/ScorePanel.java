@@ -1,12 +1,11 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
 import br.udesc.ceavi.ppr.haruichiban.control.IScoreController;
-import br.udesc.ceavi.ppr.haruichiban.control.ScoreTestController;
+import br.udesc.ceavi.ppr.haruichiban.control.ScoreController;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +27,7 @@ public class ScorePanel extends JPanel{
      */
     public ScorePanel() {
         super();
-        controller = new ScoreTestController();
+        controller = new ScoreController();
         try {
             this.scoreImg = ImageIO.read(new File(Images.PONTUACAO_FUNDO));
         } catch (IOException ex) {

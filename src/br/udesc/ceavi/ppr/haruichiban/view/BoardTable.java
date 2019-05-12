@@ -218,5 +218,5 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
     }
 
     @Override
-    public void notificaFimJogo() {}
+    public void notificaFimJogo(String mensagem) {}
 }

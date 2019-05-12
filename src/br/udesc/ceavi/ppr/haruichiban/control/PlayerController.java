@@ -181,11 +181,11 @@ public class PlayerController implements IPlayerController {
         }
     }
 
-    public void notifyYouWon() {
-        System.out.println("Ganhei Porra");
-    }
-
     public TitleOfGardener getTitle() {
         return title;
+    }
+    
+    public int getPlayerScore(){
+        return this.play.getPoints();
     }
 }

@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -106,11 +107,16 @@ public class MainFrame extends JFrame implements GameStateObserver{
     }
 
     @Override
-    public void notificaMudancaEstado(String mensagem) {}
+    public void notificaMudancaEstado(String mensagem) {
+        this.repaint();
+    }
 
     @Override
-    public void notificaFimJogo() {
-            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    public void notificaFimJogo(String mensagem) {
+        if(mensagem != null && !mensagem.isEmpty()){
+            JOptionPane.showMessageDialog(this, mensagem);
+        }
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         FrameConfig frameConfig = new FrameConfig(new MainFrame());
         frameConfig.initializeFrameProperties();
