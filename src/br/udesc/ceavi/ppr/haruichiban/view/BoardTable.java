@@ -151,6 +151,7 @@ public class BoardTable extends JTable implements BoardObserver {
         this.setFillsViewportHeight(true);
         this.setOpaque(false);
         this.setShowGrid(false);
+        this.setEnabled(false);
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
@@ -173,8 +174,9 @@ public class BoardTable extends JTable implements BoardObserver {
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        if (!newSelection.equals(lastSelection)) {
+        if (!this.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
             lastSelection = newSelection;
+            this.clearSelection();
             System.out.println("Nova seleção: " + newSelection);
         }
     }

@@ -88,6 +88,15 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         this.parentPanel = parent;
         this.controller = controller;
         this.controller.addObserver(this);
+        this.initPropriedadesComponente();
+        this.listener = (e) -> {
+            if (!e.getValueIsAdjusting()) {
+                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
+            }
+        };
+    }
+    
+    private void initPropriedadesComponente(){
         this.setModel(new PlayerHandTableModel());
         this.setDefaultRenderer(Object.class, new PlayerHandTableRenderer());
         this.setBackground(new Color(0, 0, 0, 0));
@@ -101,11 +110,6 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         this.setShowGrid(false);
         this.setForeground(Color.WHITE);
         this.setEnabled(false);
-        this.listener = (e) -> {
-            if (!e.getValueIsAdjusting()) {
-                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
-            }
-        };
     }
 
     /**
@@ -114,8 +118,11 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        controller.selecionarFlor(getSelectedColumn());
-        this.setEnabled(false);
+        if(!this.getSelectionModel().isSelectionEmpty()){
+            controller.selecionarFlor(getSelectedColumn());
+            this.clearSelection();
+            this.setEnabled(false);
+        }
     }
 
     @Override
