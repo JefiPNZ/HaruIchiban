@@ -60,7 +60,6 @@ public class BoardController implements IBoardController {
                 }
             }
         }
-        GameController.getInstance().startGame();
     }
 
     private void initTabuleiro() {

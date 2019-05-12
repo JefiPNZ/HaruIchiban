@@ -36,6 +36,7 @@ public class ColorScale {
 
     /**
      * Aplica a escala de cor configurada na imagem e retorna o resultado.
+     * @param source
      * @return A imagem convertida.
      * @throws java.io.IOException Caso não consiga ler o arquivo.
      */
@@ -46,6 +47,7 @@ public class ColorScale {
     
     /**
      * Aplica a escala de cor configurada na imagem e retorna o resultado.
+     * @param img
      * @return A imagem convertida.
      */
     public BufferedImage convert(BufferedImage img){

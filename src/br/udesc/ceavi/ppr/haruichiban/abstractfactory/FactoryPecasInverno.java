@@ -18,11 +18,6 @@ import java.awt.Color;
  */
 public class FactoryPecasInverno extends FactoryPecas{
 
-    public FactoryPecasInverno() {
-         System.out.println("Usando Tabuleiro de FactoryPecasInverno");
-    }
-
-    
     @Override
     public Flor createFlor(Color cor, int valor, ModelPlayer playerOrigem) {
         return new FlorInverno(GameController.getInstance().getRandomizer().nextFloat() * 20, cor, valor, playerOrigem);

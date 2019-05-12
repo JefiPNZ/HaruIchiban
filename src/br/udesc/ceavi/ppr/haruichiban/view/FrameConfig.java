@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -74,7 +75,8 @@ public class FrameConfig extends JFrame{
         content.add(this.corInferior, fullConstraints);
         JButton confirma = new JButton("Confirma");
         confirma.addActionListener((ActionEvent e) -> {
-            setVisible(false);
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             origem.begin((String)variante.getSelectedItem(),(String) tamanho.getSelectedItem(), corSuperior.getColor(), corInferior.getColor());
         });
         content.add(confirma, fullConstraints);

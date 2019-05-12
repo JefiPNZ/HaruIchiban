@@ -18,10 +18,6 @@ import java.awt.Color;
  */
 public class FactoryPecasPrimavera extends FactoryPecas{
 
-    public FactoryPecasPrimavera() {
-        System.out.println("Usando Tabuleiro de FactoryPecasPrimavera");
-    }
-
     
     @Override
     public Flor createFlor(Color cor, int valor, ModelPlayer playerOrigem) {

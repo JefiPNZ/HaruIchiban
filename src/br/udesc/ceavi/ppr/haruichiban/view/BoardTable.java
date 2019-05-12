@@ -109,8 +109,7 @@ public class BoardTable extends JTable implements BoardObserver {
         try {
             g.drawImage(scale.convert("img/" + imagem + ".png"), 0, 0, null);
         } catch (IOException ex) {
-            ex.printStackTrace();
-            System.exit(0);
+            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
     }
 

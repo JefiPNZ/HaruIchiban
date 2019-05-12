@@ -93,7 +93,6 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public void selecionarFlor(int x) {
-        System.out.println("Selecao Realizada");
         //Tira da mao do play a flor para coloca-la em jogo
         this.florEmJogo = play.getFlorFromHand(x);
         if (florEmJogo != null) {

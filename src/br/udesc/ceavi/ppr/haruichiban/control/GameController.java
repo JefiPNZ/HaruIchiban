@@ -12,6 +12,8 @@ import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.state.SeniorGardener;
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -45,16 +47,13 @@ public class GameController {
      * Representa o jogador do topo da tela.
      */
     private PlayerController topPlayer;
+    
+    private List<GameStateObserver> gameStateObserver;
 
     /**
      * Representa o jogador da base da tela.
      */
     private PlayerController bottomPlayer;
-
-    /**
-     * Situação do jogo (se já foi ou não inicializado).
-     */
-    private boolean gameStarted;
 
     private FactoryPecas factoryPecas;
     
@@ -63,10 +62,10 @@ public class GameController {
     /**
      * Classe para criação da instância do Singleton.
      */
-    private GameController() throws Exception {
-        this.gameStarted = false;
+    private GameController() {
         this.randomizer = new Random();
         this.fixedSeed = this.randomizer.nextLong();
+        this.gameStateObserver = new ArrayList<>();
     }
 
     /**
@@ -80,13 +79,8 @@ public class GameController {
      * @return A instância existente ou uma nova instância do jogo.
      */
     public synchronized static GameController getInstance() {
-        try {
-            if (instance == null) {
-                instance = new GameController();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(0);
+        if (instance == null) {
+            instance = new GameController();
         }
         return instance;
     }
@@ -123,23 +117,16 @@ public class GameController {
         topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
         bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.controllerBoard = new BoardController();
-        this.gameStarted = true;
     }
 
     /**
      * Para a execução da lógica do jogo.
      */
     public void stop() {
-        this.gameStarted = false;
-    }
-
-    /**
-     * Retorna se o jogo está rodando.
-     *
-     * @return <b>true</b> se o jogo já foi iniciado, senão <b>false</b>
-     */
-    public boolean isStarted() {
-        return this.gameStarted;
+        this.gameStateObserver.forEach((observer) -> {
+            observer.notificaFimJogo();
+        });
+        this.gameStateObserver = new ArrayList<>();
     }
 
     /**
@@ -181,29 +168,34 @@ public class GameController {
     }
 
     public void startGame() {
-        System.out.println("Chamada de StartGame");
+        this.notificaMudancaEstado("Início dos turnos.");
         int vez = randomizer.nextInt();
         if (vez % 2 == 0) {
+            this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
             inicioDeTurno(bottomPlayer);
         } else {
+            this.notificaMudancaEstado("Jogador superior escolha uma flor.");
             inicioDeTurno(topPlayer);
         }
     }
 
     private void inicioDeTurno(PlayerController primeiro) {
-        System.out.println("inicioDeTurno");
         primeiro.requerirAoJogadorQueEsteEscolhaUmaFlor();
     }
 
     public void selecaoDeFlorFinalizada() {
-        System.out.println("selecaoDeFlorFinalizada");
         topPlayer.hideHandValue();
         bottomPlayer.hideHandValue();
         if (bottomPlayer.getFlorEmJogo() == null) {
+            this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
             bottomPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
-        } else if (topPlayer.getFlorEmJogo() == null) {
+        } 
+        else if (topPlayer.getFlorEmJogo() == null) {
+            this.notificaMudancaEstado("Jogador superior escolha uma flor.");
             topPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
-        } else {
+        } 
+        else {
+            this.notificaMudancaEstado("Etapa de seleção de flores finalizada.");
             topPlayer.hideHandValue();
             bottomPlayer.hideHandValue();
             definirTitulos();
@@ -211,32 +203,40 @@ public class GameController {
     }
 
     private void definirTitulos() {
-        System.out.println("definirTitulos iniciado");
+        this.notificaMudancaEstado("Iniciando definição de título.");
         if (bottomPlayer.getFlorEmJogo().getValor() > topPlayer.getFlorEmJogo().getValor()) {
             try {
                 bottomPlayer.becomeSeniorGardener();
                 topPlayer.becomeJuniorGardener();
+                this.notificaMudancaEstado("Definição de títulos finalizada.");
                 colocarFlorNoTabuleiro();
             } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
-                ex.printStackTrace();
-                System.exit(0);
+                this.notificaMudancaEstado(ex.getMessage());
             }
         }
-        System.out.println("definirTitulos Finalizado");
+        else {
+            try {
+                bottomPlayer.becomeSeniorGardener();
+                topPlayer.becomeJuniorGardener();
+                colocarFlorNoTabuleiro();
+                this.notificaMudancaEstado("Definição de títulos finalizada.");
+            } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
+                this.notificaMudancaEstado(ex.getMessage());
+            }
+        }
     }
 
     private void colocarFlorNoTabuleiro() {
-        System.out.println("colocarFlorNoTabuleiro iniciado");
+        this.notificaMudancaEstado("Coloque uma flor no tabuleiro.");
         bottomPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
         topPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
     }
 
     public void florColocadaNoTabuleiro() {
-        System.out.println("Check florColocadaNoTabuleiro");
         if (bottomPlayer.getFlorEmJogo() == null && topPlayer.getFlorEmJogo() == null) {
             bottomPlayer.chamarOPrimeiroVentoDaPrimaveira();
             topPlayer.chamarOPrimeiroVentoDaPrimaveira();
-            System.out.println(" florColocadaNoTabuleiro finalizado");
+            this.notificaMudancaEstado("Flor foi colocada em tabuleiro.");
         }
     }
 
@@ -264,11 +264,25 @@ public class GameController {
     }
 
     private void novoTurno() {
-        if (topPlayer.getTitle().getClass().getSimpleName() == SeniorGardener.class.getSimpleName()) {
+        if (topPlayer.getTitle().getClass() == SeniorGardener.class) {
             inicioDeTurno(topPlayer);
         } else {
             inicioDeTurno(bottomPlayer);
         }
+    }
+    
+    public void notificaMudancaEstado(String mensagem){
+        this.gameStateObserver.forEach((observer) -> {
+            observer.notificaMudancaEstado(mensagem);
+        });
+    }
+    
+    public void addGameStateObserver(GameStateObserver obs){
+        this.gameStateObserver.add(obs);
+    }
+    
+    public void removeGameStateObserver(GameStateObserver obs){
+        this.gameStateObserver.remove(obs);
     }
 
 }

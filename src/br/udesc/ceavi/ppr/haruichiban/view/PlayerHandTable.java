@@ -100,6 +100,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         this.setOpaque(false);
         this.setShowGrid(false);
         this.setForeground(Color.WHITE);
+        this.setEnabled(false);
         this.listener = (e) -> {
             if (!e.getValueIsAdjusting()) {
                 executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
@@ -114,7 +115,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      */
     protected void executeTableSelectionChange(Point newSelection) {
         controller.selecionarFlor(getSelectedColumn());
-        this.getColumnModel().getSelectionModel().removeListSelectionListener(listener);
+        this.setEnabled(false);
     }
 
     @Override
@@ -134,13 +135,12 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
 
     @Override
     public void notificarRenderizeOsValoresDaMao() {
-        System.out.println(this.getClass().getSimpleName() + " Repintar");
         this.repaint();
     }
 
     @Override
     public void notifyJogadorEscolhaUmaFlor() {
-        System.out.println(this.getClass().getSimpleName() + " notifyJogadorEscolhaUmaFlor");
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
+        this.setEnabled(true);
     }
 }
