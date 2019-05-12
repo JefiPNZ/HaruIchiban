@@ -1,5 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Point;
@@ -40,6 +42,7 @@ public class BoardPanel extends JPanel{
      */
     private void initializeBoard(){
         this.board       = new BoardTable(this);
+        GameController.getInstance().addGameStateObserver(this.board);
         JScrollPane pane = new JScrollPane();
         
         pane.setViewportView(board);

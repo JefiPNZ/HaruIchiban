@@ -15,6 +15,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.swing.SwingUtilities;
 
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
@@ -209,6 +210,8 @@ public class GameController {
                 bottomPlayer.becomeSeniorGardener();
                 topPlayer.becomeJuniorGardener();
                 this.notificaMudancaEstado("Definição de títulos finalizada.");
+                this.notificaMudancaEstado("Jogador Inferior é o jardineiro senior.");
+                this.notificaMudancaEstado("Jogador Superior é o jardineiro junior.");
                 colocarFlorNoTabuleiro();
             } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
                 this.notificaMudancaEstado(ex.getMessage());
@@ -220,6 +223,8 @@ public class GameController {
                 topPlayer.becomeJuniorGardener();
                 colocarFlorNoTabuleiro();
                 this.notificaMudancaEstado("Definição de títulos finalizada.");
+                this.notificaMudancaEstado("Jogador Superior é o jardineiro senior.");
+                this.notificaMudancaEstado("Jogador Inferior é o jardineiro junior.");
             } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
                 this.notificaMudancaEstado(ex.getMessage());
             }
@@ -227,9 +232,11 @@ public class GameController {
     }
 
     private void colocarFlorNoTabuleiro() {
-        this.notificaMudancaEstado("Coloque uma flor no tabuleiro.");
-        bottomPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
-        topPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
+        SwingUtilities.invokeLater(() -> {
+            this.notificaMudancaEstado("Coloque uma flor no tabuleiro.");
+            bottomPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
+            topPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
+        });
     }
 
     public void florColocadaNoTabuleiro() {

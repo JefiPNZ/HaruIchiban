@@ -11,6 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Graphics2D;
@@ -20,6 +21,8 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
@@ -29,7 +32,7 @@ import javax.swing.event.ListSelectionEvent;
  *
  * @author Jeferson Penz
  */
-public class BoardTable extends JTable implements BoardObserver {
+public class BoardTable extends JTable implements BoardObserver, GameStateObserver{
 
     private IBoardController controller;
     private BoardPanel parentPanel;
@@ -204,4 +207,16 @@ public class BoardTable extends JTable implements BoardObserver {
         this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());
         return size;
     }
+
+    @Override
+    public void notificaMudancaEstado(String mensagem) {
+        try {
+            this.controller.renderBoard();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+        }
+    }
+
+    @Override
+    public void notificaFimJogo() {}
 }
