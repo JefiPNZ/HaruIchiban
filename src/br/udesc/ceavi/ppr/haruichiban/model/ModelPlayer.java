@@ -4,12 +4,13 @@ import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
  * @author Jeferson Penz, Gustavo C. Santos
  */
-public class ModelPlayer {
+public class ModelPlayer{
 
     private int points;
     private List<Flor> listaDeFlores;
@@ -67,4 +68,19 @@ public class ModelPlayer {
         this.listaDeFlores.add(florEmJogo);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ModelPlayer other = (ModelPlayer) obj;
+        return Objects.equals(this.myColor, other.myColor);
+    }
+    
 }

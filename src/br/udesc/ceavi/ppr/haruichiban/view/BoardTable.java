@@ -21,8 +21,6 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
@@ -147,7 +145,6 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         }
         this.initializeProperties();
         this.controller.renderBoard();
-        GameController.getInstance().startGame();
     }
 
     /**
@@ -215,6 +212,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         return size;
     }
 
+    @Override
     public void repaintTela() {
         this.repaint();
         this.parentPanel.repaint();

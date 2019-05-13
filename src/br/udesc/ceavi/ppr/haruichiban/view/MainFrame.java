@@ -60,8 +60,7 @@ public class MainFrame extends JFrame implements GameStateObserver {
      */
     public static void main(String[] args) {
         GameController.getInstance();
-        FrameConfig frameConfig = new FrameConfig(new MainFrame());
-        frameConfig.initializeFrameProperties();
+        MainFrame.exibeConfiguracao();
     }
 
     public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
@@ -118,6 +117,10 @@ public class MainFrame extends JFrame implements GameStateObserver {
         }
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        MainFrame.exibeConfiguracao();
+    }
+    
+    public static void exibeConfiguracao(){
         FrameConfig frameConfig = new FrameConfig(new MainFrame());
         frameConfig.initializeFrameProperties();
     }

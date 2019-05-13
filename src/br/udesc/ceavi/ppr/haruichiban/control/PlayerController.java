@@ -39,7 +39,6 @@ public class PlayerController implements IPlayerController {
 
     private List<PlayerPanelObserver> observers = new ArrayList<>();
 
-    private boolean esconderValoresDaMao;
     private IControleDeFluxo controllerFluxo;
 
     /**
@@ -83,9 +82,6 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public synchronized List<Object> getHand() {
-        if (esconderValoresDaMao) {
-            return Arrays.asList(-1, -1, -1);
-        }
         return play.getListaMao().stream().map(flor -> flor.getValor()).collect(Collectors.toList());
     }
 
@@ -93,7 +89,7 @@ public class PlayerController implements IPlayerController {
     public void selecionarFlor(int x) {
         this.florEmJogo = play.getFlorFromHand(x);
         controllerFluxo.selecaoDeFlorFinalizada();
-        observers.forEach(obs -> obs.repintarPlayerHandTable());
+        observers.forEach(obs -> obs.repintarPlayerHand());
     }
 
     public Flor getFlorEmJogo() {
@@ -105,13 +101,11 @@ public class PlayerController implements IPlayerController {
     }
 
     public synchronized void showHandValue() {
-        esconderValoresDaMao = false;
-        observers.forEach(obs -> obs.repintarPlayerHandTable());
+        observers.forEach(obs -> obs.repintarPlayerHand());
     }
 
     public synchronized void hideHandValue() {
-        esconderValoresDaMao = true;
-        observers.forEach(obs -> obs.repintarPlayerHandTable());
+        observers.forEach(obs -> obs.repintarPlayerHand());
     }
 
     public void requerirAoJogadorQueEsteEscolhaUmaFlor() {
@@ -174,11 +168,11 @@ public class PlayerController implements IPlayerController {
         observers.forEach(obs -> obs.notifyYouAreSemTitulo());
     }
 
-    public void devouverFlorAoDech() {
+    public void devolverFlorAoDeck() {
         play.devolverFlor(removerFlorEmJogo());
     }
 
-    public void setContollerFluxo(IControleDeFluxo aThis) {
+    public void setControllerFluxo(IControleDeFluxo aThis) {
         this.controllerFluxo = aThis;
     }
 

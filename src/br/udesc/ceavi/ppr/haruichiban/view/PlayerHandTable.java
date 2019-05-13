@@ -47,7 +47,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
             try {
                 return parentPanel.getFlowerImg();
             } catch (Exception e) {
-                //JOptionPane.showMessageDialog(null, e.toString());
+//                JOptionPane.showMessageDialog(null, e.toString());
                 return null;
             }
         }
@@ -67,10 +67,10 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
                     img = scale.convert(img);
                 }
                 this.setIcon(new ImageIcon(img));
-                if ((Integer) controller.getHand().get(column) == -1) {
-                    this.setText("");
-                } else {
+                if (table.isEnabled()) {
                     this.setText(controller.getHand().get(column).toString());
+                } else {
+                    this.setText("");
                 }
             }
             return this;
@@ -117,7 +117,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        if(!this.getSelectionModel().isSelectionEmpty()){
+        if(!this.columnModel.getSelectionModel().isSelectionEmpty()){
             controller.selecionarFlor(getSelectedColumn());
             this.getColumnModel().getSelectionModel().clearSelection();
             this.setEnabled(false);
@@ -133,16 +133,15 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         if (size.getWidth() <= 0 || size.getHeight() <= 0) {
             return new Dimension(0, 0);
         }
-        size.width = size.width > 350 ? 350 : size.width;
+        size.width = size.width > 375 ? 375 : size.width;
         size.height = size.width / this.getModel().getColumnCount();
         this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());
         return size;
     }
 
     @Override
-    public void repintarPlayerHandTable() {
+    public void repintarPlayerHand() {
         this.repaint();
-        this.parentPanel.repaint();
     }
 
     @Override
@@ -151,24 +150,15 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         this.setEnabled(true);
     }
 
-    //Tratamento Visual >>>>
     @Override
-    public void notifyYouAreJunior() {
-        this.parentPanel.getGraphics().drawString("Junior", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
-    }
+    public void notifyYouAreJunior() {}
 
     @Override
-    public void notifyYouAreSenior() {
-        this.parentPanel.getGraphics().drawString("Senior", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
-    }
+    public void notifyYouAreSenior() {}
 
     @Override
-    public void notifyYouAreSemTitulo() {
-        this.parentPanel.getGraphics().drawString("Sem Titulo", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
-    }
+    public void notifyYouAreSemTitulo() {}
 
     @Override
-    public void notifyEscolhaUmaPosicaoNoTabuleiro() {
-    }
-    //Tratamento Visual <<<<<
+    public void notifyEscolhaUmaPosicaoNoTabuleiro() {}
 }
