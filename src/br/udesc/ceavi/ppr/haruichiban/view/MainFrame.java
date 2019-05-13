@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities;
  *
  * @author Jeferson Penz
  */
-public class MainFrame extends JFrame implements GameStateObserver{
+public class MainFrame extends JFrame implements GameStateObserver {
 
     /**
      * Painel para conter todo o jogo.
@@ -63,8 +63,8 @@ public class MainFrame extends JFrame implements GameStateObserver{
         FrameConfig frameConfig = new FrameConfig(new MainFrame());
         frameConfig.initializeFrameProperties();
     }
-    
-    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase){
+
+    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
         GameController.getInstance().addGameStateObserver(this);
         GameController.getInstance().begin(varianteTabuleiro, tamanhoTabuleiro, corJogadorTopo, corJogadorBase);
         this.initializeGameComponents();

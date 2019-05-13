@@ -5,7 +5,6 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorExcept
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.state.TitleOfGardener;
 import br.udesc.ceavi.ppr.haruichiban.state.UntitledGardener;
 import java.awt.Color;
@@ -41,14 +40,15 @@ public class PlayerController implements IPlayerController {
     private List<PlayerPanelObserver> observers = new ArrayList<>();
 
     private boolean esconderValoresDaMao;
+    private IControleDeFluxo controllerFluxo;
 
     /**
      *
      * @param cor identifica a cor das flores do jogador
      */
-    public PlayerController(Color cor,int tamanhoDoDeck) {
+    public PlayerController(Color cor, int tamanhoDoDeck) {
         this.title = new UntitledGardener();
-        this.play = new ModelPlayer(cor,tamanhoDoDeck);
+        this.play = new ModelPlayer(cor, tamanhoDoDeck);
         hideHandValue();
     }
 
@@ -57,12 +57,10 @@ public class PlayerController implements IPlayerController {
     }
 
     public void becomeJuniorGardener() throws PlayNaoPodeSeTornarJuniorException {
-        System.err.println("Me Tornei Junior");
         title.becomeJuniorGardener(this);
     }
 
     public void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException {
-        System.err.println("Me Tornei Senior");
         title.becomeSeniorGardener(this);
     }
 
@@ -84,7 +82,7 @@ public class PlayerController implements IPlayerController {
     }
 
     @Override
-    public List<Object> getHand() {
+    public synchronized List<Object> getHand() {
         if (esconderValoresDaMao) {
             return Arrays.asList(-1, -1, -1);
         }
@@ -93,17 +91,9 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public void selecionarFlor(int x) {
-        //Tira da mao do play a flor para coloca-la em jogo
         this.florEmJogo = play.getFlorFromHand(x);
-        if (florEmJogo != null) {
-            System.out.println("Selecionei " + florEmJogo.getValor());
-            GameController.getInstance().selecaoDeFlorFinalizada();
-        }else{
-            System.err.println("Falha Na selecao da Flor");
-            System.exit(0);
-        }
-        //Notificar A Area da Flor Escolhida Pelo Jogador
-
+        controllerFluxo.selecaoDeFlorFinalizada();
+        observers.forEach(obs -> obs.repintarPlayerHandTable());
     }
 
     public Flor getFlorEmJogo() {
@@ -114,33 +104,19 @@ public class PlayerController implements IPlayerController {
         return play.getColor();
     }
 
-    public void showHandValue() {
+    public synchronized void showHandValue() {
         esconderValoresDaMao = false;
-        observers.forEach(obs -> obs.notificarRenderizeOsValoresDaMao());
+        observers.forEach(obs -> obs.repintarPlayerHandTable());
     }
 
-    public void hideHandValue() {
+    public synchronized void hideHandValue() {
         esconderValoresDaMao = true;
-        observers.forEach(obs -> obs.notificarRenderizeOsValoresDaMao());
+        observers.forEach(obs -> obs.repintarPlayerHandTable());
     }
 
     public void requerirAoJogadorQueEsteEscolhaUmaFlor() {
-        observers.forEach(obs -> {
-            obs.notifyJogadorEscolhaUmaFlor();
-        });
         showHandValue();
-    }
-
-    public void requerirAoJogadorQueEsteEscolhaUmFolhaParaSerVirada() throws Exception {
-
-    }
-
-    public void requerirAoJogadorQueEsteEscolhaUmFolhaParaSerMovida() throws Exception {
-
-    }
-
-    public void requerirAoJogadorQueEsteEscolhaUmFolhaParaColocarAFlor() throws Exception {
-
+        observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlor());
     }
 
     @Override
@@ -157,15 +133,16 @@ public class PlayerController implements IPlayerController {
         }
     }
 
-    public PecaTabuleiro removerFlorEmJogo() {
+    public Flor removerFlorEmJogo() {
         Flor flor = florEmJogo;
+        System.out.println("removerFlorEmJogo " + flor);
         florEmJogo = null;
         return flor;
     }
 
     public void chamarOPrimeiroVentoDaPrimaveira() {
         try {
-            title.chamarPrimeiroVentoDaPrimaveira(this);
+            title.chamarPrimeiroVentoDaPrimaveiraGetPosicoes(this);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(0);
@@ -174,7 +151,7 @@ public class PlayerController implements IPlayerController {
 
     public void escolhaANovaFolhaEscura() {
         try {
-            title.escolhaANovaFolhaEscura(this);
+            title.escolhaANovaFolhaEscuraGetPosicoes(this);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(0);
@@ -183,6 +160,30 @@ public class PlayerController implements IPlayerController {
 
     public TitleOfGardener getTitle() {
         return title;
+    }
+
+    public void notifyYouAJunior() {
+        observers.forEach(obs -> obs.notifyYouAreJunior());
+    }
+
+    public void notifyYouASenior() {
+        observers.forEach(obs -> obs.notifyYouAreSenior());
+    }
+
+    public void notifySemTitulo() {
+        observers.forEach(obs -> obs.notifyYouAreSemTitulo());
+    }
+
+    public void devouverFlorAoDech() {
+        play.devolverFlor(removerFlorEmJogo());
+    }
+
+    public void setContollerFluxo(IControleDeFluxo aThis) {
+        this.controllerFluxo = aThis;
+    }
+
+    public IControleDeFluxo getControllerFluxo() {
+        return controllerFluxo;
     }
     
     public int getPlayerScore(){

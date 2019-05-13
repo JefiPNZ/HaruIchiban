@@ -1,10 +1,14 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
+import br.udesc.ceavi.ppr.haruichiban.control.EtapaGame;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
+import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
+import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
+import java.awt.Point;
 
 /**
  *
@@ -17,6 +21,7 @@ public class SeniorGardener implements TitleOfGardener {
     @Override
     public void becomeUntitledGardener(PlayerController aThis) {
         aThis.setTitle(new UntitledGardener());
+        aThis.notifySemTitulo();
     }
 
     @Override
@@ -31,24 +36,59 @@ public class SeniorGardener implements TitleOfGardener {
 
     @Override
     public void getFolhaNoTabuleiroParaFlor(PlayerController aThis) throws Exception {
-        //Requerindo Ao Jogador Que Escolha Um Local Apropriado
-        aThis.requerirAoJogadorQueEsteEscolhaUmFolhaParaColocarAFlor();
+        GameController.getInstance().getBoardeController().setControlPlayOuvinte(aThis);
     }
 
     @Override
-    public void colocandoFlorNaFolha(PlayerController aThis, Folha flor) throws Exception {
-        flor.colocarPecaNaFolha(aThis.removerFlorEmJogo());
-        GameController.getInstance().florColocadaNoTabuleiro();
-    }
-
-    @Override
-    public void chamarPrimeiroVentoDaPrimaveira(PlayerController aThis) {
+    public void chamarPrimeiroVentoDaPrimaveiraGetPosicoes(PlayerController aThis) {
         //Não Faz Nada
     }
 
+    /**
+     * Metodo Chamadao no BoardeController, este passa a pocisao escolhida
+     *
+     * @param aThis controllerPlay a qual o state pertence
+     * @param modelBoardTile flor encontrada no tabuleiro
+     *
+     */
     @Override
-    public void escolhaANovaFolhaEscura(PlayerController aThis) throws Exception {
-        aThis.requerirAoJogadorQueEsteEscolhaUmFolhaParaSerVirada();
+    public void getFolha(PlayerController aThis, Point modelBoardTile) throws Exception {
+        if (GameController.getInstance().getControlDeFluxo().getEtapa() == EtapaGame.JOGAR_FLOR_NO_TABULEIRO) {
+            ModelBoardTile tile = GameController.getInstance().getBoardeController().getModelBoardTile(modelBoardTile);
+            colocarFlorNoTabuleiro(aThis, tile);
+        } else if (GameController.getInstance().getControlDeFluxo().getEtapa() == EtapaGame.ESCOLHE_FOLHA_ESCURA) {
+            setNewFolhaEscura(modelBoardTile);
+        }
+    }
+
+    @Override
+    public void escolhaANovaFolhaEscuraGetPosicoes(PlayerController aThis) throws Exception {
+        GameController.getInstance().getBoardeController().setControlPlayOuvinte(aThis);
+    }
+
+    @Override
+    public void chamarPrimeiroVentoDaPrimaveiraSetFolha(PlayerController aThis, Point origem, Point destino) throws Exception {
+    }
+
+    @Override
+    public void colocarFlorNoTabuleiro(PlayerController aThis, ModelBoardTile modelBoardTile) {
+        try {
+            modelBoardTile.getFolha().colocarPecaNaFolha(aThis.removerFlorEmJogo());
+        } catch (FolhaJaPossuiUmaPecaEmCimaException ex) {
+            ex.printStackTrace();
+            System.exit(0);
+        }
+        GameController.getInstance().getBoardeController().renderBoard();
+        GameController.getInstance().getBoardeController().setControlPlayOuvinte(null);
+
+        GameController.getInstance().getControlDeFluxo().florColocadaNoTabuleiro();
+    }
+
+    IBoardController boardeController;
+
+    private void setNewFolhaEscura(Point modelBoardTile) {
+        boardeController = GameController.getInstance().getBoardeController();
+        boardeController.setControlPlayOuvinte(null);
     }
 
 }

@@ -39,6 +39,18 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
     private BufferedImage[][] boardImages;
     private BufferedImage tileImage;
 
+    @Override
+    public void notifyAtivarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(true);
+    }
+
+    @Override
+    public void notifyDesativarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(false);
+    }
+
     /**
      * Modelo de dados para tabela.
      */
@@ -59,7 +71,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
             try {
                 return boardImages[row][col];
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.toString());
+                //JOptionPane.showMessageDialog(null, e.toString());
                 return null;
             }
         }
@@ -113,6 +125,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
             g.drawImage(scale.convert("img/" + imagem + ".png"), 0, 0, null);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            System.exit(0);
         }
     }
 
@@ -130,13 +143,11 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
             this.tileImage = ImageIO.read(new File(Images.PECA_TABULEIRO));
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            System.exit(0);
         }
         this.initializeProperties();
-        try {
-            this.controller.renderBoard();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+        this.controller.renderBoard();
+        GameController.getInstance().startGame();
     }
 
     /**
@@ -155,15 +166,9 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         this.setOpaque(false);
         this.setShowGrid(false);
         this.setEnabled(false);
+
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if (!e.getValueIsAdjusting()) {
-                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
-            }
-        });
-        this.getColumnModel().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if (!e.getValueIsAdjusting()) {
-                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
-            }
+            executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
         });
     }
 
@@ -178,9 +183,11 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      */
     protected void executeTableSelectionChange(Point newSelection) {
         if (!this.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
-            lastSelection = newSelection;
-            this.clearSelection();
-            System.out.println("Nova seleção: " + newSelection);
+            if (controller.hasPlayOuvindo()) {
+                JOptionPane.showMessageDialog(null, "Selecao: " + newSelection.x + ", " + newSelection.y);
+                this.getColumnModel().getSelectionModel().clearSelection();
+                controller.eventoDeSelecao(newSelection);
+            }
         }
     }
 
@@ -208,13 +215,14 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         return size;
     }
 
+    public void repaintTela() {
+        this.repaint();
+        this.parentPanel.repaint();
+    }
+    
     @Override
     public void notificaMudancaEstado(String mensagem) {
-        try {
-            this.controller.renderBoard();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+        this.controller.renderBoard();
     }
 
     @Override

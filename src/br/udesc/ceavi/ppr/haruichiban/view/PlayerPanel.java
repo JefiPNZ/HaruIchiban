@@ -64,7 +64,7 @@ public class PlayerPanel extends JPanel {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            //JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
         this.rotation = 0;
         this.setBackground(new Color(0, 0, 0, 0));

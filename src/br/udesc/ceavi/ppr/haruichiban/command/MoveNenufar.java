@@ -1,4 +1,4 @@
-package br.udesc.ceavi.ppr.haruichibanl.command;
+package br.udesc.ceavi.ppr.haruichiban.command;
 
 import br.udesc.ceavi.ppr.haruichiban.control.BoardController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PosicaoEmTabuleiroOcupadaException;

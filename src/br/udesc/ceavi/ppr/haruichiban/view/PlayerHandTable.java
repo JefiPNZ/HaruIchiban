@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
@@ -14,7 +13,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import javax.swing.event.ListSelectionEvent;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionListener;
 
 /**
@@ -48,7 +47,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
             try {
                 return parentPanel.getFlowerImg();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.toString());
+                //JOptionPane.showMessageDialog(null, e.toString());
                 return null;
             }
         }
@@ -120,7 +119,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
     protected void executeTableSelectionChange(Point newSelection) {
         if(!this.getSelectionModel().isSelectionEmpty()){
             controller.selecionarFlor(getSelectedColumn());
-            this.clearSelection();
+            this.getColumnModel().getSelectionModel().clearSelection();
             this.setEnabled(false);
         }
     }
@@ -141,8 +140,9 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
     }
 
     @Override
-    public void notificarRenderizeOsValoresDaMao() {
+    public void repintarPlayerHandTable() {
         this.repaint();
+        this.parentPanel.repaint();
     }
 
     @Override
@@ -150,4 +150,25 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
         this.setEnabled(true);
     }
+
+    //Tratamento Visual >>>>
+    @Override
+    public void notifyYouAreJunior() {
+        this.parentPanel.getGraphics().drawString("Junior", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
+    }
+
+    @Override
+    public void notifyYouAreSenior() {
+        this.parentPanel.getGraphics().drawString("Senior", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
+    }
+
+    @Override
+    public void notifyYouAreSemTitulo() {
+        this.parentPanel.getGraphics().drawString("Sem Titulo", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
+    }
+
+    @Override
+    public void notifyEscolhaUmaPosicaoNoTabuleiro() {
+    }
+    //Tratamento Visual <<<<<
 }

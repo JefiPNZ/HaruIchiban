@@ -6,10 +6,7 @@ import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasPrimavera;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardGigaBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardNormalBuilder;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
-import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.state.SeniorGardener;
+import br.udesc.ceavi.ppr.haruichiban.view.MenuPanel;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -20,10 +17,11 @@ import javax.swing.SwingUtilities;
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
  *
- * @author Jeferson Penz
+ * @author Gustavo
  *
- * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE HAVER JOPTIONPANE NO CONTROLLER. -
- * Quando adicionar um componente transparente (como overlay por ex.), lembrar do setOpaque(false).
+ * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE
+ * HAVER //JOptionPane NO CONTROLLER. - Quando adicionar um componente
+ * transparente (como overlay por ex.), lembrar do setOpaque(false).
  */
 public class GameController {
 
@@ -41,7 +39,7 @@ public class GameController {
      * Semente fixa para geração estática de dados aleatórios.
      */
     private long fixedSeed;
-    
+
     private BoardBuilder builderTabuleiro;
 
     /**
@@ -57,8 +55,10 @@ public class GameController {
     private PlayerController bottomPlayer;
 
     private FactoryPecas factoryPecas;
-    
+
     private BoardController controllerBoard;
+
+    private IControleDeFluxo controlDeFluxo;
 
     /**
      * Classe para criação da instância do Singleton.
@@ -88,6 +88,7 @@ public class GameController {
 
     /**
      * Para a execução da lógica do jogo.
+     *
      * @param varianteTabuleiro
      * @param tamanhoTabuleiro
      * @param corJogadorTopo
@@ -118,6 +119,7 @@ public class GameController {
         topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
         bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.controllerBoard = new BoardController();
+        this.controlDeFluxo = new ControleDeFluxoDeJogo(this);
     }
 
     /**
@@ -141,7 +143,8 @@ public class GameController {
     }
 
     /**
-     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre os mesmo valores quando é criado.
+     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre
+     * os mesmo valores quando é criado.
      *
      * @return
      */
@@ -170,113 +173,11 @@ public class GameController {
     }
 
     public void startGame() {
-        this.notificaMudancaEstado("Início dos turnos.");
-        int vez = randomizer.nextInt();
-        if (vez % 2 == 0) {
-            this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
-            inicioDeTurno(bottomPlayer);
-        } else {
-            this.notificaMudancaEstado("Jogador superior escolha uma flor.");
-            inicioDeTurno(topPlayer);
-        }
+        controlDeFluxo.startGame();
     }
 
-    private void inicioDeTurno(PlayerController primeiro) {
-        primeiro.requerirAoJogadorQueEsteEscolhaUmaFlor();
-    }
-
-    public void selecaoDeFlorFinalizada() {
-        topPlayer.hideHandValue();
-        bottomPlayer.hideHandValue();
-        if (bottomPlayer.getFlorEmJogo() == null) {
-            this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
-            bottomPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
-        } 
-        else if (topPlayer.getFlorEmJogo() == null) {
-            this.notificaMudancaEstado("Jogador superior escolha uma flor.");
-            topPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
-        } 
-        else {
-            this.notificaMudancaEstado("Etapa de seleção de flores finalizada.");
-            topPlayer.hideHandValue();
-            bottomPlayer.hideHandValue();
-            definirTitulos();
-        }
-    }
-
-    private void definirTitulos() {
-        this.notificaMudancaEstado("Iniciando definição de título.");
-        if (bottomPlayer.getFlorEmJogo().getValor() > topPlayer.getFlorEmJogo().getValor()) {
-            try {
-                bottomPlayer.becomeSeniorGardener();
-                topPlayer.becomeJuniorGardener();
-                this.notificaMudancaEstado("Definição de títulos finalizada.");
-                this.notificaMudancaEstado("Jogador Inferior é o jardineiro senior.");
-                this.notificaMudancaEstado("Jogador Superior é o jardineiro junior.");
-                colocarFlorNoTabuleiro();
-            } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
-                this.notificaMudancaEstado(ex.getMessage());
-            }
-        }
-        else {
-            try {
-                bottomPlayer.becomeSeniorGardener();
-                topPlayer.becomeJuniorGardener();
-                colocarFlorNoTabuleiro();
-                this.notificaMudancaEstado("Definição de títulos finalizada.");
-                this.notificaMudancaEstado("Jogador Superior é o jardineiro senior.");
-                this.notificaMudancaEstado("Jogador Inferior é o jardineiro junior.");
-            } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
-                this.notificaMudancaEstado(ex.getMessage());
-            }
-        }
-    }
-
-    private void colocarFlorNoTabuleiro() {
-        SwingUtilities.invokeLater(() -> {
-            this.notificaMudancaEstado("Coloque uma flor no tabuleiro.");
-            bottomPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
-            topPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
-        });
-    }
-
-    public void florColocadaNoTabuleiro() {
-        if (bottomPlayer.getFlorEmJogo() == null && topPlayer.getFlorEmJogo() == null) {
-            bottomPlayer.chamarOPrimeiroVentoDaPrimaveira();
-            topPlayer.chamarOPrimeiroVentoDaPrimaveira();
-            this.notificaMudancaEstado("Flor foi colocada em tabuleiro.");
-        }
-    }
-
-    public void tabuleirMovimentado() {
-        bottomPlayer.escolhaANovaFolhaEscura();
-        topPlayer.escolhaANovaFolhaEscura();
-    }
-
-    public void folhaVirada(Point newFolhaEscura) {
-        verificarPontuacao();
-    }
-
-    private void verificarPontuacao() {
-        controllerBoard.verificarPontuacaoDosJogadores();
-        if (controllerBoard.hasWinner()) {
-            ModelPlayer winner = controllerBoard.getWinner();
-            if (bottomPlayer.getPlay().equals(winner)) {
-                this.stop("Jogador Inferior venceu!");
-            } else if (topPlayer.getPlay().equals(winner)) {
-                this.stop("Jogador Superior venceu!");
-            }
-        } else {
-            novoTurno();
-        }
-    }
-
-    private void novoTurno() {
-        if (topPlayer.getTitle().getClass() == SeniorGardener.class) {
-            inicioDeTurno(topPlayer);
-        } else {
-            inicioDeTurno(bottomPlayer);
-        }
+    public IControleDeFluxo getControlDeFluxo() {
+        return controlDeFluxo;
     }
     
     public void notificaMudancaEstado(String mensagem){
