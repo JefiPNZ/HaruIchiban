@@ -36,6 +36,18 @@ public class BoardTable extends JTable implements BoardObserver {
     private BufferedImage[][] boardImages;
     private BufferedImage tileImage;
 
+    @Override
+    public void notifyAtivarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(true);
+    }
+
+    @Override
+    public void notifyDesativarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(false);
+    }
+
     /**
      * Modelo de dados para tabela.
      */
@@ -56,7 +68,7 @@ public class BoardTable extends JTable implements BoardObserver {
             try {
                 return boardImages[row][col];
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.toString());
+                //JOptionPane.showMessageDialog(null, e.toString());
                 return null;
             }
         }
@@ -109,7 +121,7 @@ public class BoardTable extends JTable implements BoardObserver {
         try {
             g.drawImage(scale.convert("img/" + imagem + ".png"), 0, 0, null);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
             System.exit(0);
         }
     }
@@ -128,13 +140,11 @@ public class BoardTable extends JTable implements BoardObserver {
             this.tileImage = ImageIO.read(new File(Images.PECA_TABULEIRO));
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            System.exit(0);
         }
         this.initializeProperties();
-        try {
-            this.controller.renderBoard();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+        this.controller.renderBoard();
+        GameController.getInstance().startGame();
     }
 
     /**
@@ -152,15 +162,10 @@ public class BoardTable extends JTable implements BoardObserver {
         this.setFillsViewportHeight(true);
         this.setOpaque(false);
         this.setShowGrid(false);
+        this.setEnabled(false);
+
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if (!e.getValueIsAdjusting()) {
-                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
-            }
-        });
-        this.getColumnModel().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if (!e.getValueIsAdjusting()) {
-                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
-            }
+            executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
         });
     }
 
@@ -175,8 +180,11 @@ public class BoardTable extends JTable implements BoardObserver {
      */
     protected void executeTableSelectionChange(Point newSelection) {
         if (!newSelection.equals(lastSelection)) {
-            lastSelection = newSelection;
-            System.out.println("Nova seleção: " + newSelection);
+            if (controller.hasPlayOuvindo()) {
+                JOptionPane.showMessageDialog(null, "Selecao: " + newSelection.x + ", " + newSelection.y);
+                this.getColumnModel().getSelectionModel().clearSelection();
+                controller.eventoDeSelecao(newSelection);
+            }
         }
     }
 
@@ -202,5 +210,11 @@ public class BoardTable extends JTable implements BoardObserver {
         }
         this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());
         return size;
+    }
+
+    @Override
+    public void repaitTela() {
+        this.repaint();
+        this.parentPanel.repaint();
     }
 }

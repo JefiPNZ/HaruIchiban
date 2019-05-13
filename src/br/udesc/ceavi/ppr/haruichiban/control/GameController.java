@@ -6,21 +6,20 @@ import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasPrimavera;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardGigaBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardNormalBuilder;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
-import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.state.SeniorGardener;
+import br.udesc.ceavi.ppr.haruichiban.view.MenuPanel;
 import java.awt.Color;
-import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
  *
- * @author Jeferson Penz
+ * @author Gustavo
  *
- * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE HAVER JOPTIONPANE NO CONTROLLER. -
- * Quando adicionar um componente transparente (como overlay por ex.), lembrar do setOpaque(false).
+ * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE
+ * HAVER //JOptionPane NO CONTROLLER. - Quando adicionar um componente
+ * transparente (como overlay por ex.), lembrar do setOpaque(false).
  */
 public class GameController {
 
@@ -38,7 +37,7 @@ public class GameController {
      * Semente fixa para geração estática de dados aleatórios.
      */
     private long fixedSeed;
-    
+
     private BoardBuilder builderTabuleiro;
 
     /**
@@ -57,8 +56,11 @@ public class GameController {
     private boolean gameStarted;
 
     private FactoryPecas factoryPecas;
-    
+
     private BoardController controllerBoard;
+
+    private IControleDeFluxo controlDeFluxo;
+    private List<GameStateObserver> gameStateObserver;
 
     /**
      * Classe para criação da instância do Singleton.
@@ -67,6 +69,7 @@ public class GameController {
         this.gameStarted = false;
         this.randomizer = new Random();
         this.fixedSeed = this.randomizer.nextLong();
+        this.gameStateObserver = new ArrayList<>();
     }
 
     /**
@@ -93,6 +96,7 @@ public class GameController {
 
     /**
      * Para a execução da lógica do jogo.
+     *
      * @param varianteTabuleiro
      * @param tamanhoTabuleiro
      * @param corJogadorTopo
@@ -123,6 +127,7 @@ public class GameController {
         topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
         bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.controllerBoard = new BoardController();
+        this.controlDeFluxo = new ControleDeFluxoDeJogo(this);
         this.gameStarted = true;
     }
 
@@ -152,7 +157,8 @@ public class GameController {
     }
 
     /**
-     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre os mesmo valores quando é criado.
+     * Retorna o gerador de dados aleatórios fixo. Este gerador apresenta sempre
+     * os mesmo valores quando é criado.
      *
      * @return
      */
@@ -181,94 +187,19 @@ public class GameController {
     }
 
     public void startGame() {
-        System.out.println("Chamada de StartGame");
-        int vez = randomizer.nextInt();
-        if (vez % 2 == 0) {
-            inicioDeTurno(bottomPlayer);
-        } else {
-            inicioDeTurno(topPlayer);
-        }
+        controlDeFluxo.startGame();
     }
 
-    private void inicioDeTurno(PlayerController primeiro) {
-        System.out.println("inicioDeTurno");
-        primeiro.requerirAoJogadorQueEsteEscolhaUmaFlor();
+    public IControleDeFluxo getControlDeFluxo() {
+        return controlDeFluxo;
     }
 
-    public void selecaoDeFlorFinalizada() {
-        System.out.println("selecaoDeFlorFinalizada");
-        topPlayer.hideHandValue();
-        bottomPlayer.hideHandValue();
-        if (bottomPlayer.getFlorEmJogo() == null) {
-            bottomPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
-        } else if (topPlayer.getFlorEmJogo() == null) {
-            topPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
-        } else {
-            topPlayer.hideHandValue();
-            bottomPlayer.hideHandValue();
-            definirTitulos();
-        }
+    public void addGameStateObserver(GameStateObserver obs) {
+        this.gameStateObserver.add(obs);
     }
 
-    private void definirTitulos() {
-        System.out.println("definirTitulos iniciado");
-        if (bottomPlayer.getFlorEmJogo().getValor() > topPlayer.getFlorEmJogo().getValor()) {
-            try {
-                bottomPlayer.becomeSeniorGardener();
-                topPlayer.becomeJuniorGardener();
-                colocarFlorNoTabuleiro();
-            } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
-                ex.printStackTrace();
-                System.exit(0);
-            }
-        }
-        System.out.println("definirTitulos Finalizado");
-    }
-
-    private void colocarFlorNoTabuleiro() {
-        System.out.println("colocarFlorNoTabuleiro iniciado");
-        bottomPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
-        topPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
-    }
-
-    public void florColocadaNoTabuleiro() {
-        System.out.println("Check florColocadaNoTabuleiro");
-        if (bottomPlayer.getFlorEmJogo() == null && topPlayer.getFlorEmJogo() == null) {
-            bottomPlayer.chamarOPrimeiroVentoDaPrimaveira();
-            topPlayer.chamarOPrimeiroVentoDaPrimaveira();
-            System.out.println(" florColocadaNoTabuleiro finalizado");
-        }
-    }
-
-    public void tabuleirMovimentado() {
-        bottomPlayer.escolhaANovaFolhaEscura();
-        topPlayer.escolhaANovaFolhaEscura();
-    }
-
-    public void folhaVirada(Point newFolhaEscura) {
-        verificarPontuacao();
-    }
-
-    private void verificarPontuacao() {
-        controllerBoard.verificarPontuacaoDosJogadores();
-        if (controllerBoard.hasWinner()) {
-            ModelPlayer winner = controllerBoard.getWinner();
-            if (bottomPlayer.getPlay().equals(winner)) {
-                bottomPlayer.notifyYouWon();
-            } else if (topPlayer.getPlay().equals(winner)) {
-                topPlayer.notifyYouWon();
-            }
-        } else {
-            novoTurno();
-        }
-    }
-
-    private void novoTurno() {
-        if (topPlayer.getTitle().getClass().getSimpleName() == SeniorGardener.class.getSimpleName()) {
-            inicioDeTurno(topPlayer);
-        } else {
-            inicioDeTurno(bottomPlayer);
-        }
+    public void notificaMudancaEstado(String mensagem) {
+        gameStateObserver.forEach(obs-> obs.notificaMudancaEstado(mensagem));
     }
 
 }

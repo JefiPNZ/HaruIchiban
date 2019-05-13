@@ -6,7 +6,6 @@ import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class ScorePanel extends JPanel{
         try {
             this.scoreImg = ImageIO.read(new File(Images.PONTUACAO_FUNDO));
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            //JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
         this.setOpaque(false);
         this.setBackground(new Color(0, 0, 0, 0));

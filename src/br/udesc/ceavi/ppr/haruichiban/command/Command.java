@@ -1,4 +1,4 @@
-package br.udesc.ceavi.ppr.haruichibanl.command;
+package br.udesc.ceavi.ppr.haruichiban.command;
 
 /**
  *

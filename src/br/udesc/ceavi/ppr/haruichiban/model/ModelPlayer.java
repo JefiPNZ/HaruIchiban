@@ -54,11 +54,17 @@ public class ModelPlayer {
     }
 
     public Flor getFlorFromHand(int i) {
-        return listaMao.get(i);
+        Flor florARemover = listaMao.remove(i);
+        controlHand();
+        return florARemover;
     }
 
     public Color getColor() {
         return myColor;
+    }
+
+    public void devolverFlor(Flor florEmJogo) {
+        this.listaDeFlores.add(florEmJogo);
     }
 
 }

@@ -28,4 +28,10 @@ public abstract class Flor extends PecaTabuleiro {
         return TipoPeca.FLOR;
     }
 
+    @Override
+    public String toString() {
+        return "Flor{" + "valor=" + valor + ", playerOrigem=" + playerOrigem.getColor() + '}';
+    }
+
+    
 }

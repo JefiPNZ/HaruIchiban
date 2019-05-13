@@ -2,7 +2,7 @@ package br.udesc.ceavi.ppr.haruichiban.builder;
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
+import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import java.awt.Point;
@@ -58,13 +58,13 @@ public class BoardGigaBuilder extends BoardBuilder{
                         try {
                             folha.colocarFilhoteNaFolha(gcInstance.getFactoryPecas().createFilhote(gcInstance.getTopPlayer().getColor()));
                             folha.colocarPecaNaFolha(gcInstance.getFactoryPecas().createAnimal(gcInstance.getTopPlayer().getColor()));
-                        } catch (NenufareJaPossuiUmaPecaEmCimaException ex) {}
+                        } catch (FolhaJaPossuiUmaPecaEmCimaException ex) {}
                     }
                     else if(POSICAO_ANIMAL_BASE.equals(pos)){
                         try {
                             folha.colocarFilhoteNaFolha(gcInstance.getFactoryPecas().createFilhote(gcInstance.getBottomPlayer().getColor()));
                             folha.colocarPecaNaFolha(gcInstance.getFactoryPecas().createAnimal(gcInstance.getTopPlayer().getColor()));
-                        } catch (NenufareJaPossuiUmaPecaEmCimaException ex) {}
+                        } catch (FolhaJaPossuiUmaPecaEmCimaException ex) {}
                     }
                 }
             }

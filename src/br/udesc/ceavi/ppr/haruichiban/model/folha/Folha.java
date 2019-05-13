@@ -1,12 +1,11 @@
 package br.udesc.ceavi.ppr.haruichiban.model.folha;
 
-import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
+import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 /**
  *
@@ -72,18 +71,18 @@ public abstract class Folha extends PecaTabuleiro {
      * com outra peca
      *
      * @param peca
-     * @throws NenufareJaPossuiUmaPecaEmCimaException
+     * @throws FolhaJaPossuiUmaPecaEmCimaException
      */
-    public void colocarPecaNaFolha(PecaTabuleiro peca) throws NenufareJaPossuiUmaPecaEmCimaException {
+    public void colocarPecaNaFolha(PecaTabuleiro peca) throws FolhaJaPossuiUmaPecaEmCimaException {
         if (hasPeca()) {
-            throw new NenufareJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
+            throw new FolhaJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
         }
         this.peca = peca;
     }
     
-    public void colocarFilhoteNaFolha(Filhote filhote) throws NenufareJaPossuiUmaPecaEmCimaException {
+    public void colocarFilhoteNaFolha(Filhote filhote) throws FolhaJaPossuiUmaPecaEmCimaException {
         if (hasFilhote()) {
-            throw new NenufareJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
+            throw new FolhaJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
         }
         this.filhote = filhote;
     }

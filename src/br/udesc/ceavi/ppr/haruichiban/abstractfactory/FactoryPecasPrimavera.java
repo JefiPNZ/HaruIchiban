@@ -19,7 +19,7 @@ import java.awt.Color;
 public class FactoryPecasPrimavera extends FactoryPecas{
 
     public FactoryPecasPrimavera() {
-        System.out.println("Usando Tabuleiro de FactoryPecasPrimavera");
+//        System.out.println("Usando Tabuleiro de FactoryPecasPrimavera");
     }
 
     

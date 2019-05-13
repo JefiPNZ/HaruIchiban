@@ -3,13 +3,13 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BuilderDirector;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
+import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PosicaoEmTabuleiroOcupadaException;
 import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
-import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class BoardController implements IBoardController {
 
     private List<BoardObserver> observers;
     private ModelBoardTile[][] tabuleiro;
+    private PlayerController playOuvindo;
 
     public BoardController() {
         this.observers = new ArrayList<>();
@@ -40,9 +41,9 @@ public class BoardController implements IBoardController {
      */
     @Override
     public void renderBoard() {
-        for (int row = 0; row < tabuleiro.length; row++) {
-            for (int column = 0; column < tabuleiro[row].length; column++) {
-                for (BoardObserver observer : observers) {
+        for (BoardObserver observer : observers) {
+            for (int row = 0; row < tabuleiro.length; row++) {
+                for (int column = 0; column < tabuleiro[row].length; column++) {
                     observer.clearTile(row, column);
                     //Desenha a Nenufare
                     if (getCampoTabuleiro(row, column).hasFolha()) {
@@ -59,8 +60,8 @@ public class BoardController implements IBoardController {
                     }
                 }
             }
+            observer.repaitTela();
         }
-        GameController.getInstance().startGame();
     }
 
     private void initTabuleiro() {
@@ -71,7 +72,11 @@ public class BoardController implements IBoardController {
     }
 
     public ModelBoardTile getCampoTabuleiro(int x, int y) {
-        return tabuleiro[x][y];
+        return this.tabuleiro[x][y];
+    }
+
+    public ModelBoardTile getCampoTabuleiro(Point point) {
+        return this.tabuleiro[point.y][point.x];
     }
 
     public boolean changeNenufarTo(ModelBoardTile campoDe,
@@ -94,9 +99,7 @@ public class BoardController implements IBoardController {
     }
 
     public boolean virarNenufar(int x, int y) throws CanNotChangeSideNenufareException {
-
         ModelBoardTile campoEmUso = getCampoTabuleiro(x, y);
-
         if (campoEmUso.hasFolha() && !campoEmUso.getFolha().isEscura()) {
             campoEmUso.getFolha().virarFolha();
             return true;
@@ -105,7 +108,7 @@ public class BoardController implements IBoardController {
     }
 
     public boolean changeSapoTo(int deX, int deY,
-            int paraX, int paraY) throws NenufareJaPossuiUmaPecaEmCimaException {
+            int paraX, int paraY) throws FolhaJaPossuiUmaPecaEmCimaException {
 
         ModelBoardTile campoDe = getCampoTabuleiro(deX, deY);
         ModelBoardTile campoPara = getCampoTabuleiro(paraX, paraY);
@@ -128,7 +131,7 @@ public class BoardController implements IBoardController {
         return true;
     }
 
-    public boolean colocarFlor(Flor flor, int x, int y) throws NenufareJaPossuiUmaPecaEmCimaException {
+    public boolean colocarFlor(Flor flor, int x, int y) throws FolhaJaPossuiUmaPecaEmCimaException {
         ModelBoardTile campoEmUso = getCampoTabuleiro(x, y);
         if (campoEmUso.hasFolha() && !campoEmUso.getFolha().hasPeca()) {
             return false;
@@ -148,27 +151,56 @@ public class BoardController implements IBoardController {
     }
 
     @Override
-    public Folha getFolhaEscura() {
+    public ModelBoardTile getFolhaEscura() {
         for (int row = 0; row < tabuleiro.length; row++) {
             for (int column = 0; column < tabuleiro[row].length; column++) {
-                if (getCampoTabuleiro(row, column).hasFolha() && 
-                        getCampoTabuleiro(row, column).getFolha().isEscura()) {
-                    return getCampoTabuleiro(row, column).getFolha();
+                if (getCampoTabuleiro(row, column).hasFolha()
+                        && getCampoTabuleiro(row, column).getFolha().isEscura()) {
+                    return getCampoTabuleiro(row, column);
                 }
             }
         }
         return null;
     }
 
-    void verificarPontuacaoDosJogadores() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public void eventoDeSelecao(Point newSelection) {
+        try {
+            playOuvindo.getTitle().getFolha(playOuvindo, newSelection);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    boolean hasWinner() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public void setControlPlayOuvinte(PlayerController ouvindo) {
+        this.playOuvindo = ouvindo;
+        if (ouvindo != null) {
+            observers.forEach(obs -> obs.notifyAtivarTabela());
+        } else {
+            observers.forEach(obs -> obs.notifyDesativarTabela());
+        }
     }
 
-    ModelPlayer getWinner() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public boolean hasPlayOuvindo() {
+        return playOuvindo != null;
     }
+
+    @Override
+    public ModelBoardTile getModelBoardTile(Point point) {
+        return getCampoTabuleiro(point);
+    }
+
+    @Override
+    public void moveTo(Point origem, Point destino) {
+        ModelBoardTile origemT = tabuleiro[origem.y][origem.x];
+        ModelBoardTile destinoT = tabuleiro[destino.y][destino.x];
+
+        tabuleiro[destino.y][destino.x] = origemT;
+        tabuleiro[origem.y][origem.x] = destinoT;
+        renderBoard();
+        observers.forEach(obs -> obs.repaitTela());
+    }
+
 }

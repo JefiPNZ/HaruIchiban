@@ -1,21 +1,23 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import javax.swing.BoxLayout;
+import static java.awt.Frame.MAXIMIZED_BOTH;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
  * JFrame Principal contendo a tela da Aplicação.
  *
  * @author Jeferson Penz
  */
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements GameStateObserver {
 
     /**
      * Painel para conter todo o jogo.
@@ -59,11 +61,15 @@ public class MainFrame extends JFrame {
         FrameConfig frameConfig = new FrameConfig(new MainFrame());
         frameConfig.initializeFrameProperties();
     }
-    
-    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase){
+
+    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
         GameController.getInstance().begin(varianteTabuleiro, tamanhoTabuleiro, corJogadorTopo, corJogadorBase);
         this.initializeGameComponents();
         this.initializeFrameProperties();
+        SwingUtilities.invokeLater(() -> {
+            GameController.getInstance().startGame();
+            GameController.getInstance().addGameStateObserver(this);
+        });
     }
 
     /**
@@ -73,7 +79,6 @@ public class MainFrame extends JFrame {
         this.setVisible(false);
         this.setUndecorated(true);
         this.setExtendedState(MAXIMIZED_BOTH);
-        this.setSize(1024, 750);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
@@ -83,32 +88,32 @@ public class MainFrame extends JFrame {
      */
     private void initializeGameComponents() {
         this.gamePanel = new GamePanel();
-        //Passo os devidos controladores para os PlayerPanel!
         this.topPlayerPanel = new PlayerPanel(GameController.getInstance().getTopPlayer().getColor(),
                 GameController.getInstance().getTopPlayer());
         this.topPlayerPanel.setRotation(180);
-        //Passo os devidos controladores para os PlayerPanel!
         this.bottomPlayerPanel = new PlayerPanel(GameController.getInstance().getBottomPlayer().getColor(),
                 GameController.getInstance().getBottomPlayer());
         this.boardPanel = new BoardPanel();
         this.scorePanel = new ScorePanel();
-        this.menuPanel = new JPanel();
+        this.menuPanel = new MenuPanel();
         this.gamePanel.add(this.topPlayerPanel, BorderLayout.NORTH);
         this.gamePanel.add(this.bottomPlayerPanel, BorderLayout.SOUTH);
         this.gamePanel.add(this.boardPanel, BorderLayout.CENTER);
         this.gamePanel.add(this.scorePanel, BorderLayout.WEST);
         this.gamePanel.add(this.menuPanel, BorderLayout.EAST);
-        this.menuPanel.setBackground(new Color(140, 75, 55));
-        this.menuPanel.setLayout(new BoxLayout(this.menuPanel, BoxLayout.Y_AXIS));
-        JLabel haruIchiban = new JLabel("Haru Ichiban");
-        haruIchiban.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
-        haruIchiban.setForeground(Color.white);
-        JLabel men = new JLabel("Menu");
-        men.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
-        men.setForeground(Color.white);
-        this.menuPanel.add(haruIchiban);
-        this.menuPanel.add(men);
         this.setContentPane(this.gamePanel);
+    }
+
+    @Override
+    public void notificaMudancaEstado(String mensagem) {
+    }
+
+    @Override
+    public void notificaFimJogo() {
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        FrameConfig frameConfig = new FrameConfig(new MainFrame());
+        frameConfig.initializeFrameProperties();
     }
 
 }
