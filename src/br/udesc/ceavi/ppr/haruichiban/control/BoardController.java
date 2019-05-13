@@ -212,8 +212,8 @@ public class BoardController implements IBoardController {
      * @return 
      */
     public boolean validaPontuacao(){
-        int maiorPontuacaoPrimeiroPontuador = 0;
-        int maiorPontuacaoSegundoPontuador = 0;
+        int pontuacaoPrimeiroPontuador = 0;
+        int pontuacaoSegundoPontuador = 0;
         ModelPlayer primeiroPontuador = null;
         ModelPlayer segundoPontuador = null;
         for (int row = 0; row < tabuleiro.length; row++) {
@@ -238,17 +238,23 @@ public class BoardController implements IBoardController {
                         if(primeiroPontuador == null){
                             primeiroPontuador = origem;
                         }
-                        else if(segundoPontuador == null){
-                            segundoPontuador = origem;
+                        if(primeiroPontuador.equals(origem)){
+                            pontuacaoPrimeiroPontuador += maiorPontuacao;
+                        }
+                        else{
+                            if(segundoPontuador == null){
+                                segundoPontuador = origem;
+                            }
+                            pontuacaoSegundoPontuador += maiorPontuacao;
                         }
                     }
                 }
             }
         }
         if(primeiroPontuador != null){
-            primeiroPontuador.addPontos(maiorPontuacaoPrimeiroPontuador);
+            primeiroPontuador.addPontos(pontuacaoPrimeiroPontuador);
             if(segundoPontuador != null){
-                segundoPontuador.addPontos(maiorPontuacaoSegundoPontuador);
+                segundoPontuador.addPontos(pontuacaoSegundoPontuador);
             }
         }
         return primeiroPontuador != null;

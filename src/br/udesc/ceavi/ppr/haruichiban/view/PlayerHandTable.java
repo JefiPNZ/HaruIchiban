@@ -134,8 +134,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
             return new Dimension(0, 0);
         }
         size.width = size.width > 375 ? 375 : size.width;
-        size.height = size.width / this.getModel().getColumnCount();
-        this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());
+        this.setRowHeight((int) size.getHeight());
         return size;
     }
 
