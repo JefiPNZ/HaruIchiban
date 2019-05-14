@@ -39,7 +39,9 @@ public interface IPlayerController {
 
     public void devolverFlorAoDeck();
 
-    public void choseFlowerDeckEnd(int x);
+    public void chooseFlowerDeckEnd(int x);
+
+    public void getFlorFromHand(int x);
 
     public void addObserver(PlayerPanelObserver obs);
 

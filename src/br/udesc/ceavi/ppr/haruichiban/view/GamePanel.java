@@ -30,7 +30,7 @@ public class GamePanel extends JPanel{
             waterImg = ImageIO.read(new File(Images.TABULEIRO_AGUA));
         }
         catch (IOException ex){
-            //JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
         this.setBackground(new Color(86, 134, 190));
         this.setLayout(new BorderLayout(1, 1));

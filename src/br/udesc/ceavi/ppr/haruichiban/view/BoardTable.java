@@ -69,7 +69,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
             try {
                 return boardImages[row][col];
             } catch (Exception e) {
-                //JOptionPane.showMessageDialog(null, e.toString());
+                JOptionPane.showMessageDialog(null, e.toString());
                 return null;
             }
         }

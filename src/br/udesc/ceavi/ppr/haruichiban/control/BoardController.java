@@ -41,7 +41,7 @@ public class BoardController implements IBoardController {
      * {@inheritdoc}
      */
     @Override
-    public void renderBoard() {
+    public synchronized void renderBoard() {
         observers.forEach(observer -> {
             for (int row = 0; row < tabuleiro.length; row++) {
                 for (int column = 0; column < tabuleiro[row].length; column++) {
@@ -92,9 +92,9 @@ public class BoardController implements IBoardController {
     public void eventoDeSelecao(Point newSelection) {
         if (boardMovement != null) {
             boardMovement.addPoint(newSelection);
-        }
         if (boardMovement.isReady()) {
-            boardMovement.execute();
+                boardMovement.execute();
+            }
         }
     }
 
@@ -105,7 +105,7 @@ public class BoardController implements IBoardController {
      * @return
      */
     @Override
-    public boolean validaPontuacao() {
+    public synchronized boolean validaPontuacao() {
         int pontuacaoPrimeiroPontuador = 0;
         int pontuacaoSegundoPontuador = 0;
         ModelPlayer primeiroPontuador = null;

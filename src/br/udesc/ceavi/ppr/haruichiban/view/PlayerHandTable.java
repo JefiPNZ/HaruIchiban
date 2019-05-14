@@ -112,7 +112,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      */
     protected void executeTableSelectionChange(Point newSelection) {
         if (!this.columnModel.getSelectionModel().isSelectionEmpty()) {
-            controller.choseFlowerDeckEnd(getSelectedColumn());
+            controller.chooseFlowerDeckEnd(getSelectedColumn());
             this.getColumnModel().getSelectionModel().clearSelection();
         }
     }

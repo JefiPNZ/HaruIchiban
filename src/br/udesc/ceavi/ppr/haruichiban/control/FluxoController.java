@@ -1,7 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
+import br.udesc.ceavi.ppr.haruichiban.command.DefineTitleCommand;
+import br.udesc.ceavi.ppr.haruichiban.command.DifineTitleEmpateCommand;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,38 +76,18 @@ public class FluxoController implements IFluxoController {
         this.notificaMudancaEstado("Definição de títulos:");
 
         if (bottomPlayer.getFlower().getValor() > topPlayer.getFlower().getValor()) {
-            try {
-                bottomPlayer.becomeSeniorGardener();
-                topPlayer.becomeJuniorGardener();
-
-                jardineiro.put(JARDINEIROSENIOR, bottomPlayer);
-                jardineiro.put(JARDINEIROJUNIOR, topPlayer);
-                defineTitlesEnd();
-            } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
-                ex.printStackTrace();
-                System.exit(0);
-            }
+            controlGame.executeCommand(
+                    new DefineTitleCommand(jardineiro, topPlayer, bottomPlayer));
+            defineTitlesEnd();
 
         } else if (bottomPlayer.getFlower().getValor() < topPlayer.getFlower().getValor()) {
-            try {
-                topPlayer.becomeSeniorGardener();
-                bottomPlayer.becomeJuniorGardener();
-
-                jardineiro.put(JARDINEIROSENIOR, topPlayer);
-                jardineiro.put(JARDINEIROJUNIOR, bottomPlayer);
-
-                defineTitlesEnd();
-            } catch (PlayNaoPodeSeTornarSeniorException | PlayNaoPodeSeTornarJuniorException ex) {
-                ex.printStackTrace();
-                System.exit(0);
-            }
+            controlGame.executeCommand(
+                    new DefineTitleCommand(jardineiro, bottomPlayer, topPlayer));
+            defineTitlesEnd();
 
         } else if (bottomPlayer.getFlower().getValor() == topPlayer.getFlower().getValor()) {
-            bottomPlayer.devolverFlorAoDeck();
-            topPlayer.devolverFlorAoDeck();
-            this.notificaMudancaEstado("Flores Com Mesmos Valores");
-            this.notificaMudancaEstado("Voltando Flores Para Seus Respetivos Deck");
-            startGame();
+            controlGame.executeCommand(
+                    new DifineTitleEmpateCommand(topPlayer, bottomPlayer, this));
             return;
         }
     }
@@ -146,6 +126,7 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void newDarkLeaf() {
+        System.out.println("Chamado");
         if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.NEW_DARK_LEAF
                 && jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.NEW_DARK_LEAF) {
             this.notificaMudancaEstado("Escolher Nova Folha Escura");
@@ -163,8 +144,11 @@ public class FluxoController implements IFluxoController {
     @Override
     public void getPlayerPoints() {
         this.notificaMudancaEstado("Verificando Pontuação");
+        System.out.println("Pontos Inicio De Calculo");
 
-        controllerBoard.validaPontuacao();
+//        controllerBoard.validaPontuacao();
+
+        System.out.println("Pontos Fim  De Calculo");
         getPlayerPointsEnd();
     }
 

@@ -31,7 +31,7 @@ public class ScorePanel extends JPanel{
         try {
             this.scoreImg = ImageIO.read(new File(Images.PONTUACAO_FUNDO));
         } catch (IOException ex) {
-            //JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
         }
         this.setOpaque(false);
         this.setBackground(new Color(0, 0, 0, 0));
