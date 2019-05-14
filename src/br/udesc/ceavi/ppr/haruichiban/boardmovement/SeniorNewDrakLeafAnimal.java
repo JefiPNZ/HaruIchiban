@@ -100,6 +100,7 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
         player.setFase(Fase.MOVE_ANIMAL);
         boardController.initBoardMovement(this);
         gameController.notificaMudancaEstado("Mover Animal");
+        player.notifySimples("");
     }
 
 }

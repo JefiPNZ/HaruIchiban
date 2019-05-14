@@ -218,7 +218,9 @@ public class BoardController implements IBoardController {
         int count = 0;
         ModelBoardTile atual = tabuleiro[row][column];
         while (atual != null && isPosicaoValida(column + deltaX, row + deltaY)) {
-            atual = tabuleiro[row + deltaY][column + deltaX];
+            row += deltaY;
+            column += deltaX;
+            atual = tabuleiro[row][column];
             if (tilePertenceJogador(atual, origem)) {
                 count++;
             } else {

@@ -39,6 +39,7 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
     private PlayerHandTable playerHand;
     private int rotation;
     private String estado;
+    private String notificacao;
 
     /**
      * Cria um novo painel para o jogador com a cor desejada.
@@ -53,6 +54,7 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
     public PlayerPanel(Color color, IPlayerController controller) {
         super();
         this.estado = "";
+        this.notificacao = "";
         this.controller = controller;
         this.controller.addObserver(this);
         ColorScale scale = new ColorScale(color);
@@ -108,6 +110,7 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
         this.drawPlayer(g);
         this.drawPile(g);
         this.drawState(g);
+        this.drawNotify(g);
     }
 
     /**
@@ -172,6 +175,21 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
     }
 
     /**
+     * Desenha o estado da última notificação do jogador no painel.
+     *
+     * @param g
+     */
+    private void drawNotify(Graphics g) {
+        if (!this.notificacao.isEmpty()) {
+            g.setColor(Color.WHITE);
+            Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
+            g.setFont(fonte);
+            FontMetrics metrics = g.getFontMetrics(fonte);
+            g.drawString(this.notificacao, (this.getWidth() - metrics.stringWidth(this.notificacao)) / 2, this.getHeight() - 15);
+        }
+    }
+
+    /**
      * Define a rotação da imagem do jogador.
      *
      * @param rotation
@@ -219,8 +237,9 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
     }
 
     @Override
-    public void notifySimpleMessager(String messagem) {
-        JOptionPane.showMessageDialog(this, messagem);
+    public void notifySimpleMessager(String mensagem) {
+        this.notificacao = mensagem;
+        this.repaint();
     }
 
 }

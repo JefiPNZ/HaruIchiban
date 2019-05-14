@@ -49,6 +49,7 @@ public class JuniorFlowerBoard implements BoardMovement {
         
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
+        player.notifySimples("");
     }
 
     @Override

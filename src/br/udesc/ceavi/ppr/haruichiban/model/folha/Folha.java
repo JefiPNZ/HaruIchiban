@@ -14,12 +14,22 @@ import java.awt.Color;
 public abstract class Folha extends PecaTabuleiro {
 
     protected boolean isShowDarkSide;
+    protected boolean sempreEscura;
     protected PecaTabuleiro peca;
     protected Filhote filhote;
 
     public Folha(float rotacao) {
         super(rotacao, null);
+        this.sempreEscura = false;
         this.isShowDarkSide = false;
+    }
+
+    public boolean isSempreEscura() {
+        return sempreEscura;
+    }
+
+    public void setSempreEscura(boolean sempreEscura) {
+        this.sempreEscura = sempreEscura;
     }
 
     /**
@@ -28,7 +38,7 @@ public abstract class Folha extends PecaTabuleiro {
      * @return true esta mostrando,false se não esta mostrando
      */
     public boolean isEscura() {
-        return isShowDarkSide;
+        return this.sempreEscura || isShowDarkSide;
     }
 
     /**

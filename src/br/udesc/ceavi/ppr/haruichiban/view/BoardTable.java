@@ -179,7 +179,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        if (!this.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
+        if (!this.getSelectionModel().isSelectionEmpty() && !this.columnModel.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
             this.getColumnModel().getSelectionModel().clearSelection();
             controller.eventoDeSelecao(newSelection);
         }

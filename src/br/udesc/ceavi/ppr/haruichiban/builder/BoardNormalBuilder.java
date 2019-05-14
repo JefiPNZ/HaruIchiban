@@ -20,7 +20,7 @@ public class BoardNormalBuilder extends BoardBuilder {
     private static final boolean[][] TABULEIRO = {
         {true, false, true, false, true},
         {false, true, true, true, false},
-        {true, true, false, true, true},
+        {true, true, true, true, true},
         {false, true, true, true, false},
         {true, false, true, false, true}
     };
@@ -47,6 +47,7 @@ public class BoardNormalBuilder extends BoardBuilder {
                     Point pos = new Point(column, row);
                     if (POSICAO_FOLHA_PRETA.equals(pos)) {
                         folha.virarFolha();
+                        folha.setSempreEscura(true);
                     }
                     if (POSICAO_ANIMAL_TOPO.equals(pos)) {
                         folha.colocarFilhoteNaFolha(gcInstance.getFactoryPecas().createFilhote(gcInstance.getTopPlayer().getColor()));

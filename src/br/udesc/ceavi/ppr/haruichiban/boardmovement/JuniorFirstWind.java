@@ -84,6 +84,7 @@ public class JuniorFirstWind implements BoardMovement {
 //        } else {
 //            destino = null;
 //        }
+        player.notifySimples("");
     }
 
     @Override

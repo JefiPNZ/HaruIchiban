@@ -50,6 +50,7 @@ public class BoardGigaBuilder extends BoardBuilder {
                     Point pos = new Point(column, row);
                     if (POSICAO_FOLHA_PRETA.equals(pos)) {
                         folha.virarFolha();
+                        folha.setSempreEscura(true);
                     }
                     if (POSICAO_ANIMAL_TOPO.equals(pos)) {
                         folha.colocarFilhoteNaFolha(gcInstance.getFactoryPecas().createFilhote(gcInstance.getTopPlayer().getColor()));

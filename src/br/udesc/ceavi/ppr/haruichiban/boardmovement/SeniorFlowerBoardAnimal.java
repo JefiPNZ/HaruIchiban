@@ -79,6 +79,7 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
         boardController.removeBoardMovement();
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
+        player.notifySimples("");
     }
 
     @Override

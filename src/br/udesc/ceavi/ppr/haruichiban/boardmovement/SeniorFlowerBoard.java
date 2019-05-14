@@ -81,6 +81,7 @@ public class SeniorFlowerBoard implements BoardMovement {
 
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
+        player.notifySimples("");
     }
 
     @Override

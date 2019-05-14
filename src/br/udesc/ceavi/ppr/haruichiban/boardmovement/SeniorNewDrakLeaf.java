@@ -77,6 +77,7 @@ public class SeniorNewDrakLeaf implements BoardMovement {
         boardController.removeBoardMovement();
         player.setFase(fluxoController.newDarkLeafEnd());
         fluxoController.newDarkLeaf();
+        player.notifySimples("");
     }
     
     @Override

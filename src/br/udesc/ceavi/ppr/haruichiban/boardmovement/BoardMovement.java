@@ -14,7 +14,7 @@ public interface BoardMovement {
 
     public boolean isReady();
 
-    public  void execute();
+    public void execute();
 
     public boolean tableInteraction();
 

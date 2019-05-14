@@ -147,10 +147,13 @@ public class FluxoController implements IFluxoController {
         this.notificaMudancaEstado("Verificando Pontuação");
         System.out.println("Pontos Inicio De Calculo");
 
-//        controllerBoard.validaPontuacao();
-
-        System.out.println("Pontos Fim  De Calculo");
-        getPlayerPointsEnd();
+        if(controllerBoard.validaPontuacao()){
+            // Valida terminou rodada
+        }
+        else {
+            System.out.println("Pontos Fim  De Calculo");
+            getPlayerPointsEnd();
+        }
     }
 
     @Override
