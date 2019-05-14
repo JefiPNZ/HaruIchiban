@@ -7,13 +7,12 @@ import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasPrimavera;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardGigaBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardNormalBuilder;
-import br.udesc.ceavi.ppr.haruichiban.view.MenuPanel;
+import br.udesc.ceavi.ppr.haruichiban.command.Command;
+import br.udesc.ceavi.ppr.haruichiban.command.CommandInvoker;
 import java.awt.Color;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.SwingUtilities;
 
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
@@ -61,6 +60,7 @@ public class GameController {
 
     private IFluxoController controlDeFluxo;
 
+    private CommandInvoker commandInvoker;
     /**
      * Classe para criação da instância do Singleton.
      */
@@ -120,6 +120,7 @@ public class GameController {
         topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
         bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.controllerBoard = new BoardController();
+        this.commandInvoker = new CommandInvoker();
         this.controlDeFluxo = new FluxoController(this);
     }
 
@@ -195,4 +196,7 @@ public class GameController {
         this.gameStateObserver.remove(obs);
     }
 
+    public void executeCommand(Command command){
+        this.commandInvoker.executeCommand(command);
+    }
 }
