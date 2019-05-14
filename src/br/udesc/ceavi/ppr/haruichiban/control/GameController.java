@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecas;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasInverno;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasPrimavera;
@@ -58,7 +59,7 @@ public class GameController {
 
     private BoardController controllerBoard;
 
-    private IControleDeFluxo controlDeFluxo;
+    private IFluxoController controlDeFluxo;
 
     /**
      * Classe para criação da instância do Singleton.
@@ -119,7 +120,7 @@ public class GameController {
         topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
         bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.controllerBoard = new BoardController();
-        this.controlDeFluxo = new ControleDeFluxoDeJogo(this);
+        this.controlDeFluxo = new FluxoController(this);
     }
 
     /**
@@ -168,7 +169,7 @@ public class GameController {
         return builderTabuleiro;
     }
 
-    public IBoardController getBoardeController() {
+    public IBoardController getBoardController() {
         return controllerBoard;
     }
 
@@ -176,7 +177,7 @@ public class GameController {
         controlDeFluxo.startGame();
     }
 
-    public IControleDeFluxo getControlDeFluxo() {
+    public IFluxoController getFluxoController() {
         return controlDeFluxo;
     }
     

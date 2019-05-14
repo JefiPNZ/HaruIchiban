@@ -1,5 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.BoardMovement;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import java.awt.Point;
 
@@ -26,15 +28,22 @@ public interface IBoardController {
 
     public int getLarguraTabuleiro();
 
-    public ModelBoardTile getFolhaEscura();
+    public Point getFolhaEscura();
 
-    public ModelBoardTile getModelBoardTile(Point point);
+    public void setFolhaEscura(Point newFolhaEscura);
 
     public void eventoDeSelecao(Point newSelection);
 
-    public void setControlPlayOuvinte(PlayerController ouvindo);
+    public void removeBoardMovement();
 
-    public boolean hasPlayOuvindo();
+    public ModelBoardTile getBoardTile(Point localLerf);
 
-    public void moveTo(Point origem, Point destino);
+    public void initBoardMovement(BoardMovement juniorFlowerBoard);
+
+    public boolean isPosicaoValida(int x, int y);
+
+    public ModelBoardTile[][] getTabuleiro();
+
+    public boolean validaPontuacao();
+
 }

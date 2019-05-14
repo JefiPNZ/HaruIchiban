@@ -9,11 +9,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
-import br.udesc.ceavi.ppr.haruichiban.control.PlayerPanelObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionListener;
 
 /**
@@ -44,12 +43,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
 
         @Override
         public Object getValueAt(int row, int col) {
-            try {
-                return parentPanel.getFlowerImg();
-            } catch (Exception e) {
-                //JOptionPane.showMessageDialog(null, e.toString());
-                return null;
-            }
+            return parentPanel.getFlowerImg();
         }
     }
 
@@ -67,10 +61,10 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
                     img = scale.convert(img);
                 }
                 this.setIcon(new ImageIcon(img));
-                if ((Integer) controller.getHand().get(column) == -1) {
-                    this.setText("");
-                } else {
+                if (table.isEnabled()) {
                     this.setText(controller.getHand().get(column).toString());
+                } else {
+                    this.setText("");
                 }
             }
             return this;
@@ -94,8 +88,8 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
             }
         };
     }
-    
-    private void initPropriedadesComponente(){
+
+    private void initPropriedadesComponente() {
         this.setModel(new PlayerHandTableModel());
         this.setDefaultRenderer(Object.class, new PlayerHandTableRenderer());
         this.setBackground(new Color(0, 0, 0, 0));
@@ -117,10 +111,9 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        if(!this.getSelectionModel().isSelectionEmpty()){
-            controller.selecionarFlor(getSelectedColumn());
+        if (!this.columnModel.getSelectionModel().isSelectionEmpty()) {
+            controller.choseFlowerDeckEnd(getSelectedColumn());
             this.getColumnModel().getSelectionModel().clearSelection();
-            this.setEnabled(false);
         }
     }
 
@@ -133,42 +126,38 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         if (size.getWidth() <= 0 || size.getHeight() <= 0) {
             return new Dimension(0, 0);
         }
-        size.width = size.width > 350 ? 350 : size.width;
-        size.height = size.width / this.getModel().getColumnCount();
-        this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());
+        size.width = size.width > 375 ? 375 : size.width;
+        this.setRowHeight((int) size.getHeight());
         return size;
     }
 
     @Override
-    public void repintarPlayerHandTable() {
+    public void notifyJogadorEscolhaUmaFlor() {
+        this.setEnabled(true);
         this.repaint();
-        this.parentPanel.repaint();
+        this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
     }
 
     @Override
-    public void notifyJogadorEscolhaUmaFlor() {
+    public void notifyJogadorEscolhaUmaFlorEnd() {
+        this.setEnabled(false);
+        this.repaint();
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
-        this.setEnabled(true);
     }
 
-    //Tratamento Visual >>>>
     @Override
     public void notifyYouAreJunior() {
-        this.parentPanel.getGraphics().drawString("Junior", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
     }
 
     @Override
     public void notifyYouAreSenior() {
-        this.parentPanel.getGraphics().drawString("Senior", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
     }
 
     @Override
     public void notifyYouAreSemTitulo() {
-        this.parentPanel.getGraphics().drawString("Sem Titulo", parentPanel.getHeight() / 2, parentPanel.getWidth() / 2);
     }
 
     @Override
-    public void notifyEscolhaUmaPosicaoNoTabuleiro() {
+    public void notifySimpleMessager(String messagem) {
     }
-    //Tratamento Visual <<<<<
 }

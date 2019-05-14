@@ -13,6 +13,7 @@ public class CommandInvoker {
 
     private List<Command> listaCommandNotExeuted;
     private List<Command> listaCommandExecutados;
+    private Command commandGuardado;
 
     public CommandInvoker() {
         listaCommandNotExeuted = new ArrayList<>();
@@ -34,6 +35,16 @@ public class CommandInvoker {
         }
         this.listaCommandExecutados.addAll(listaCommandNotExeuted);
         listaCommandNotExeuted.clear();
+    }
+
+    public void guardarCommand(Command guardar) {
+        this.commandGuardado = guardar;
+    }
+
+    public void executeCommandGuardado() {
+        commandGuardado.execute();
+        listaCommandExecutados.add(commandGuardado);
+        commandGuardado = null;
     }
 
 }

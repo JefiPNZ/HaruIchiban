@@ -1,4 +1,4 @@
-package br.udesc.ceavi.ppr.haruichiban.control;
+package br.udesc.ceavi.ppr.haruichiban.control.observers;
 
 /**
  *
@@ -8,9 +8,9 @@ package br.udesc.ceavi.ppr.haruichiban.control;
  */
 public interface PlayerPanelObserver {
 
-    public void repintarPlayerHandTable();
-
     public void notifyJogadorEscolhaUmaFlor();
+    
+    public void notifyJogadorEscolhaUmaFlorEnd();
 
     public void notifyYouAreJunior();
 
@@ -18,6 +18,6 @@ public interface PlayerPanelObserver {
 
     public void notifyYouAreSemTitulo();
 
-    public void notifyEscolhaUmaPosicaoNoTabuleiro();
+    public void notifySimpleMessager(String messagem);
 
 }

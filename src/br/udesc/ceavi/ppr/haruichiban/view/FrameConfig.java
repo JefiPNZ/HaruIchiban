@@ -14,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 
@@ -75,9 +76,14 @@ public class FrameConfig extends JFrame{
         content.add(this.corInferior, fullConstraints);
         JButton confirma = new JButton("Confirma");
         confirma.addActionListener((ActionEvent e) -> {
-            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-            origem.begin((String)variante.getSelectedItem(),(String) tamanho.getSelectedItem(), corSuperior.getColor(), corInferior.getColor());
+            if(corSuperior.getColor().equals(corInferior.getColor())){
+                JOptionPane.showMessageDialog(this, "Os jogadores não podem ter a mesma cor.");
+            }
+            else {
+                this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                origem.begin((String)variante.getSelectedItem(),(String) tamanho.getSelectedItem(), corSuperior.getColor(), corInferior.getColor());
+            }
         });
         content.add(confirma, fullConstraints);
         this.add(content);

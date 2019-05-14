@@ -5,11 +5,11 @@ import br.udesc.ceavi.ppr.haruichiban.model.animais.Pinguim;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.OvoPinguim;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.flores.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.model.FlorInverno;
+import br.udesc.ceavi.ppr.haruichiban.model.flores.FlorInverno;
 import java.awt.Color;
 
 /**

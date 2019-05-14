@@ -1,4 +1,4 @@
-package br.udesc.ceavi.ppr.haruichiban.control;
+package br.udesc.ceavi.ppr.haruichiban.control.observers;
 
 import java.awt.Color;
 

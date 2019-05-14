@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.BoardObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Graphics2D;
@@ -21,8 +21,6 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
@@ -32,7 +30,7 @@ import javax.swing.event.ListSelectionEvent;
  *
  * @author Jeferson Penz
  */
-public class BoardTable extends JTable implements BoardObserver, GameStateObserver{
+public class BoardTable extends JTable implements BoardObserver, GameStateObserver {
 
     private IBoardController controller;
     private BoardPanel parentPanel;
@@ -49,6 +47,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
     public void notifyDesativarTabela() {
         this.getSelectionModel().clearSelection();
         this.setEnabled(false);
+        GameController.getInstance().notificaMudancaEstado("Tabela Desativada");
     }
 
     /**
@@ -135,7 +134,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * @param parent
      */
     public BoardTable(BoardPanel parent) {
-        this.controller = GameController.getInstance().getBoardeController();
+        this.controller = GameController.getInstance().getBoardController();
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
@@ -147,7 +146,6 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         }
         this.initializeProperties();
         this.controller.renderBoard();
-        GameController.getInstance().startGame();
     }
 
     /**
@@ -183,11 +181,8 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      */
     protected void executeTableSelectionChange(Point newSelection) {
         if (!this.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
-            if (controller.hasPlayOuvindo()) {
-                JOptionPane.showMessageDialog(null, "Selecao: " + newSelection.x + ", " + newSelection.y);
-                this.getColumnModel().getSelectionModel().clearSelection();
-                controller.eventoDeSelecao(newSelection);
-            }
+            this.getColumnModel().getSelectionModel().clearSelection();
+            controller.eventoDeSelecao(newSelection);
         }
     }
 
@@ -215,16 +210,18 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         return size;
     }
 
+    @Override
     public void repaintTela() {
         this.repaint();
         this.parentPanel.repaint();
     }
-    
+
     @Override
     public void notificaMudancaEstado(String mensagem) {
         this.controller.renderBoard();
     }
 
     @Override
-    public void notificaFimJogo(String mensagem) {}
+    public void notificaFimJogo(String mensagem) {
+    }
 }
