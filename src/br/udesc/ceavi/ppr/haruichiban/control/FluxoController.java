@@ -5,7 +5,6 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorExcept
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -153,6 +152,7 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void getPlayerPoints() {
+        controllerBoard.validaPontuacao();
         getPlayerPointsEnd();
     }
 

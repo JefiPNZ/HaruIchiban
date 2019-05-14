@@ -90,7 +90,6 @@ public class BoardController implements IBoardController {
 
     @Override
     public void eventoDeSelecao(Point newSelection) {
-        System.out.println("Ponto Selecionado");
         if (boardMovement != null) {
             boardMovement.addPoint(newSelection);
         }
@@ -105,6 +104,7 @@ public class BoardController implements IBoardController {
      *
      * @return
      */
+    @Override
     public boolean validaPontuacao() {
         int pontuacaoPrimeiroPontuador = 0;
         int pontuacaoSegundoPontuador = 0;

@@ -44,4 +44,6 @@ public interface IBoardController {
 
     public ModelBoardTile[][] getTabuleiro();
 
+    public boolean validaPontuacao();
+
 }
