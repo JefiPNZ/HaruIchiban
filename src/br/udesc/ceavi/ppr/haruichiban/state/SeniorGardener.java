@@ -1,6 +1,5 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
-import br.udesc.ceavi.ppr.haruichiban.boardmovement.JuniorFlowerBoard;
 import br.udesc.ceavi.ppr.haruichiban.boardmovement.SeniorFlowerBoard;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;

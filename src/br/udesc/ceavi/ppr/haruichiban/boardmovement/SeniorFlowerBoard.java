@@ -31,15 +31,11 @@ public class SeniorFlowerBoard implements BoardMovement {
 
     @Override
     public boolean addPoint(Point positionBoard) {
-        GameController.getInstance().notificaMudancaEstado("Add Point");
         if (localLerf == null) {
-            GameController.getInstance().notificaMudancaEstado("localLerf == null");
 
             if (validandoPosicao(positionBoard)) {
-                GameController.getInstance().notificaMudancaEstado("validandoPosicao()");
                 return false;
             }
-            GameController.getInstance().notificaMudancaEstado("localLerf = positionBoard");
 
             localLerf = positionBoard;
             return true;
@@ -53,9 +49,18 @@ public class SeniorFlowerBoard implements BoardMovement {
             player.notifySimples("A Posicao Escolhida Não Tem Folha");
             return true;
         }
+        if (boardTile.getFolha().hasAnimal()) {
+            player.notifySimples("A Posicao Escolhida Tem Animal");
+            boardController.removeBoardMovement();
+            SeniorFlowerBoardAnimal juniorFlowerBoard
+                    = new SeniorFlowerBoardAnimal(player, boardController, fluxoController, positionBoard);
+            boardController.initBoardMovement(juniorFlowerBoard);
+            juniorFlowerBoard.executePutFlower();
+            
+            return true;
+        }
         if (boardTile.getFolha().hasPeca()) {
             player.notifySimples("A Posicao Escolhida Ja Tem Flor");
-            this.localLerf = null;
             return true;
         }
         return false;
@@ -72,7 +77,8 @@ public class SeniorFlowerBoard implements BoardMovement {
         boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
         boardController.renderBoard();
         boardController.removeBoardMovement();
-        player.setFase(fluxoController.chooseFlowerEnd());
+        player.setFase(fluxoController.putFlowerTableEnd());
+        fluxoController.putFlowerTable();
         GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
     }
 

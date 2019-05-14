@@ -92,7 +92,7 @@ public abstract class Folha extends PecaTabuleiro {
      *
      * @return retorna peca removida
      */
-    public PecaTabuleiro removerPecaDeNenufare() {
+    public PecaTabuleiro removerPecaDeFlor() {
         PecaTabuleiro pecaPegar = peca;
         peca = null;
         return pecaPegar;

@@ -1,10 +1,12 @@
 package br.udesc.ceavi.ppr.haruichiban.boardmovement;
 
+import br.udesc.ceavi.ppr.haruichiban.control.Fase;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
+import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
 import java.awt.Point;
 
 /**
@@ -16,6 +18,7 @@ import java.awt.Point;
 public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardMovement {
 
     private Point animalLocal;
+    private Animal animal;
 
     public SeniorFlowerBoardAnimal(IPlayerController player,
             IBoardController boardController, IFluxoController fluxoController, Point animalLocal) {
@@ -24,31 +27,41 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
         System.out.println(this.getClass().getSimpleName());
         GameController.getInstance().notificaMudancaEstado("Senior Escolha Qual Em "
                 + "Que Folha Quer Colocar Sua Flor");
+        super.localLerf = null;
     }
 
     @Override
     public boolean addPoint(Point positionBoard) {
-        if (localLerf == null) {
-            ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-            if (!boardTile.hasFolha()) {
-                player.notifySimples("A Posicao Escolhida Não Tem Folha");
+        if (animal != null && localLerf == null) {
+            if (validar(positionBoard)) {
                 return false;
             }
-            if (boardTile.getFolha().isEscura()) {
-                player.notifySimples("A Posicao Escolhida é Invalida Folha Escura");
-                this.localLerf = null;
-                return false;
-            }
-            if (boardTile.getFolha().hasAnimal()) {
-                player.notifySimples("A Posicao Escolhida Tem Outro Animal");
-                this.localLerf = null;
-                return false;
-            }
-            if (boardTile.getFolha().hasPeca()) {
-                player.notifySimples("A Posicao Escolhida Ja Tem Flor");
-                this.localLerf = null;
-                return false;
-            }
+            localLerf = positionBoard;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validar(Point positionBoard) {
+        ModelBoardTile boardTile = boardController.getBoardTile(positionBoard);
+        if (!boardTile.hasFolha()) {
+            player.notifySimples("A Posicao Escolhida Não Tem Folha");
+            return true;
+        }
+        if (boardTile.getFolha().isEscura()) {
+            player.notifySimples("A Posicao Escolhida é Invalida Folha Escura");
+            this.localLerf = null;
+            return true;
+        }
+        if (boardTile.getFolha().hasAnimal()) {
+            player.notifySimples("A Posicao Escolhida Tem Outro Animal");
+            this.localLerf = null;
+            return true;
+        }
+        if (boardTile.getFolha().hasPeca()) {
+            player.notifySimples("A Posicao Escolhida Ja Tem Flor");
+            this.localLerf = null;
+            return true;
         }
         return false;
     }
@@ -60,22 +73,33 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
 
     @Override
     public synchronized void execute() {
-        if (validarPoint()) {
-            ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        }
-    }
-
-    private boolean validarPoint() {
         ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        if (boardTile.getFolha().hasAnimal()) {
-            //Chamar sem quebrar o fluxo
-        }
-        return true;
+        boardTile.getFolha().colocarPecaNaFolha(animal);
+        boardController.removeBoardMovement();
+        boardController.renderBoard();
+        player.setFase(fluxoController.putFlowerTableEnd());
+        fluxoController.putFlowerTable();
     }
 
     @Override
     public boolean tableInteraction() {
         return true;
+    }
+
+    public void executePutFlower() {
+        ModelBoardTile boardTile = boardController.getBoardTile(animalLocal);
+
+        this.animal = (Animal) boardTile.getFolha().removerPecaDeFlor();
+        boardController.renderBoard();
+
+        boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
+        boardController.renderBoard();
+        player.setFase(Fase.MOVE_ANIMAL);
+        
+        boardController.initBoardMovement(this);
+        GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
+
+        GameController.getInstance().notificaMudancaEstado("Escolha Um Novo Local Para O Animal");
     }
 
 }
