@@ -243,13 +243,9 @@ public class BoardController implements IBoardController {
                 && ((Flor) tile.getFolha().getPeca()).getPlayerOrigem().equals(origem);
     }
 
-    private boolean isPosicaoValida(int x, int y) {
-        return !(y < 0 || y >= tabuleiro.length || x < 0 || x >= tabuleiro[0].length);
-    }
-
     @Override
-    public void removerBoardMovement() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean isPosicaoValida(int x, int y) {
+        return !(y < 0 || y >= tabuleiro.length || x < 0 || x >= tabuleiro[0].length);
     }
 
     @Override
@@ -277,6 +273,11 @@ public class BoardController implements IBoardController {
     public void removeBoardMovement() {
         observers.forEach(obs -> obs.notifyDesativarTabela());
         this.boardMovement = null;
+    }
+
+    @Override
+    public ModelBoardTile[][] getTabuleiro() {
+        return this.tabuleiro;
     }
 
 }

@@ -116,7 +116,6 @@ public class PlayerController implements IPlayerController {
     @Override
     public Flor removeFlower() {
         Flor flor = florEmJogo;
-        System.out.println("removerFlorEmJogo " + flor);
         florEmJogo = null;
         return flor;
     }
@@ -127,11 +126,13 @@ public class PlayerController implements IPlayerController {
     }
     
     @Override
-    public void chamarOPrimeiroVentoDaPrimaveira() {
+    public void fristWint() {
+        title.firstWind(this);
     }
     
     @Override
-    public void escolhaANovaFolhaEscura() {
+    public void newDarkLeaf() {
+        title.newDarkLeaf(this);
     }
     
     @Override

@@ -15,17 +15,17 @@ import java.awt.Point;
  * @since 13/05/2019
  *
  */
-public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardMovement {
+public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardMovement {
 
     private Point animalLocal;
     private Animal animal;
 
-    public SeniorFlowerBoardAnimal(IPlayerController player,
+    public SeniorNewDrakLeafAnimal(IPlayerController player,
             IBoardController boardController, IFluxoController fluxoController, Point animalLocal) {
         super(player, boardController, fluxoController);
         this.animalLocal = animalLocal;
-       
         super.localLerf = null;
+       
     }
 
     @Override
@@ -75,7 +75,7 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
         boardTile.getFolha().colocarPecaNaFolha(animal);
         boardController.removeBoardMovement();
         boardController.renderBoard();
-        player.setFase(fluxoController.putFlowerTableEnd());
+        player.setFase(fluxoController.newDarkLeafEnd());
         fluxoController.putFlowerTable();
     }
 
@@ -88,12 +88,9 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
         ModelBoardTile boardTile = boardController.getBoardTile(animalLocal);
 
         this.animal = (Animal) boardTile.getFolha().removerPecaDeFlor();
-        boardController.renderBoard();
-
-        boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
+        boardTile.getFolha().virarFolha();
         boardController.renderBoard();
         player.setFase(Fase.MOVE_ANIMAL);
-        
         boardController.initBoardMovement(this);
         GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
 

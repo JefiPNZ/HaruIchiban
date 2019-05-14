@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.JuniorFirstWind;
 import br.udesc.ceavi.ppr.haruichiban.boardmovement.JuniorFlowerBoard;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
@@ -40,16 +41,21 @@ public class JuniorGardener implements TitleOfGardener {
         JuniorFlowerBoard juniorFlowerBoard = new JuniorFlowerBoard(aThis, boardController, fluxoController);
         juniorFlowerBoard.addPoint(boardController.getFolhaEscura());
         juniorFlowerBoard.execute();
-        aThis.setFase(fluxoController.putFlowerTableEnd());
-        fluxoController.putFlowerTable();
     }
 
     @Override
     public void firstWind(IPlayerController aThis) {
+        IBoardController boardController = GameController.getInstance().getBoardController();
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+        JuniorFirstWind juniorFirstWind = new JuniorFirstWind(aThis, boardController, fluxoController);
+        boardController.initBoardMovement(juniorFirstWind);
     }
 
     @Override
     public void newDarkLeaf(IPlayerController aThis) {
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+        aThis.setFase(fluxoController.newDarkLeafEnd());
+        fluxoController.newDarkLeaf();
     }
 
 }

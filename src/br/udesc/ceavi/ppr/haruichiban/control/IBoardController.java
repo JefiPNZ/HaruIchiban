@@ -34,12 +34,14 @@ public interface IBoardController {
 
     public void eventoDeSelecao(Point newSelection);
 
-    public void removerBoardMovement();
+    public void removeBoardMovement();
 
     public ModelBoardTile getBoardTile(Point localLerf);
 
     public void initBoardMovement(BoardMovement juniorFlowerBoard);
 
-    public void removeBoardMovement();
+    public boolean isPosicaoValida(int x, int y);
+
+    public ModelBoardTile[][] getTabuleiro();
 
 }

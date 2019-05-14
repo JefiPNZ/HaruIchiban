@@ -5,6 +5,7 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorExcept
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -54,10 +55,6 @@ public class FluxoController implements IFluxoController {
         }
     }
 
-    private void chooseFlower(IPlayerController vez) {
-        vez.choseFlowerDeck();
-    }
-
     @Override
     public void chooseFlower() {
         if (bottomPlayer.getFase() == Fase.CHOISE_FLOWER_DECK) {
@@ -70,6 +67,10 @@ public class FluxoController implements IFluxoController {
             this.notificaMudancaEstado("Etapa de seleção de flores finalizada.");
             defineTitles();
         }
+    }
+
+    private void chooseFlower(IPlayerController vez) {
+        vez.choseFlowerDeck();
     }
 
     private void defineTitles() {
@@ -113,12 +114,12 @@ public class FluxoController implements IFluxoController {
     }
 
     private void defineTitlesEnd() {
+        this.notificaMudancaEstado("Coloquem As Flores No Tabuleiro");
         putFlowerTable();
     }
 
     @Override
     public void putFlowerTable() {
-        this.notificaMudancaEstado("Coloquem As Flores No Tabuleiro");
         if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.PUT_FLOWER_TABLE) {
             jardineiro.get(JARDINEIROJUNIOR).putFlowerTable();
         } else if (jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.PUT_FLOWER_TABLE) {
@@ -130,18 +131,29 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void firstWind() {
+        if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.FRIST_WINT) {
+            jardineiro.get(JARDINEIROJUNIOR).fristWint();
+        } else if (jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.FRIST_WINT) {
+            jardineiro.get(JARDINEIROSENIOR).fristWint();
+        } else {
+            newDarkLeaf();
+        }
     }
 
     @Override
     public void newDarkLeaf() {
+        if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.NEW_DARK_LEAF) {
+            jardineiro.get(JARDINEIROJUNIOR).newDarkLeaf();
+        } else if (jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.NEW_DARK_LEAF) {
+            jardineiro.get(JARDINEIROSENIOR).newDarkLeaf();
+        } else {
+            getPlayerPoints();
+        }
     }
 
     @Override
     public void getPlayerPoints() {
-    }
-
-    @Override
-    public void choseFlowerDeck() {
+        getPlayerPointsEnd();
     }
 
     @Override
@@ -179,6 +191,7 @@ public class FluxoController implements IFluxoController {
     public void getPlayerPointsEnd() {
         topPlayer.setFase(Fase.INICIO_TURNO);
         bottomPlayer.setFase(Fase.INICIO_TURNO);
+        startGame();
     }
 
     public void notificaMudancaEstado(String mensagem) {

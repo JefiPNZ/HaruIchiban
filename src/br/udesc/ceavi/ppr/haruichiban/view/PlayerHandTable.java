@@ -114,7 +114,6 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         if (!this.columnModel.getSelectionModel().isSelectionEmpty()) {
             controller.choseFlowerDeckEnd(getSelectedColumn());
             this.getColumnModel().getSelectionModel().clearSelection();
-            this.setEnabled(false);
         }
     }
 
@@ -134,16 +133,16 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
 
     @Override
     public void notifyJogadorEscolhaUmaFlor() {
+        this.setEnabled(true);
         this.repaint();
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
-        this.setEnabled(true);
     }
 
     @Override
     public void notifyJogadorEscolhaUmaFlorEnd() {
+        this.setEnabled(false);
         this.repaint();
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
-        this.setEnabled(false);
     }
 
     @Override

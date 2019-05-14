@@ -25,8 +25,6 @@ public class JuniorFlowerBoard implements BoardMovement {
         this.player = player;
         this.boardController = boardController;
         this.fluxoController = fluxoController;
-
-        System.out.println(this.getClass().getSimpleName());
     }
 
     @Override
@@ -45,7 +43,8 @@ public class JuniorFlowerBoard implements BoardMovement {
         ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
         boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
         boardController.renderBoard();
-        fluxoController.chooseFlowerEnd();
+        player.setFase(fluxoController.putFlowerTableEnd());
+        fluxoController.putFlowerTable();
         GameController.getInstance().notificaMudancaEstado("Flor Do Junior Colocada No Tabuleiro");
     }
 

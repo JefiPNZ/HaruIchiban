@@ -53,9 +53,9 @@ public interface IPlayerController {
 
     public void putFlowerTable();
 
-    public void chamarOPrimeiroVentoDaPrimaveira();
+    public void fristWint();
 
-    public void escolhaANovaFolhaEscura();
+    public void newDarkLeaf();
 
     public Flor getFlower();
 

@@ -20,8 +20,6 @@ public interface IFluxoController {
 
     public void getPlayerPoints();
 
-    public void choseFlowerDeck();
-
     /**
      * Retorna ao controller o estado da fase em que este se encontra
      *
