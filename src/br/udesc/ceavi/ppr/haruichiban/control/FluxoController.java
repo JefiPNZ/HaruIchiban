@@ -11,7 +11,7 @@ import java.awt.Point;
  * @since 12/05/2019
  *
  */
-public class ControleDeFluxoDeJogo implements IControleDeFluxo {
+public class FluxoController implements IFluxoController {
 
     private GameController controlGame;
     private IPlayerController bottomPlayer;
@@ -20,7 +20,7 @@ public class ControleDeFluxoDeJogo implements IControleDeFluxo {
 
     private EtapaGame etapa;
 
-    public ControleDeFluxoDeJogo(GameController controlGame) {
+    public FluxoController(GameController controlGame) {
         this.controlGame = controlGame;
         this.controllerBoard = controlGame.getBoardeController();
         this.bottomPlayer = controlGame.getBottomPlayer();
@@ -29,7 +29,6 @@ public class ControleDeFluxoDeJogo implements IControleDeFluxo {
         this.topPlayer.setControllerFluxo(this);
     }
 
-    @Override
     public EtapaGame getEtapa() {
         return etapa;
     }
@@ -64,7 +63,6 @@ public class ControleDeFluxoDeJogo implements IControleDeFluxo {
     /**
      * Metodo usado para controlar a selecao da flor
      */
-    @Override
     public void selecaoDeFlorFinalizada() {
         escoderOsValoresDasCartadasDosJogadores();
         //Verifica se um dos jogadores ainda tem que selecionar a flor do turno
@@ -147,7 +145,6 @@ public class ControleDeFluxoDeJogo implements IControleDeFluxo {
      *
      * Evento Tratado Pelo State
      */
-    @Override
     public void florColocadaNoTabuleiro() {
         this.controllerBoard.renderBoard();
         if (bottomPlayer.getFlorEmJogo() == null && topPlayer.getFlorEmJogo() == null) {
@@ -164,7 +161,6 @@ public class ControleDeFluxoDeJogo implements IControleDeFluxo {
      *
      * Evento Tratado Pelo State
      */
-    @Override
     public void escolherNovaFolhaEscura() {
         this.notificaMudancaEstado("Chamado o Primeiro Vento Da Primaveira.");
         etapa = EtapaGame.ESCOLHE_FOLHA_ESCURA;
@@ -194,5 +190,63 @@ public class ControleDeFluxoDeJogo implements IControleDeFluxo {
     public void notificaMudancaEstado(String mensagem) {
         GameController.getInstance().notificaMudancaEstado(mensagem);
     }
+
+    //Metodo de Chamada >>>>
+    private void chooseFlower() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void defineTitles() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void putFlowerTable() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void firstWind() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void newDarkLeaf() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void getPlayerPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    //Metodo de Chamada <<<
+
+    //Metodo de Finalizacao >>>
+    @Override
+    public void chooseFlowerEnd() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void defineTitlesEnd() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void putFlowerTableEnd() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void firstWindEnd() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void newDarkLeafEnd() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void getPlayerPointsEnd() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    //Metodo de Finalizacao <<<
 
 }

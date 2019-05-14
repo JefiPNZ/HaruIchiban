@@ -58,7 +58,7 @@ public class GameController {
 
     private BoardController controllerBoard;
 
-    private IControleDeFluxo controlDeFluxo;
+    private IFluxoController controlDeFluxo;
 
     /**
      * Classe para criação da instância do Singleton.
@@ -119,7 +119,7 @@ public class GameController {
         topPlayer = new PlayerController(corJogadorTopo, tamanhoDeck);
         bottomPlayer = new PlayerController(corJogadorBase, tamanhoDeck);
         this.controllerBoard = new BoardController();
-        this.controlDeFluxo = new ControleDeFluxoDeJogo(this);
+        this.controlDeFluxo = new FluxoController(this);
     }
 
     /**
@@ -176,7 +176,7 @@ public class GameController {
         controlDeFluxo.startGame();
     }
 
-    public IControleDeFluxo getControlDeFluxo() {
+    public IFluxoController getControlDeFluxo() {
         return controlDeFluxo;
     }
     

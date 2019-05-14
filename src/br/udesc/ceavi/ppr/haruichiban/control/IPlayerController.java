@@ -30,27 +30,29 @@ public interface IPlayerController {
     public void selecionarFlor(int x);
 
     public void addObserver(PlayerPanelObserver obs);
-    
-    public abstract void setControllerFluxo(IControleDeFluxo aThis);
-    
+
+    public abstract void setControllerFluxo(IFluxoController aThis);
+
     public abstract void requerirAoJogadorQueEsteEscolhaUmaFlor();
-    
+
     public abstract Flor getFlorEmJogo();
-    
+
     public abstract void hideHandValue();
-    
+
     public abstract void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException;
-    
+
     public abstract void becomeJuniorGardener() throws PlayNaoPodeSeTornarJuniorException;
-    
+
     public abstract void devolverFlorAoDeck();
-    
+
     public abstract void requerirQueOJogadorColoqueAFlorNoTabuleiro();
-    
+
     public abstract void chamarOPrimeiroVentoDaPrimaveira();
-    
+
     public abstract void escolhaANovaFolhaEscura();
-    
+
     public abstract TitleOfGardener getTitle();
+
+    public void notifySimples(String messagem);
 
 }

@@ -30,7 +30,7 @@ import javax.swing.event.ListSelectionEvent;
  *
  * @author Jeferson Penz
  */
-public class BoardTable extends JTable implements BoardObserver, GameStateObserver{
+public class BoardTable extends JTable implements BoardObserver, GameStateObserver {
 
     private IBoardController controller;
     private BoardPanel parentPanel;
@@ -180,11 +180,9 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      */
     protected void executeTableSelectionChange(Point newSelection) {
         if (!this.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
-            if (controller.hasPlayOuvindo()) {
-                JOptionPane.showMessageDialog(null, "Selecao: " + newSelection.x + ", " + newSelection.y);
-                this.getColumnModel().getSelectionModel().clearSelection();
-                controller.eventoDeSelecao(newSelection);
-            }
+            JOptionPane.showMessageDialog(null, "Selecao: " + newSelection.x + ", " + newSelection.y);
+            this.getColumnModel().getSelectionModel().clearSelection();
+            controller.eventoDeSelecao(newSelection);
         }
     }
 
@@ -217,12 +215,13 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         this.repaint();
         this.parentPanel.repaint();
     }
-    
+
     @Override
     public void notificaMudancaEstado(String mensagem) {
         this.controller.renderBoard();
     }
 
     @Override
-    public void notificaFimJogo(String mensagem) {}
+    public void notificaFimJogo(String mensagem) {
+    }
 }

@@ -1,7 +1,5 @@
 package br.udesc.ceavi.ppr.haruichiban.model.folha;
 
-import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
@@ -56,13 +54,14 @@ public abstract class Folha extends PecaTabuleiro {
      * CanNotChangeSideNenufareException quando o lado escuro ja esta sendo
      * mostardo
      *
-     * @throws CanNotChangeSideNenufareException
+     * @return
      */
-    public void virarFolha() throws CanNotChangeSideNenufareException {
+    public boolean virarFolha() {
         if (isShowDarkSide) {
-            throw new CanNotChangeSideNenufareException();
+            return false;
         }
         isShowDarkSide = true;
+        return true;
     }
 
     /**
@@ -71,20 +70,21 @@ public abstract class Folha extends PecaTabuleiro {
      * com outra peca
      *
      * @param peca
-     * @throws FolhaJaPossuiUmaPecaEmCimaException
      */
-    public void colocarPecaNaFolha(PecaTabuleiro peca) throws FolhaJaPossuiUmaPecaEmCimaException {
+    public boolean colocarPecaNaFolha(PecaTabuleiro peca) {
         if (hasPeca()) {
-            throw new FolhaJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
+            return false;
         }
         this.peca = peca;
+        return true;
     }
-    
-    public void colocarFilhoteNaFolha(Filhote filhote) throws FolhaJaPossuiUmaPecaEmCimaException {
+
+    public boolean colocarFilhoteNaFolha(Filhote filhote) {
         if (hasFilhote()) {
-            throw new FolhaJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
+            return false;
         }
         this.filhote = filhote;
+        return true;
     }
 
     /**

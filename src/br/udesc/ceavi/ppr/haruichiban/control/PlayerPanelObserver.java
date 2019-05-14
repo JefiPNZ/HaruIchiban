@@ -20,4 +20,6 @@ public interface PlayerPanelObserver {
 
     public void notifyEscolhaUmaPosicaoNoTabuleiro();
 
+    public void notifySimpleMessager(String messagem);
+
 }

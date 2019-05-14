@@ -15,13 +15,13 @@ import java.io.IOException;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.control.PlayerPanelObserver;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import javax.swing.JOptionPane;
 
 /**
  * Painel para representação dos dados de um jogador.
@@ -217,5 +217,10 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver{
 
     @Override
     public void notifyEscolhaUmaPosicaoNoTabuleiro() {}
+
+    @Override
+    public void notifySimpleMessager(String messagem) {
+        JOptionPane.showMessageDialog(this, messagem);
+    }
 
 }

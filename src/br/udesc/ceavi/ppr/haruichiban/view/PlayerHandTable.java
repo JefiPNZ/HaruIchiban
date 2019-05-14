@@ -13,7 +13,6 @@ import br.udesc.ceavi.ppr.haruichiban.control.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionListener;
 
 /**
@@ -94,8 +93,8 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
             }
         };
     }
-    
-    private void initPropriedadesComponente(){
+
+    private void initPropriedadesComponente() {
         this.setModel(new PlayerHandTableModel());
         this.setDefaultRenderer(Object.class, new PlayerHandTableRenderer());
         this.setBackground(new Color(0, 0, 0, 0));
@@ -117,7 +116,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        if(!this.columnModel.getSelectionModel().isSelectionEmpty()){
+        if (!this.columnModel.getSelectionModel().isSelectionEmpty()) {
             controller.selecionarFlor(getSelectedColumn());
             this.getColumnModel().getSelectionModel().clearSelection();
             this.setEnabled(false);
@@ -150,14 +149,22 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
     }
 
     @Override
-    public void notifyYouAreJunior() {}
+    public void notifyYouAreJunior() {
+    }
 
     @Override
-    public void notifyYouAreSenior() {}
+    public void notifyYouAreSenior() {
+    }
 
     @Override
-    public void notifyYouAreSemTitulo() {}
+    public void notifyYouAreSemTitulo() {
+    }
 
     @Override
-    public void notifyEscolhaUmaPosicaoNoTabuleiro() {}
+    public void notifyEscolhaUmaPosicaoNoTabuleiro() {
+    }
+
+    @Override
+    public void notifySimpleMessager(String messagem) {
+    }
 }

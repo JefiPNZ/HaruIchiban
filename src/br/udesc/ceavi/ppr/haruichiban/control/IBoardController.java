@@ -26,15 +26,14 @@ public interface IBoardController {
 
     public int getLarguraTabuleiro();
 
-    public ModelBoardTile getFolhaEscura();
+    public Point getFolhaEscura();
 
-    public ModelBoardTile getModelBoardTile(Point point);
+    public void setFolhaEscura(Point newFolhaEscura);
 
     public void eventoDeSelecao(Point newSelection);
 
-    public void setControlPlayOuvinte(PlayerController ouvindo);
+    public void removerBoardMovement();
 
-    public boolean hasPlayOuvindo();
+    public ModelBoardTile getBoardTile(Point localLerf);
 
-    public void moveTo(Point origem, Point destino);
 }
