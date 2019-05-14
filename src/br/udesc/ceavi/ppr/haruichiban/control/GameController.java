@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecas;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasInverno;
 import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasPrimavera;

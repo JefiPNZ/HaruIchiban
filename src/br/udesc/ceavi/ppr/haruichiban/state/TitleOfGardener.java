@@ -19,4 +19,9 @@ public interface TitleOfGardener {
 
     public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException;
 
+    public void putFlowerTable(PlayerController aThis);
+
+    public void firstWind(PlayerController aThis);
+
+    public void newDarkLeaf(PlayerController aThis);
 }

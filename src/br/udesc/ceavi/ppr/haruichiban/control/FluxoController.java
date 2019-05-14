@@ -18,7 +18,6 @@ public class FluxoController implements IFluxoController {
     private IPlayerController topPlayer;
     private IBoardController controllerBoard;
 
-    private EtapaGame etapa;
 
     public FluxoController(GameController controlGame) {
         this.controlGame = controlGame;
@@ -29,16 +28,12 @@ public class FluxoController implements IFluxoController {
         this.topPlayer.setControllerFluxo(this);
     }
 
-    public EtapaGame getEtapa() {
-        return etapa;
-    }
 
     /**
      * Escolhe Aleatoriamete o Jogador Para Dar Inicio Ao Turno
      */
     @Override
     public void startGame() {
-        etapa = EtapaGame.INICIAL;
         int vez = controlGame.getRandomizer().nextInt();
         if (vez % 2 == 0) {
             this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
@@ -56,7 +51,6 @@ public class FluxoController implements IFluxoController {
      * @param primeiro jogador que efetura a escolha da flor em primeiro lugar
      */
     private void inicioDeTurno(IPlayerController primeiro) {
-        etapa = EtapaGame.ESCOLHE_FLOR;
         primeiro.requerirAoJogadorQueEsteEscolhaUmaFlor();
     }
 
@@ -91,7 +85,6 @@ public class FluxoController implements IFluxoController {
      */
     private void definirTitulos() {
         this.notificaMudancaEstado("Definição de títulos:");
-        etapa = EtapaGame.DISTRIIBUICAO_DE_TITULOS;
         if (bottomPlayer.getFlorEmJogo().getValor() > topPlayer.getFlorEmJogo().getValor()) {
             try {
                 bottomPlayer.becomeSeniorGardener();
@@ -132,7 +125,6 @@ public class FluxoController implements IFluxoController {
      * Evento Tratado Pelo State
      */
     private void colocarFlorNoTabuleiro() {
-        etapa = EtapaGame.JOGAR_FLOR_NO_TABULEIRO;
         this.notificaMudancaEstado("Jogador senior, coloque sua flor no tabuleiro.");
         bottomPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
         topPlayer.requerirQueOJogadorColoqueAFlorNoTabuleiro();
@@ -149,7 +141,6 @@ public class FluxoController implements IFluxoController {
         this.controllerBoard.renderBoard();
         if (bottomPlayer.getFlorEmJogo() == null && topPlayer.getFlorEmJogo() == null) {
             this.notificaMudancaEstado("Flor colocada em tabuleiro.");
-            etapa = EtapaGame.CHAMAR_VENTO_DA_PRIMAVERA;
             this.notificaMudancaEstado("Jardineiro junior, chame o Primeiro Vento da Primaveira.");
             bottomPlayer.chamarOPrimeiroVentoDaPrimaveira();
             topPlayer.chamarOPrimeiroVentoDaPrimaveira();
@@ -163,7 +154,6 @@ public class FluxoController implements IFluxoController {
      */
     public void escolherNovaFolhaEscura() {
         this.notificaMudancaEstado("Chamado o Primeiro Vento Da Primaveira.");
-        etapa = EtapaGame.ESCOLHE_FOLHA_ESCURA;
         this.notificaMudancaEstado("Jardineiro Senior escolha a nova Folha Escura");
         bottomPlayer.escolhaANovaFolhaEscura();
         topPlayer.escolhaANovaFolhaEscura();

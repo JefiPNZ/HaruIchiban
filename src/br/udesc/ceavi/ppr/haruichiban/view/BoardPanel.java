@@ -1,7 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Point;

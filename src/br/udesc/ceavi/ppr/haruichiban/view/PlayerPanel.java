@@ -18,7 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
-import br.udesc.ceavi.ppr.haruichiban.control.PlayerPanelObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import javax.swing.JOptionPane;

@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import java.awt.Point;
 

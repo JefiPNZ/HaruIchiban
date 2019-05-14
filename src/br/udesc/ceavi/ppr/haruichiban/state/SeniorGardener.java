@@ -1,14 +1,8 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
-import br.udesc.ceavi.ppr.haruichiban.control.EtapaGame;
-import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
-import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
-import java.awt.Point;
 
 /**
  *
@@ -21,6 +15,7 @@ public class SeniorGardener implements TitleOfGardener {
     @Override
     public void becomeUntitledGardener(PlayerController aThis) {
         aThis.setTitle(new UntitledGardener());
+        aThis.notifySemTitulo();
     }
 
     @Override
@@ -31,6 +26,21 @@ public class SeniorGardener implements TitleOfGardener {
     @Override
     public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException {
         throw new PlayNaoPodeSeTornarSeniorException("Este usuario já é um Senior");
+    }
+
+    @Override
+    public void putFlowerTable(PlayerController aThis) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void firstWind(PlayerController aThis) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void newDarkLeaf(PlayerController aThis) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
