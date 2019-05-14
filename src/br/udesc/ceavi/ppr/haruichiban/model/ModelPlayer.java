@@ -42,7 +42,7 @@ public class ModelPlayer{
     }
 
     public void controlHand() {
-        while (listaMao.size() != 3) {
+        while (listaMao.size() < 3 && listaDeFlores.size() > 0) {
             listaMao.add(listaDeFlores.remove((int) (Math.random() * listaDeFlores.size())));
         }
     }
@@ -67,6 +67,7 @@ public class ModelPlayer{
 
     public void devolverFlor(Flor florEmJogo) {
         this.listaDeFlores.add(florEmJogo);
+        controlHand();
     }
 
     @Override

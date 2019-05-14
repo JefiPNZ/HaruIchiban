@@ -61,7 +61,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
                     img = scale.convert(img);
                 }
                 this.setIcon(new ImageIcon(img));
-                if (table.isEnabled()) {
+                if (table.isEnabled() && controller.getHand().size() > column) {
                     this.setText(controller.getHand().get(column).toString());
                 } else {
                     this.setText("");
@@ -134,6 +134,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
     @Override
     public void notifyJogadorEscolhaUmaFlor() {
         this.setEnabled(true);
+        ((AbstractTableModel) this.getModel()).fireTableStructureChanged();
         this.repaint();
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
     }
@@ -141,6 +142,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
     @Override
     public void notifyJogadorEscolhaUmaFlorEnd() {
         this.setEnabled(false);
+        ((AbstractTableModel) this.getModel()).fireTableStructureChanged();
         this.repaint();
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
     }

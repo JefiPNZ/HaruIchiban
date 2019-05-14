@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.swing.SwingUtilities;
 
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
@@ -183,8 +184,10 @@ public class GameController {
     }
     
     public void notificaMudancaEstado(String mensagem){
-        this.gameStateObserver.forEach((observer) -> {
-            observer.notificaMudancaEstado(mensagem);
+        SwingUtilities.invokeLater(() ->{
+            this.gameStateObserver.forEach((observer) -> {
+                observer.notificaMudancaEstado(mensagem);
+            });
         });
     }
     
