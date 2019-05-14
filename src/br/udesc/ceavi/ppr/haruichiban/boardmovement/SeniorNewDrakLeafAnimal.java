@@ -1,5 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.boardmovement;
 
+import br.udesc.ceavi.ppr.haruichiban.command.MoveAnimalCommand;
+import br.udesc.ceavi.ppr.haruichiban.command.NewDrakLeafCommand;
 import br.udesc.ceavi.ppr.haruichiban.control.Fase;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
@@ -25,7 +27,7 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
         super(player, boardController, fluxoController);
         this.animalLocal = animalLocal;
         super.localLerf = null;
-       
+
     }
 
     @Override
@@ -71,10 +73,13 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
 
     @Override
     public synchronized void execute() {
-        ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        boardTile.getFolha().colocarPecaNaFolha(animal);
+        GameController.getInstance().executeCommand(
+                new MoveAnimalCommand(
+                        animal,
+                        boardController.getBoardTile(localLerf),
+                        boardController));
+        
         boardController.removeBoardMovement();
-        boardController.renderBoard();
         player.setFase(fluxoController.newDarkLeafEnd());
         fluxoController.putFlowerTable();
     }
@@ -86,15 +91,13 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
 
     public void executePutFlower() {
         ModelBoardTile boardTile = boardController.getBoardTile(animalLocal);
-
         this.animal = (Animal) boardTile.getFolha().removerPecaDeFlor();
-        boardTile.getFolha().virarFolha();
-        boardController.renderBoard();
+
+        GameController.getInstance().executeCommand(
+                new NewDrakLeafCommand(boardController, animalLocal));
+
         player.setFase(Fase.MOVE_ANIMAL);
         boardController.initBoardMovement(this);
-        GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
-
-        GameController.getInstance().notificaMudancaEstado("Escolha Um Novo Local Para O Animal");
     }
 
 }

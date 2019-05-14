@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.boardmovement;
 
+import br.udesc.ceavi.ppr.haruichiban.command.NewDrakLeafCommand;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
@@ -14,34 +15,34 @@ import java.awt.Point;
  *
  */
 public class SeniorNewDrakLeaf implements BoardMovement {
-
+    
     protected IPlayerController player;
     protected IBoardController boardController;
     protected Point localLerf;
     protected IFluxoController fluxoController;
-
+    
     public SeniorNewDrakLeaf(IPlayerController player, IBoardController boardController, IFluxoController fluxoController) {
         this.player = player;
         this.boardController = boardController;
         this.fluxoController = fluxoController;
         GameController.getInstance().notificaMudancaEstado("Junior Escolha Qual Folha Deseja Vira a Fase");
-       
+        
     }
-
+    
     @Override
     public boolean addPoint(Point positionBoard) {
         if (localLerf == null) {
-
+            
             if (validandoPosicao(positionBoard)) {
                 return false;
             }
-
+            
             localLerf = positionBoard;
             return true;
         }
         return false;
     }
-
+    
     private boolean validandoPosicao(Point positionBoard) {
         ModelBoardTile boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
@@ -55,7 +56,7 @@ public class SeniorNewDrakLeaf implements BoardMovement {
                     = new SeniorNewDrakLeafAnimal(player, boardController, fluxoController, positionBoard);
             boardController.initBoardMovement(juniorFlowerBoard);
             juniorFlowerBoard.executePutFlower();
-
+            
             return true;
         }
         if (boardTile.getFolha().hasPeca()) {
@@ -64,25 +65,25 @@ public class SeniorNewDrakLeaf implements BoardMovement {
         }
         return false;
     }
-
+    
     @Override
     public boolean isReady() {
         return localLerf != null;
     }
-
+    
     @Override
     public synchronized void execute() {
-        boardController.getBoardTile(localLerf).getFolha().virarFolha();
-        boardController.setFolhaEscura(localLerf);
-        boardController.renderBoard();
+        GameController.getInstance().executeCommand(
+                new NewDrakLeafCommand(boardController, localLerf));
+        
         boardController.removeBoardMovement();
         player.setFase(fluxoController.newDarkLeafEnd());
         fluxoController.newDarkLeaf();
     }
-
+    
     @Override
     public boolean tableInteraction() {
         return true;
     }
-
+    
 }

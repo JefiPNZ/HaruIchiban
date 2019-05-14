@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.boardmovement;
 
+import br.udesc.ceavi.ppr.haruichiban.command.FlowerBoardCommand;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
@@ -25,7 +26,7 @@ public class SeniorFlowerBoard implements BoardMovement {
         this.boardController = boardController;
         this.fluxoController = fluxoController;
         this.localLerf = null;
-       
+
         GameController.getInstance().notificaMudancaEstado("Senior Escolha Qual Em Que Folha Quer Colocar Sua Flor");
     }
 
@@ -56,7 +57,7 @@ public class SeniorFlowerBoard implements BoardMovement {
                     = new SeniorFlowerBoardAnimal(player, boardController, fluxoController, positionBoard);
             boardController.initBoardMovement(juniorFlowerBoard);
             juniorFlowerBoard.executePutFlower();
-            
+
             return true;
         }
         if (boardTile.getFolha().hasPeca()) {
@@ -73,13 +74,16 @@ public class SeniorFlowerBoard implements BoardMovement {
 
     @Override
     public synchronized void execute() {
-        ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
-        boardController.renderBoard();
+        GameController.getInstance().executeCommand(
+                new FlowerBoardCommand(
+                        player.removeFlower(),
+                        boardController.getBoardTile(localLerf),
+                        boardController));
         boardController.removeBoardMovement();
-        GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
+
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
+        GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
     }
 
     @Override

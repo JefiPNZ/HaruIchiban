@@ -1,5 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.boardmovement;
 
+import br.udesc.ceavi.ppr.haruichiban.command.FlowerBoardCommand;
+import br.udesc.ceavi.ppr.haruichiban.command.MoveAnimalCommand;
 import br.udesc.ceavi.ppr.haruichiban.control.Fase;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
@@ -24,7 +26,7 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
             IBoardController boardController, IFluxoController fluxoController, Point animalLocal) {
         super(player, boardController, fluxoController);
         this.animalLocal = animalLocal;
-       
+
         super.localLerf = null;
     }
 
@@ -71,10 +73,10 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
 
     @Override
     public synchronized void execute() {
-        ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        boardTile.getFolha().colocarPecaNaFolha(animal);
+        GameController.getInstance().executeCommand(
+                new MoveAnimalCommand(animal, boardController.getBoardTile(localLerf), boardController));
+        
         boardController.removeBoardMovement();
-        boardController.renderBoard();
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
     }
@@ -90,13 +92,15 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
         this.animal = (Animal) boardTile.getFolha().removerPecaDeFlor();
         boardController.renderBoard();
 
-        boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
-        boardController.renderBoard();
+        GameController.getInstance().executeCommand(
+                new FlowerBoardCommand(
+                        player.removeFlower(),
+                        boardTile,
+                        boardController));
+
         player.setFase(Fase.MOVE_ANIMAL);
-        
         boardController.initBoardMovement(this);
         GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
-
         GameController.getInstance().notificaMudancaEstado("Escolha Um Novo Local Para O Animal");
     }
 

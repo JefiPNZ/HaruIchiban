@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.boardmovement;
 
+import br.udesc.ceavi.ppr.haruichiban.command.FlowerBoardCommand;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
@@ -40,9 +41,12 @@ public class JuniorFlowerBoard implements BoardMovement {
 
     @Override
     public synchronized void execute() {
-        ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
-        boardController.renderBoard();
+        GameController.getInstance().executeCommand(
+                new FlowerBoardCommand(
+                        player.removeFlower(),
+                        boardController.getBoardTile(localLerf),
+                        boardController));
+        
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
         GameController.getInstance().notificaMudancaEstado("Flor Do Junior Colocada No Tabuleiro");
