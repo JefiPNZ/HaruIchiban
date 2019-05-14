@@ -36,136 +36,146 @@ public class PlayerController implements IPlayerController {
      * Este guarda a flor do turno
      */
     private Flor florEmJogo;
-    
+
     private List<PlayerPanelObserver> observers = new ArrayList<>();
-    
+
     private IFluxoController controllerFluxo;
 
     /**
      *
      * @param cor identifica a cor das flores do jogador
+     * @param tamanhoDoDeck tamano do deck
      */
     public PlayerController(Color cor, int tamanhoDoDeck) {
         this.title = new UntitledGardener();
         this.play = new ModelPlayer(cor, tamanhoDoDeck);
-        hideHandValue();
     }
-    
+
+    @Override
     public void becomeUntitledGardener() throws PlayNaoPodeSeTornarUntitledGardenerException {
         title.becomeUntitledGardener(this);
     }
-    
+
+    @Override
     public void becomeJuniorGardener() throws PlayNaoPodeSeTornarJuniorException {
         title.becomeJuniorGardener(this);
     }
-    
+
+    @Override
     public void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException {
         title.becomeSeniorGardener(this);
     }
-    
+
+    @Override
     public void setTitle(TitleOfGardener title) {
         this.title = title;
     }
-    
+
     public void addPontos(int pontos) {
         play.addPontos(pontos);
     }
-    
+
     public ModelPlayer getPlay() {
         return play;
     }
-    
+
     @Override
     public int getPileSize() {
         return play.getListaDeFlores().size();
     }
-    
+
     @Override
     public synchronized List<Object> getHand() {
         return play.getListaMao().stream().map(flor -> flor.getValor()).collect(Collectors.toList());
     }
-    
+
     @Override
-    public void selecionarFlor(int x) {
+    public void choseFlowerDeckEnd(int x) {
         this.florEmJogo = play.getFlorFromHand(x);
-        observers.forEach(obs -> obs.repintarPlayerHand());
     }
-    
+
+    @Override
     public Flor getFlorEmJogo() {
         return florEmJogo;
     }
-    
+
     public Color getColor() {
         return play.getColor();
     }
-    
-    public synchronized void showHandValue() {
-        observers.forEach(obs -> obs.repintarPlayerHand());
-    }
-    
-    public synchronized void hideHandValue() {
-        observers.forEach(obs -> obs.repintarPlayerHand());
-    }
-    
-    public void requerirAoJogadorQueEsteEscolhaUmaFlor() {
-        showHandValue();
-        observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlor());
-    }
-    
-    @Override
-    public void addObserver(PlayerPanelObserver obs) {
-        this.observers.add(obs);
-    }
-    
+
     public Flor removerFlorEmJogo() {
         Flor flor = florEmJogo;
         System.out.println("removerFlorEmJogo " + flor);
         florEmJogo = null;
         return flor;
     }
-    
+
+    @Override
     public void requerirQueOJogadorColoqueAFlorNoTabuleiro() {
     }
-    
+
+    @Override
     public void chamarOPrimeiroVentoDaPrimaveira() {
     }
-    
+
+    @Override
     public void escolhaANovaFolhaEscura() {
     }
-    
+
+    @Override
     public TitleOfGardener getTitle() {
         return title;
     }
-    
+
+    @Override
     public void devolverFlorAoDeck() {
         play.devolverFlor(removerFlorEmJogo());
     }
-    
+
+    @Override
     public void setControllerFluxo(IFluxoController aThis) {
         this.controllerFluxo = aThis;
     }
-    
+
     public IFluxoController getControllerFluxo() {
         return controllerFluxo;
     }
-    
+
+    @Override
     public int getPlayerScore() {
         return this.play.getPoints();
     }
 
     //notify observers >>>
-    public void notifyYouAJunior() {
-        observers.forEach(obs -> obs.notifyYouAreJunior());
+    @Override
+    public void choseFlowerDeck() {
+        observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlor());
     }
-    
-    public void notifyYouASenior() {
-        observers.forEach(obs -> obs.notifyYouAreSenior());
+
+    private void choseFlowerDeckEnd() {
+        observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlorEnd());
     }
-    
+
+    @Override
+    public void addObserver(PlayerPanelObserver obs) {
+        this.observers.add(obs);
+    }
+
+    @Override
     public void notifySemTitulo() {
         observers.forEach(obs -> obs.notifyYouAreSemTitulo());
     }
-    
+
+    @Override
+    public void notifyYouAJunior() {
+        observers.forEach(obs -> obs.notifyYouAreJunior());
+    }
+
+    @Override
+    public void notifyYouASenior() {
+        observers.forEach(obs -> obs.notifyYouAreSenior());
+    }
+
     @Override
     public void notifySimples(String messagem) {
         observers.forEach(obs -> obs.notifySimpleMessager(messagem));

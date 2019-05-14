@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
  *
  * @author Jeferson Penz
  */
-public class PlayerPanel extends JPanel implements PlayerPanelObserver{
+public class PlayerPanel extends JPanel implements PlayerPanelObserver {
 
     private IPlayerController controller;
     private BufferedImage floorImg;
@@ -155,13 +155,14 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver{
                     null);
         }
     }
-    
+
     /**
      * Desenha o estado do jogador no painel.
-     * @param g 
+     *
+     * @param g
      */
-    private void drawState(Graphics g){
-        if(!this.estado.isEmpty()){
+    private void drawState(Graphics g) {
+        if (!this.estado.isEmpty()) {
             g.setColor(Color.WHITE);
             Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
             g.setFont(fonte);
@@ -208,15 +209,14 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver{
     }
 
     @Override
-    public void repintarPlayerHand() {
+    public void notifyJogadorEscolhaUmaFlor() {
         this.repaint();
     }
 
     @Override
-    public void notifyJogadorEscolhaUmaFlor() {}
-
-    @Override
-    public void notifyEscolhaUmaPosicaoNoTabuleiro() {}
+    public void notifyJogadorEscolhaUmaFlorEnd() {
+        this.repaint();
+    }
 
     @Override
     public void notifySimpleMessager(String messagem) {

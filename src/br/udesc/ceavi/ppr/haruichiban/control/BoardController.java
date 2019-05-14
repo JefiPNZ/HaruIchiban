@@ -3,14 +3,10 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BuilderDirector;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.PosicaoEmTabuleiroOcupadaException;
 import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
-import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -44,18 +40,23 @@ public class BoardController implements IBoardController {
      */
     @Override
     public void renderBoard() {
-        observers.stream().map((observer) -> {
+        observers.forEach(observer -> {
             for (int row = 0; row < tabuleiro.length; row++) {
                 for (int column = 0; column < tabuleiro[row].length; column++) {
+
+                    //Apaga
                     observer.clearTile(row, column);
-                    //Desenha a Nenufare
+
+                    //Desenha a Desenha Folha
                     if (tabuleiro[row][column].hasFolha()) {
                         Folha folha = tabuleiro[row][column].getFolha();
                         observer.drawImage(row, column, folha.getCor(), folha.getRotacao(), folha.getClass().getSimpleName());
+
                         //Verifica se esta tem filhotes 
                         if (folha.hasFilhote()) {
                             observer.drawImage(row, column, folha.getFilhote().getCor(), null, folha.getFilhote().getClass().getSimpleName());
                         }
+
                         //Verifica se essa tem uma peca
                         if (folha.hasPeca()) {
                             observer.drawImage(row, column, folha.getPeca().getCor(), folha.getPeca().getRotacao(), folha.getPeca().getClass().getSimpleName());
@@ -63,8 +64,6 @@ public class BoardController implements IBoardController {
                     }
                 }
             }
-            return observer;
-        }).forEachOrdered((observer) -> {
             observer.repaintTela();
         });
     }

@@ -51,31 +51,26 @@ public class FluxoController implements IFluxoController {
      * @param primeiro jogador que efetura a escolha da flor em primeiro lugar
      */
     private void inicioDeTurno(IPlayerController primeiro) {
-        primeiro.requerirAoJogadorQueEsteEscolhaUmaFlor();
+        primeiro.choseFlowerDeck();
     }
 
     /**
      * Metodo usado para controlar a selecao da flor
      */
     public void selecaoDeFlorFinalizada() {
-        escoderOsValoresDasCartadasDosJogadores();
         //Verifica se um dos jogadores ainda tem que selecionar a flor do turno
         if (bottomPlayer.getFlorEmJogo() == null) {
             this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
-            bottomPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
+            bottomPlayer.choseFlowerDeck();
         } else if (topPlayer.getFlorEmJogo() == null) {
             this.notificaMudancaEstado("Jogador superior escolha uma flor.");
-            topPlayer.requerirAoJogadorQueEsteEscolhaUmaFlor();
+            topPlayer.choseFlowerDeck();
         } else if (topPlayer.getFlorEmJogo() != null && bottomPlayer.getFlorEmJogo() != null) {
             this.notificaMudancaEstado("Etapa de seleção de flores finalizada.");
             definirTitulos();
         }
     }
 
-    private void escoderOsValoresDasCartadasDosJogadores() {
-        topPlayer.hideHandValue();
-        bottomPlayer.hideHandValue();
-    }
 
     /**
      * Apos as escolha de carta deve-se verificar qual jogador vai ter qual
@@ -147,14 +142,7 @@ public class FluxoController implements IFluxoController {
         }
     }
 
-    /**
-     * Apos o chamado da Primaveira deve escolher uma nova folha escura Evento
-     *
-     * Evento Tratado Pelo State
-     */
     public void escolherNovaFolhaEscura() {
-        this.notificaMudancaEstado("Chamado o Primeiro Vento Da Primaveira.");
-        this.notificaMudancaEstado("Jardineiro Senior escolha a nova Folha Escura");
         bottomPlayer.escolhaANovaFolhaEscura();
         topPlayer.escolhaANovaFolhaEscura();
     }

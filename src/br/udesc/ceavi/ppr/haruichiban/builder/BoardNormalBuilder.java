@@ -1,8 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.builder;
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.FolhaJaPossuiUmaPecaEmCimaException;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import java.awt.Point;

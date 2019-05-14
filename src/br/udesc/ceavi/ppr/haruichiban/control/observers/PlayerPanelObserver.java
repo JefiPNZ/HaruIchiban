@@ -8,17 +8,15 @@ package br.udesc.ceavi.ppr.haruichiban.control.observers;
  */
 public interface PlayerPanelObserver {
 
-    public void repintarPlayerHand();
-
     public void notifyJogadorEscolhaUmaFlor();
+    
+    public void notifyJogadorEscolhaUmaFlorEnd();
 
     public void notifyYouAreJunior();
 
     public void notifyYouAreSenior();
 
     public void notifyYouAreSemTitulo();
-
-    public void notifyEscolhaUmaPosicaoNoTabuleiro();
 
     public void notifySimpleMessager(String messagem);
 

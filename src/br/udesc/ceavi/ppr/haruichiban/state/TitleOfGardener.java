@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
-import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
+import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
@@ -13,15 +13,15 @@ import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGard
  */
 public interface TitleOfGardener {
 
-    public void becomeUntitledGardener(PlayerController aThis) throws PlayNaoPodeSeTornarUntitledGardenerException;
+    public void becomeUntitledGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarUntitledGardenerException;
 
-    public void becomeJuniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarJuniorException;
+    public void becomeJuniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarJuniorException;
 
-    public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException;
+    public void becomeSeniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarSeniorException;
 
-    public void putFlowerTable(PlayerController aThis);
+    public void putFlowerTable(IPlayerController aThis);
 
-    public void firstWind(PlayerController aThis);
+    public void firstWind(IPlayerController aThis);
 
-    public void newDarkLeaf(PlayerController aThis);
+    public void newDarkLeaf(IPlayerController aThis);
 }

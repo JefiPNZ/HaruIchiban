@@ -3,8 +3,10 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
+import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import br.udesc.ceavi.ppr.haruichiban.model.Flor;
 import br.udesc.ceavi.ppr.haruichiban.state.TitleOfGardener;
+import br.udesc.ceavi.ppr.haruichiban.state.UntitledGardener;
 import java.util.List;
 
 /**
@@ -28,32 +30,42 @@ public interface IPlayerController {
      */
     public List<Object> getHand();
 
-    public void selecionarFlor(int x);
+    public int getPlayerScore();
+
+    public void choseFlowerDeck();
+
+    public void devolverFlorAoDeck();
+
+    public void choseFlowerDeckEnd(int x);
 
     public void addObserver(PlayerPanelObserver obs);
 
-    public abstract void setControllerFluxo(IFluxoController aThis);
+    public void setControllerFluxo(IFluxoController aThis);
 
-    public abstract void requerirAoJogadorQueEsteEscolhaUmaFlor();
+    public void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException;
 
-    public abstract Flor getFlorEmJogo();
+    public void becomeJuniorGardener() throws PlayNaoPodeSeTornarJuniorException;
 
-    public abstract void hideHandValue();
+    public void becomeUntitledGardener() throws PlayNaoPodeSeTornarUntitledGardenerException;
 
-    public abstract void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException;
+    public void requerirQueOJogadorColoqueAFlorNoTabuleiro();
 
-    public abstract void becomeJuniorGardener() throws PlayNaoPodeSeTornarJuniorException;
+    public void chamarOPrimeiroVentoDaPrimaveira();
 
-    public abstract void devolverFlorAoDeck();
+    public void escolhaANovaFolhaEscura();
 
-    public abstract void requerirQueOJogadorColoqueAFlorNoTabuleiro();
+    public Flor getFlorEmJogo();
 
-    public abstract void chamarOPrimeiroVentoDaPrimaveira();
-
-    public abstract void escolhaANovaFolhaEscura();
-
-    public abstract TitleOfGardener getTitle();
+    public TitleOfGardener getTitle();
 
     public void notifySimples(String messagem);
+
+    public void setTitle(TitleOfGardener untitledGardener);
+
+    public void notifySemTitulo();
+
+    public void notifyYouAJunior();
+
+    public void notifyYouASenior();
 
 }

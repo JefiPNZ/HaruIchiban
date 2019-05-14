@@ -43,12 +43,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
 
         @Override
         public Object getValueAt(int row, int col) {
-            try {
-                return parentPanel.getFlowerImg();
-            } catch (Exception e) {
-//                JOptionPane.showMessageDialog(null, e.toString());
-                return null;
-            }
+            return parentPanel.getFlowerImg();
         }
     }
 
@@ -117,7 +112,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      */
     protected void executeTableSelectionChange(Point newSelection) {
         if (!this.columnModel.getSelectionModel().isSelectionEmpty()) {
-            controller.selecionarFlor(getSelectedColumn());
+            controller.choseFlowerDeckEnd(getSelectedColumn());
             this.getColumnModel().getSelectionModel().clearSelection();
             this.setEnabled(false);
         }
@@ -138,14 +133,17 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
     }
 
     @Override
-    public void repintarPlayerHand() {
+    public void notifyJogadorEscolhaUmaFlor() {
         this.repaint();
+        this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
+        this.setEnabled(true);
     }
 
     @Override
-    public void notifyJogadorEscolhaUmaFlor() {
+    public void notifyJogadorEscolhaUmaFlorEnd() {
+        this.repaint();
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
-        this.setEnabled(true);
+        this.setEnabled(false);
     }
 
     @Override
@@ -158,10 +156,6 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
 
     @Override
     public void notifyYouAreSemTitulo() {
-    }
-
-    @Override
-    public void notifyEscolhaUmaPosicaoNoTabuleiro() {
     }
 
     @Override
