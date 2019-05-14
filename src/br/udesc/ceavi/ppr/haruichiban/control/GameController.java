@@ -169,7 +169,7 @@ public class GameController {
         return builderTabuleiro;
     }
 
-    public IBoardController getBoardeController() {
+    public IBoardController getBoardController() {
         return controllerBoard;
     }
 
@@ -177,7 +177,7 @@ public class GameController {
         controlDeFluxo.startGame();
     }
 
-    public IFluxoController getControlDeFluxo() {
+    public IFluxoController getFluxoController() {
         return controlDeFluxo;
     }
     

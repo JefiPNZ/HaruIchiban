@@ -4,9 +4,8 @@ import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.flores.Flor;
 import br.udesc.ceavi.ppr.haruichiban.state.TitleOfGardener;
-import br.udesc.ceavi.ppr.haruichiban.state.UntitledGardener;
 import java.util.List;
 
 /**
@@ -32,6 +31,10 @@ public interface IPlayerController {
 
     public int getPlayerScore();
 
+    public void setFase(Fase fase);
+
+    public Fase getFase();
+
     public void choseFlowerDeck();
 
     public void devolverFlorAoDeck();
@@ -40,7 +43,7 @@ public interface IPlayerController {
 
     public void addObserver(PlayerPanelObserver obs);
 
-    public void setControllerFluxo(IFluxoController aThis);
+    public void setFluxoController(IFluxoController aThis);
 
     public void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException;
 
@@ -48,13 +51,13 @@ public interface IPlayerController {
 
     public void becomeUntitledGardener() throws PlayNaoPodeSeTornarUntitledGardenerException;
 
-    public void requerirQueOJogadorColoqueAFlorNoTabuleiro();
+    public void putFlowerTable();
 
     public void chamarOPrimeiroVentoDaPrimaveira();
 
     public void escolhaANovaFolhaEscura();
 
-    public Flor getFlorEmJogo();
+    public Flor getFlower();
 
     public TitleOfGardener getTitle();
 
@@ -67,5 +70,7 @@ public interface IPlayerController {
     public void notifyYouAJunior();
 
     public void notifyYouASenior();
+
+    public Flor removeFlower();
 
 }

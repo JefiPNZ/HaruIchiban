@@ -1,5 +1,9 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.JuniorFlowerBoard;
+import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
+import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
@@ -30,17 +34,22 @@ public class JuniorGardener implements TitleOfGardener {
 
     @Override
     public void putFlowerTable(IPlayerController aThis) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        IBoardController boardController = GameController.getInstance().getBoardController();
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+
+        JuniorFlowerBoard juniorFlowerBoard = new JuniorFlowerBoard(aThis, boardController, fluxoController);
+        juniorFlowerBoard.addPoint(boardController.getFolhaEscura());
+        juniorFlowerBoard.execute();
+        aThis.setFase(fluxoController.putFlowerTableEnd());
+        fluxoController.putFlowerTable();
     }
 
     @Override
     public void firstWind(IPlayerController aThis) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void newDarkLeaf(IPlayerController aThis) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

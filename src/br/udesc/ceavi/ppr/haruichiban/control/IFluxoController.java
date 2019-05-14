@@ -10,16 +10,44 @@ public interface IFluxoController {
 
     public void startGame();
 
-    public void chooseFlowerEnd();
+    public void chooseFlower();
 
-    public void defineTitlesEnd();
+    public void putFlowerTable();
 
-    public void putFlowerTableEnd();
+    public void firstWind();
 
-    public void firstWindEnd();
+    public void newDarkLeaf();
 
-    public void newDarkLeafEnd();
+    public void getPlayerPoints();
 
-    public void getPlayerPointsEnd();
+    public void choseFlowerDeck();
+
+    /**
+     * Retorna ao controller o estado da fase em que este se encontra
+     *
+     * @return Fase.PUT_FLOWER_TABLE
+     */
+    public Fase chooseFlowerEnd();
+
+    /**
+     * Retorna ao controller o estado da fase em que este se encontra
+     *
+     * @return Fase.FRIST_WINT
+     */
+    public Fase putFlowerTableEnd();
+
+    /**
+     * Retorna ao controller o estado da fase em que este se encontra
+     *
+     * @return NEW_DARK_LEAF
+     */
+    public Fase firstWindEnd();
+
+    /**
+     * Retorna ao controller o estado da fase em que este se encontra
+     *
+     * @return GET_PONTS
+     */
+    public Fase newDarkLeafEnd();
 
 }

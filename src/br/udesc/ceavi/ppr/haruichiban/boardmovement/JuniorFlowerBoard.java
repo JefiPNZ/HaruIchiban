@@ -20,7 +20,8 @@ public class JuniorFlowerBoard implements BoardMovement {
     private Point localLerf;
     private final IFluxoController fluxoController;
 
-    public JuniorFlowerBoard(IPlayerController player, IBoardController boardController, IFluxoController fluxoController) {
+    public JuniorFlowerBoard(IPlayerController player, IBoardController boardController,
+            IFluxoController fluxoController) {
         this.player = player;
         this.boardController = boardController;
         this.fluxoController = fluxoController;
@@ -30,12 +31,8 @@ public class JuniorFlowerBoard implements BoardMovement {
 
     @Override
     public boolean addPoint(Point positionBoard) {
-        if (localLerf == null) {
-            this.localLerf = positionBoard;
-            return true;
-            
-        }
-        return false;
+        this.localLerf = positionBoard;
+        return true;
     }
 
     @Override
@@ -46,8 +43,10 @@ public class JuniorFlowerBoard implements BoardMovement {
     @Override
     public synchronized void execute() {
         ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-//        GameController.getInstance().execucarCommand(
-//                new FlowerBoardCommand(boardController, boardTile.getFolha(), player.removerFlorTurno(), fluxoController));
+        boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
+        boardController.renderBoard();
+        fluxoController.chooseFlowerEnd();
+        GameController.getInstance().notificaMudancaEstado("Flor Do Junior Colocada No Tabuleiro");
     }
 
     @Override

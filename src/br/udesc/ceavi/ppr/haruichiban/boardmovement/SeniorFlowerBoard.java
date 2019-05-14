@@ -15,10 +15,10 @@ import java.awt.Point;
  */
 public class SeniorFlowerBoard implements BoardMovement {
 
-    private IPlayerController player;
-    private IBoardController boardController;
-    private Point localLerf;
-    private final IFluxoController fluxoController;
+    protected IPlayerController player;
+    protected IBoardController boardController;
+    protected Point localLerf;
+    protected final IFluxoController fluxoController;
 
     public SeniorFlowerBoard(IPlayerController player, IBoardController boardController, IFluxoController fluxoController) {
         this.player = player;
@@ -31,8 +31,31 @@ public class SeniorFlowerBoard implements BoardMovement {
 
     @Override
     public boolean addPoint(Point positionBoard) {
+        GameController.getInstance().notificaMudancaEstado("Add Point");
         if (localLerf == null) {
+            GameController.getInstance().notificaMudancaEstado("localLerf == null");
+
+            if (validandoPosicao(positionBoard)) {
+                GameController.getInstance().notificaMudancaEstado("validandoPosicao()");
+                return false;
+            }
+            GameController.getInstance().notificaMudancaEstado("localLerf = positionBoard");
+
             localLerf = positionBoard;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validandoPosicao(Point positionBoard) {
+        ModelBoardTile boardTile = boardController.getBoardTile(positionBoard);
+        if (!boardTile.hasFolha()) {
+            player.notifySimples("A Posicao Escolhida Não Tem Folha");
+            return true;
+        }
+        if (boardTile.getFolha().hasPeca()) {
+            player.notifySimples("A Posicao Escolhida Ja Tem Flor");
+            this.localLerf = null;
             return true;
         }
         return false;
@@ -45,27 +68,12 @@ public class SeniorFlowerBoard implements BoardMovement {
 
     @Override
     public synchronized void execute() {
-        if (validarPoint()) {
-            ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        }
-    }
-
-    private boolean validarPoint() {
         ModelBoardTile boardTile = boardController.getBoardTile(localLerf);
-        if (!boardTile.hasFolha()) {
-            player.notifySimples("A Posicao Escolhida Não Tem Folha");
-            this.localLerf = null;
-            return false;
-        }
-        if (boardTile.getFolha().hasAnimal()) {
-            //Chamar sem quebrar o fluxo
-        }
-        if (boardTile.getFolha().hasPeca()) {
-            player.notifySimples("A Posicao Escolhida Ja Tem Flor");
-            this.localLerf = null;
-            return false;
-        }
-        return true;
+        boardTile.getFolha().colocarPecaNaFolha(player.removeFlower());
+        boardController.renderBoard();
+        boardController.removeBoardMovement();
+        player.setFase(fluxoController.chooseFlowerEnd());
+        GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.BoardMovement;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import java.awt.Point;
@@ -36,5 +37,9 @@ public interface IBoardController {
     public void removerBoardMovement();
 
     public ModelBoardTile getBoardTile(Point localLerf);
+
+    public void initBoardMovement(BoardMovement juniorFlowerBoard);
+
+    public void removeBoardMovement();
 
 }

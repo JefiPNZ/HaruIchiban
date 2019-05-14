@@ -1,9 +1,10 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.BoardMovement;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BuilderDirector;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.flores.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
@@ -21,6 +22,7 @@ public class BoardController implements IBoardController {
     private List<BoardObserver> observers;
     private ModelBoardTile[][] tabuleiro;
     private Point folhaEscura;
+    private BoardMovement boardMovement;
 
     public BoardController() {
         this.observers = new ArrayList<>();
@@ -88,6 +90,13 @@ public class BoardController implements IBoardController {
 
     @Override
     public void eventoDeSelecao(Point newSelection) {
+        System.out.println("Ponto Selecionado");
+        if (boardMovement != null) {
+            boardMovement.addPoint(newSelection);
+        }
+        if (boardMovement.isReady()) {
+            boardMovement.execute();
+        }
     }
 
     /**
@@ -256,6 +265,18 @@ public class BoardController implements IBoardController {
     @Override
     public void setFolhaEscura(Point folhaEscura) {
         this.folhaEscura = folhaEscura;
+    }
+
+    @Override
+    public void initBoardMovement(BoardMovement boardMovement) {
+        this.boardMovement = boardMovement;
+        observers.forEach(obs -> obs.notifyAtivarTabela());
+    }
+
+    @Override
+    public void removeBoardMovement() {
+        observers.forEach(obs -> obs.notifyDesativarTabela());
+        this.boardMovement = null;
     }
 
 }

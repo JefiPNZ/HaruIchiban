@@ -41,12 +41,14 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
     public void notifyAtivarTabela() {
         this.getSelectionModel().clearSelection();
         this.setEnabled(true);
+        GameController.getInstance().notificaMudancaEstado("Tabela Ativa");
     }
 
     @Override
     public void notifyDesativarTabela() {
         this.getSelectionModel().clearSelection();
         this.setEnabled(false);
+        GameController.getInstance().notificaMudancaEstado("Tabela Desativada");
     }
 
     /**
@@ -133,7 +135,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * @param parent
      */
     public BoardTable(BoardPanel parent) {
-        this.controller = GameController.getInstance().getBoardeController();
+        this.controller = GameController.getInstance().getBoardController();
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
