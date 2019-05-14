@@ -25,8 +25,6 @@ public class JuniorFirstWind implements BoardMovement {
         this.player = player;
         this.boardController = boardController;
         this.fluxoController = fluxoController;
-
-        GameController.getInstance().notificaMudancaEstado("Junior Escolha Qual Folha Deseja Mover");
         this.tabuleiro = boardController.getTabuleiro();
     }
 
@@ -35,7 +33,6 @@ public class JuniorFirstWind implements BoardMovement {
         if (origim == null) {
             if (validacaoOrigem(positionBoard)) {
                 origim = positionBoard;
-                GameController.getInstance().notificaMudancaEstado("Para Onde Quer Move?");
                 return true;
             }
         } else if (destino == null) {
@@ -72,22 +69,21 @@ public class JuniorFirstWind implements BoardMovement {
 
     @Override
     public boolean isReady() {
-        return origim != null && destino != null;
+//        return origim != null && destino != null;
+        return true;
     }
 
     @Override
     public synchronized void execute() {
-        if (verificarValidadeMovimento()) {
-            realizarMovimento();
-            boardController.renderBoard();
+//        if (verificarValidadeMovimento()) {
+//            realizarMovimento();
+//            boardController.renderBoard();
             boardController.removeBoardMovement();
             player.setFase(fluxoController.firstWindEnd());
             fluxoController.firstWind();
-        } else {
-            destino = null;
-            GameController.getInstance().notificaMudancaEstado("Movimento Invalido");
-            GameController.getInstance().notificaMudancaEstado("Escolha Um Novo Local Para Onde Empurar A Folha");
-        }
+//        } else {
+//            destino = null;
+//        }
     }
 
     @Override

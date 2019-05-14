@@ -49,7 +49,6 @@ public class JuniorFlowerBoard implements BoardMovement {
         
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
-        GameController.getInstance().notificaMudancaEstado("Flor Do Junior Colocada No Tabuleiro");
     }
 
     @Override

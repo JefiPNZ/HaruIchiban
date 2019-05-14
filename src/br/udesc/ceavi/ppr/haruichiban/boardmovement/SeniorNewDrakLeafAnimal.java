@@ -91,13 +91,15 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
 
     public void executePutFlower() {
         ModelBoardTile boardTile = boardController.getBoardTile(animalLocal);
+        GameController gameController = GameController.getInstance();
+        
         this.animal = (Animal) boardTile.getFolha().removerPecaDeFlor();
-
-        GameController.getInstance().executeCommand(
+        gameController.executeCommand(
                 new NewDrakLeafCommand(boardController, animalLocal));
 
         player.setFase(Fase.MOVE_ANIMAL);
         boardController.initBoardMovement(this);
+        gameController.notificaMudancaEstado("Mover Animal");
     }
 
 }

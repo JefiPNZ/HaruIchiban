@@ -47,7 +47,6 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
     public void notifyDesativarTabela() {
         this.getSelectionModel().clearSelection();
         this.setEnabled(false);
-        GameController.getInstance().notificaMudancaEstado("Tabela Desativada");
     }
 
     /**

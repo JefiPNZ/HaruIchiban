@@ -26,8 +26,6 @@ public class SeniorFlowerBoard implements BoardMovement {
         this.boardController = boardController;
         this.fluxoController = fluxoController;
         this.localLerf = null;
-
-        GameController.getInstance().notificaMudancaEstado("Senior Escolha Qual Em Que Folha Quer Colocar Sua Flor");
     }
 
     @Override
@@ -83,7 +81,6 @@ public class SeniorFlowerBoard implements BoardMovement {
 
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
-        GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
     }
 
     @Override

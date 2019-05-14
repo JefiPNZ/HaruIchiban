@@ -130,6 +130,11 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void firstWind() {
+        if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.FRIST_WINT
+                && jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.FRIST_WINT) {
+            this.notificaMudancaEstado("Chamando Primeiro Vento Da Primavera");
+        }
+
         if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.FRIST_WINT) {
             jardineiro.get(JARDINEIROJUNIOR).fristWint();
         } else if (jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.FRIST_WINT) {
@@ -141,6 +146,11 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void newDarkLeaf() {
+        if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.NEW_DARK_LEAF
+                && jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.NEW_DARK_LEAF) {
+            this.notificaMudancaEstado("Escolher Nova Folha Escura");
+        }
+
         if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.NEW_DARK_LEAF) {
             jardineiro.get(JARDINEIROJUNIOR).newDarkLeaf();
         } else if (jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.NEW_DARK_LEAF) {
@@ -152,6 +162,8 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void getPlayerPoints() {
+        this.notificaMudancaEstado("Verificando Pontuação");
+
         controllerBoard.validaPontuacao();
         getPlayerPointsEnd();
     }

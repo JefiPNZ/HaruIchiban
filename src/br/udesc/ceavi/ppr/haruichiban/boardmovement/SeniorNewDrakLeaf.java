@@ -25,8 +25,6 @@ public class SeniorNewDrakLeaf implements BoardMovement {
         this.player = player;
         this.boardController = boardController;
         this.fluxoController = fluxoController;
-        GameController.getInstance().notificaMudancaEstado("Junior Escolha Qual Folha Deseja Vira a Fase");
-        
     }
     
     @Override

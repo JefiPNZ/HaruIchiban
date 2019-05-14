@@ -87,12 +87,13 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
     }
 
     public void executePutFlower() {
+        GameController gameController = GameController.getInstance();
         ModelBoardTile boardTile = boardController.getBoardTile(animalLocal);
 
         this.animal = (Animal) boardTile.getFolha().removerPecaDeFlor();
         boardController.renderBoard();
 
-        GameController.getInstance().executeCommand(
+        gameController.executeCommand(
                 new FlowerBoardCommand(
                         player.removeFlower(),
                         boardTile,
@@ -100,8 +101,7 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
 
         player.setFase(Fase.MOVE_ANIMAL);
         boardController.initBoardMovement(this);
-        GameController.getInstance().notificaMudancaEstado("Flor Do Senior Colocada No Tabuleiro");
-        GameController.getInstance().notificaMudancaEstado("Escolha Um Novo Local Para O Animal");
+        gameController.notificaMudancaEstado("Mover Animal");
     }
 
 }
