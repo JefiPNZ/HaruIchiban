@@ -298,9 +298,6 @@ public class BoardController implements IBoardController {
                 }
             }
         }
-        System.out.println(numeroDeFolha);
-        System.out.println(numeroDeFores);
-        System.out.println("numero de possicoes desocupadas " + (numeroDeFolha - numeroDeFores));
         if ((numeroDeFolha - numeroDeFores) <= 2) {
             for (int row = 0; row < tabuleiro.length; row++) {
                 for (int column = 0; column < tabuleiro[row].length; column++) {
