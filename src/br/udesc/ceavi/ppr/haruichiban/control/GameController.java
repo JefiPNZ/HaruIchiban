@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities;
 /**
  * Classe Principal para inicialização e controle do estado da Aplicação.
  *
- * @author Gustavo
+ * @author Jerfeson e Gustavo
  *
  * AVISO - NÃO USAR INSTANCEOF, COMPARAR USANDO GETCLASS() == .CLASS. - NÃO PODE
  * HAVER //JOptionPane NO CONTROLLER. - Quando adicionar um componente
