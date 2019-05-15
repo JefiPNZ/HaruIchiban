@@ -1,6 +1,5 @@
 package br.udesc.ceavi.ppr.haruichiban.boardmovement;
 
-import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
@@ -30,6 +29,9 @@ public class JuniorFirstWind implements BoardMovement {
 
     @Override
     public boolean addPoint(Point positionBoard) {
+        if (isReady()) {
+            execute();
+        }
         if (origim == null) {
             if (validacaoOrigem(positionBoard)) {
                 origim = positionBoard;
@@ -67,7 +69,6 @@ public class JuniorFirstWind implements BoardMovement {
         return true;
     }
 
-    @Override
     public boolean isReady() {
 //        return origim != null && destino != null;
         return true;
@@ -78,10 +79,10 @@ public class JuniorFirstWind implements BoardMovement {
 //        if (verificarValidadeMovimento()) {
 //            realizarMovimento();
 //            boardController.renderBoard();
-            boardController.removeBoardMovement();
-            player.setFase(fluxoController.firstWindEnd());
-            fluxoController.firstWind();
-            player.notifySimples("");
+        boardController.removeBoardMovement();
+        player.setFase(fluxoController.firstWindEnd());
+        fluxoController.firstWind();
+        player.notifySimples("");
 //        } else {
 //            destino = null;
 //        }

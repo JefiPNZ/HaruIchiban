@@ -36,6 +36,7 @@ public class SeniorNewDrakLeaf implements BoardMovement {
             }
 
             localLerf = positionBoard;
+            if(isReady()) execute();
             return true;
         }
         return false;
@@ -64,7 +65,6 @@ public class SeniorNewDrakLeaf implements BoardMovement {
         return false;
     }
 
-    @Override
     public boolean isReady() {
         return localLerf != null;
     }

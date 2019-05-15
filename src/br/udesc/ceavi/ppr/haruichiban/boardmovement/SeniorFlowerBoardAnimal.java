@@ -37,6 +37,7 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
                 return false;
             }
             localLerf = positionBoard;
+            if(isReady()) execute();
             return true;
         }
         return false;

@@ -7,7 +7,6 @@ import br.udesc.ceavi.ppr.haruichiban.builder.BuilderDirector;
 import br.udesc.ceavi.ppr.haruichiban.model.flores.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Point;
@@ -93,9 +92,6 @@ public class BoardController implements IBoardController {
     public void eventoDeSelecao(Point newSelection) {
         if (boardMovement != null) {
             boardMovement.addPoint(newSelection);
-            if (boardMovement.isReady()) {
-                boardMovement.execute();
-            }
         }
     }
 

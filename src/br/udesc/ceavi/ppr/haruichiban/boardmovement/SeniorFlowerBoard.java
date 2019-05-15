@@ -37,6 +37,7 @@ public class SeniorFlowerBoard implements BoardMovement {
             }
 
             localLerf = positionBoard;
+            if(isReady()) execute();
             return true;
         }
         return false;
@@ -55,7 +56,6 @@ public class SeniorFlowerBoard implements BoardMovement {
                     = new SeniorFlowerBoardAnimal(player, boardController, fluxoController, positionBoard);
             boardController.initBoardMovement(juniorFlowerBoard);
             juniorFlowerBoard.executePutFlower();
-
             return true;
         }
         if (boardTile.getFolha().hasPeca()) {
@@ -65,7 +65,6 @@ public class SeniorFlowerBoard implements BoardMovement {
         return false;
     }
 
-    @Override
     public boolean isReady() {
         return localLerf != null;
     }

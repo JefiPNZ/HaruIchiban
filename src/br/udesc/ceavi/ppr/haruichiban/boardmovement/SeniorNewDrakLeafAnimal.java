@@ -37,6 +37,7 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
                 return false;
             }
             localLerf = positionBoard;
+            if(isReady()) execute();
             return true;
         }
         return false;
@@ -62,7 +63,6 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
         return false;
     }
 
-    @Override
     public boolean isReady() {
         return localLerf != null;
     }

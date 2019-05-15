@@ -31,10 +31,10 @@ public class JuniorFlowerBoard implements BoardMovement {
     @Override
     public boolean addPoint(Point positionBoard) {
         this.localLerf = positionBoard;
+        if(isReady()) execute();
         return true;
     }
 
-    @Override
     public boolean isReady() {
         return localLerf != null;
     }

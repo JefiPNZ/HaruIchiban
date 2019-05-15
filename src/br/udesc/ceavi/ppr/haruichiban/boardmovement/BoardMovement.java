@@ -12,8 +12,6 @@ public interface BoardMovement {
 
     public boolean addPoint(Point positionBoard);
 
-    public boolean isReady();
-
     public void execute();
 
     public boolean tableInteraction();
