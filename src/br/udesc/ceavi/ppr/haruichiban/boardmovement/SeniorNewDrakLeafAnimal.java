@@ -9,7 +9,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import java.awt.Point;
 
 /**
@@ -32,13 +32,15 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
     }
 
     @Override
-    public boolean addPoint(Posicao positionBoard) {
+    public boolean addPoint(Point positionBoard) {
         if (animal != null && localLerf == null) {
-            if (validar(positionBoard.getPosicao())) {
+            if (validar(positionBoard)) {
                 return false;
             }
-            localLerf = positionBoard.getPosicao();
-            if(isReady()) execute();
+            localLerf = positionBoard;
+            if (isReady()) {
+                execute();
+            }
             return true;
         }
         return false;
@@ -97,6 +99,11 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
         player.setFase(Fase.MOVE_ANIMAL);
         boardController.initBoardMovement(this);
         gameController.notificaMudancaEstado("Mover Animal");
+    }
+
+    @Override
+    public boolean addDiretion(Diretion deretion) {
+        return false;
     }
 
 }

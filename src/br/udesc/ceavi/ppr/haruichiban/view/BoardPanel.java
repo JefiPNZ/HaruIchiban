@@ -1,8 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -105,9 +104,9 @@ public class BoardPanel extends JPanel {
         lest.setEnabled(true);
         lest.setSelected(true);
         
-        norte.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.NORTE)));
-        sul.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.SUL)));
-        oeste.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.OESTE)));
-        lest.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.LEST)));
+        norte.addActionListener((e) -> board.controlleClick(Diretion.NORTE));
+        sul.addActionListener((e) -> board.controlleClick(Diretion.SUL));
+        oeste.addActionListener((e) -> board.controlleClick(Diretion.OESTE));
+        lest.addActionListener((e) -> board.controlleClick(Diretion.LEST));
     }
 }

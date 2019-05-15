@@ -3,7 +3,7 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 import br.udesc.ceavi.ppr.haruichiban.boardmovement.BoardMovement;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import java.awt.Point;
 
 /**
@@ -33,7 +33,9 @@ public interface IBoardController {
 
     public void setFolhaEscura(Point newFolhaEscura);
 
-    public void eventoDeSelecao(Posicao newSelection);
+    public void eventoDeSelecao(Point newSelection);
+
+    public void botaoClick(Diretion newSelection);
 
     public void removeBoardMovement();
 

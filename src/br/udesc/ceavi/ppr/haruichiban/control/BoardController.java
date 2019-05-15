@@ -9,7 +9,7 @@ import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,9 +90,16 @@ public class BoardController implements IBoardController {
     }
 
     @Override
-    public void eventoDeSelecao(Posicao newSelection) {
+    public void eventoDeSelecao(Point newSelection) {
         if (boardMovement != null) {
             boardMovement.addPoint(newSelection);
+        }
+    }
+
+    @Override
+    public void botaoClick(Diretion diretion) {
+        if (boardMovement != null) {
+            boardMovement.addDiretion(diretion);
         }
     }
 

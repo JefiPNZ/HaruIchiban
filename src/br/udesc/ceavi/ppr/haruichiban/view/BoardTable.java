@@ -13,8 +13,8 @@ import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
@@ -189,13 +189,15 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
                 && !newSelection.equals(lastSelection)) {
             this.getSelectionModel().clearSelection();
             this.columnModel.getSelectionModel().clearSelection();
-            controlleClick(new Posicao(newSelection));
+            controller.eventoDeSelecao(newSelection);
         }
     }
 
-    protected synchronized void controlleClick(Posicao newSelection) {
-        if (newSelection != null) {
-            controller.eventoDeSelecao(newSelection);
+    protected synchronized void controlleClick(Diretion diretion) {
+        if (diretion != null) {
+            controller.botaoClick(diretion);
+            this.getSelectionModel().clearSelection();
+            this.columnModel.getSelectionModel().clearSelection();
         }
     }
 

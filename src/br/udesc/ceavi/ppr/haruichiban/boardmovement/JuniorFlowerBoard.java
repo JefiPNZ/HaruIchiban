@@ -6,7 +6,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import java.awt.Point;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 
 /**
  *
@@ -29,9 +29,11 @@ public class JuniorFlowerBoard implements BoardMovement {
     }
 
     @Override
-    public boolean addPoint(Posicao positionBoard) {
-        this.localLerf = positionBoard.getPosicao();
-        if(isReady()) execute();
+    public boolean addPoint(Point positionBoard) {
+        this.localLerf = positionBoard;
+        if (isReady()) {
+            execute();
+        }
         return true;
     }
 
@@ -54,6 +56,11 @@ public class JuniorFlowerBoard implements BoardMovement {
 
     @Override
     public boolean tableInteraction() {
+        return false;
+    }
+
+    @Override
+    public boolean addDiretion(Diretion deretion) {
         return false;
     }
 

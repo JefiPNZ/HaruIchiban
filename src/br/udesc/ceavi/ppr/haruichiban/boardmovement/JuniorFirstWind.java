@@ -8,7 +8,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import java.awt.Point;
 
 /**
@@ -23,7 +23,7 @@ public class JuniorFirstWind implements BoardMovement {
     private IBoardController boardController;
     private Point origem;
     private Point fim;
-    private Posicao.Direcao destino;
+    private Diretion destino;
     private IFluxoController fluxoController;
 
     public JuniorFirstWind(IPlayerController player, IBoardController boardController, IFluxoController fluxoController) {
@@ -34,30 +34,15 @@ public class JuniorFirstWind implements BoardMovement {
     }
 
     @Override
-    public boolean addPoint(Posicao positionBoard) {
-
-        if (positionBoard.hasPoint()) {
-            if (validacaoOrigem(positionBoard.getPosicao())) {
-                if (origem == null) {
-                    player.notifySimples("Folha Escolhida, Escolha a Direção");
-                } else {
-                    player.notifySimples("Nova Folha Escolhida, Escolha a Direção");
-                }
-                origem = positionBoard.getPosicao();
-                return true;
-            }
-        }
-
-        if (origem != null && positionBoard.hasDirecao()) {
-            if (validarMovimento(origem, positionBoard.getDirecao())) {
-                destino = positionBoard.getDirecao();
-                if (isReady()) {
-                    execute();
-                }
-                return true;
+    public boolean addPoint(Point positionBoard) {
+        if (validacaoOrigem(positionBoard)) {
+            if (origem == null) {
+                player.notifySimples("Folha Escolhida, Escolha a Direção");
             } else {
-                player.notifySimples("Movimento Não Valido");
+                player.notifySimples("Nova Folha Escolhida, Escolha a Direção");
             }
+            origem = positionBoard;
+            return true;
         }
         return false;
     }
@@ -82,7 +67,7 @@ public class JuniorFirstWind implements BoardMovement {
 
         mover(origem, fim, destino, boardController.getBoardTile(origem).removeFolha(), macroCommand);
         GameController.getInstance().executeCommand(macroCommand);
-        
+
         boardController.renderBoard();
         player.setFase(fluxoController.firstWindEnd());
         fluxoController.firstWind();
@@ -94,7 +79,7 @@ public class JuniorFirstWind implements BoardMovement {
         return true;
     }
 
-    private boolean validarMovimento(Point newPoint, Posicao.Direcao p) {
+    private boolean validarMovimento(Point newPoint, Diretion p) {
         switch (p) {
             case NORTE:
                 if (0 <= newPoint.y) {
@@ -146,7 +131,7 @@ public class JuniorFirstWind implements BoardMovement {
     }
 
     private void mover(Point atual, Point fim,
-            Posicao.Direcao p,
+            Diretion p,
             Folha peca, MacroCommand macroCommand) {
         if (!atual.equals(this.fim)) {
             Point pProxima = null;
@@ -171,5 +156,21 @@ public class JuniorFirstWind implements BoardMovement {
 
             mover(pProxima, fim, p, folhaDaFrente, macroCommand);
         }
+    }
+
+    @Override
+    public boolean addDiretion(Diretion deretion) {
+
+        if (origem != null) {
+            if (validarMovimento(origem, deretion)) {
+                destino = deretion;
+                if (isReady()) {
+                    execute();
+                }
+                return true;
+            }
+            player.notifySimples("Movimento Não Valido");
+        }
+        return false;
     }
 }

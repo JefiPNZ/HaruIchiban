@@ -6,7 +6,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
-import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import java.awt.Point;
 
 /**
@@ -30,15 +30,17 @@ public class SeniorFlowerBoard implements BoardMovement {
     }
 
     @Override
-    public boolean addPoint(Posicao positionBoard) {
+    public boolean addPoint(Point positionBoard) {
         if (localLerf == null) {
 
-            if (validandoPosicao(positionBoard.getPosicao())) {
+            if (validandoPosicao(positionBoard)) {
                 return false;
             }
 
-            localLerf = positionBoard.getPosicao();
-            if(isReady()) execute();
+            localLerf = positionBoard;
+            if (isReady()) {
+                execute();
+            }
             return true;
         }
         return false;
@@ -88,6 +90,11 @@ public class SeniorFlowerBoard implements BoardMovement {
     @Override
     public boolean tableInteraction() {
         return true;
+    }
+
+    @Override
+    public boolean addDiretion(Diretion deretion) {
+        return false;
     }
 
 }
