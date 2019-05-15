@@ -20,7 +20,7 @@ public class BoardNormalBuilder extends BoardBuilder {
     private static final boolean[][] TABULEIRO = {
         {true, false, true, false, true},
         {false, true, true, true, false},
-        {true, true, true, true, true},
+        {true, true, false, true, true},
         {false, true, true, true, false},
         {true, false, true, false, true}
     };

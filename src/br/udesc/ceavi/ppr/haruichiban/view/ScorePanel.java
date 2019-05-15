@@ -15,10 +15,11 @@ import javax.swing.JPanel;
 
 /**
  * Painel para representação da Pontuação.
+ *
  * @author Jeferson Penz
  */
-public class ScorePanel extends JPanel{
-    
+public class ScorePanel extends JPanel {
+
     private BufferedImage scoreImg;
     private IScoreController controller;
 
@@ -28,11 +29,7 @@ public class ScorePanel extends JPanel{
     public ScorePanel() {
         super();
         controller = new ScoreController();
-        try {
-            this.scoreImg = ImageIO.read(new File(Images.PONTUACAO_FUNDO));
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+        this.scoreImg = Images.getImagem(Images.PONTUACAO_FUNDO);
         this.setOpaque(false);
         this.setBackground(new Color(0, 0, 0, 0));
         this.setPreferredSize(new Dimension(150, 0));
@@ -45,14 +42,13 @@ public class ScorePanel extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.black);
-        float scaleX = (float)this.getWidth() / (float)scoreImg.getWidth();
-        float scaleY = (float)this.getHeight() / (float)scoreImg.getHeight();
-        if(scaleX > scaleY){
+        float scaleX = (float) this.getWidth() / (float) scoreImg.getWidth();
+        float scaleY = (float) this.getHeight() / (float) scoreImg.getHeight();
+        if (scaleX > scaleY) {
             int width = (int) (scaleY / scaleX * this.getWidth());
             g.fillRect(this.getWidth() - width + 5, 20, width - 10, this.getHeight() - 40);
             g.drawImage(scoreImg, this.getWidth() - width, 0, width, this.getHeight(), null);
-        }
-        else {
+        } else {
             int height = (int) (scaleX / scaleY * this.getHeight());
             g.fillRect(5, this.getHeight() / 2 - height / 2 + 20, this.getWidth() - 10, height - 40);
             g.setColor(Color.LIGHT_GRAY);
@@ -62,5 +58,5 @@ public class ScorePanel extends JPanel{
             g.drawImage(scoreImg, 0, this.getHeight() / 2 - height / 2, this.getWidth(), height, null);
         }
     }
-    
+
 }

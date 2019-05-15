@@ -46,4 +46,6 @@ public interface IBoardController {
 
     public boolean validaPontuacao();
 
+    public void removeAnimal();
+
 }

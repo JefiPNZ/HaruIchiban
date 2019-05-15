@@ -5,7 +5,6 @@ import br.udesc.ceavi.ppr.haruichiban.command.DifineTitleEmpateCommand;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -127,7 +126,6 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void newDarkLeaf() {
-        System.out.println("Chamado");
         if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.NEW_DARK_LEAF
                 && jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.NEW_DARK_LEAF) {
             this.notificaMudancaEstado("Escolher Nova Folha Escura");
@@ -191,6 +189,7 @@ public class FluxoController implements IFluxoController {
     public void getPlayerPointsEnd() {
         topPlayer.setFase(Fase.INICIO_TURNO);
         bottomPlayer.setFase(Fase.INICIO_TURNO);
+        controllerBoard.removeAnimal();
         startGame();
     }
 

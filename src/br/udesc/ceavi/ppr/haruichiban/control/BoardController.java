@@ -7,6 +7,7 @@ import br.udesc.ceavi.ppr.haruichiban.builder.BuilderDirector;
 import br.udesc.ceavi.ppr.haruichiban.model.flores.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
+import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Point;
@@ -92,7 +93,7 @@ public class BoardController implements IBoardController {
     public void eventoDeSelecao(Point newSelection) {
         if (boardMovement != null) {
             boardMovement.addPoint(newSelection);
-        if (boardMovement.isReady()) {
+            if (boardMovement.isReady()) {
                 boardMovement.execute();
             }
         }
@@ -282,4 +283,28 @@ public class BoardController implements IBoardController {
         return this.tabuleiro;
     }
 
+    @Override
+    public void removeAnimal() {
+        int numeroDePossiçoes = 0;
+        for (int row = 0; row < tabuleiro.length; row++) {
+            for (int column = 0; column < tabuleiro[row].length; column++) {
+                if (tabuleiro[row][column].hasFolha() && tabuleiro[row][column].getFolha().hasPeca()) {
+//                    if(tabuleiro[row][column])
+                    numeroDePossiçoes++;
+                }
+            }
+        }
+        System.out.println(numeroDePossiçoes);
+        if (numeroDePossiçoes <= 2) {
+            for (int row = 0; row < tabuleiro.length; row++) {
+                for (int column = 0; column < tabuleiro[row].length; column++) {
+                    if (tabuleiro[row][column].hasFolha()
+                            && tabuleiro[row][column].getFolha().hasPeca()
+                            && tabuleiro[row][column].getFolha().getPeca().getTipo() == TipoPeca.ANIMAL) {
+                        tabuleiro[row][column].getFolha().removerPecaDeFlor();
+                    }
+                }
+            }
+        }
+    }
 }

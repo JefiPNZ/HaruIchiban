@@ -9,6 +9,7 @@ import br.udesc.ceavi.ppr.haruichiban.builder.BoardGigaBuilder;
 import br.udesc.ceavi.ppr.haruichiban.builder.BoardNormalBuilder;
 import br.udesc.ceavi.ppr.haruichiban.command.Command;
 import br.udesc.ceavi.ppr.haruichiban.command.CommandInvoker;
+import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class GameController {
      * Representa o jogador do topo da tela.
      */
     private PlayerController topPlayer;
-    
+
     private List<GameStateObserver> gameStateObserver;
 
     /**
@@ -62,6 +63,7 @@ public class GameController {
     private IFluxoController controlDeFluxo;
 
     private CommandInvoker commandInvoker;
+
     /**
      * Classe para criação da instância do Singleton.
      */
@@ -101,9 +103,11 @@ public class GameController {
             default:
             case "Primavera":
                 this.factoryPecas = new FactoryPecasPrimavera();
+                Images.mapImagemPrimaveira();
                 break;
             case "Inverno":
                 this.factoryPecas = new FactoryPecasInverno();
+                Images.mapImagemInverno();
                 break;
         }
         int tamanhoDeck;
@@ -127,6 +131,7 @@ public class GameController {
 
     /**
      * Para a execução da lógica do jogo.
+     *
      * @param mensagem
      */
     public void stop(String mensagem) {
@@ -182,24 +187,24 @@ public class GameController {
     public IFluxoController getFluxoController() {
         return controlDeFluxo;
     }
-    
-    public void notificaMudancaEstado(String mensagem){
-        SwingUtilities.invokeLater(() ->{
+
+    public void notificaMudancaEstado(String mensagem) {
+        SwingUtilities.invokeLater(() -> {
             this.gameStateObserver.forEach((observer) -> {
                 observer.notificaMudancaEstado(mensagem);
             });
         });
     }
-    
-    public void addGameStateObserver(GameStateObserver obs){
+
+    public void addGameStateObserver(GameStateObserver obs) {
         this.gameStateObserver.add(obs);
     }
-    
-    public void removeGameStateObserver(GameStateObserver obs){
+
+    public void removeGameStateObserver(GameStateObserver obs) {
         this.gameStateObserver.remove(obs);
     }
 
-    public void executeCommand(Command command){
+    public void executeCommand(Command command) {
         this.commandInvoker.executeCommand(command);
     }
 }

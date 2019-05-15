@@ -137,12 +137,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
-        try {
-            this.tileImage = ImageIO.read(new File(Images.PECA_TABULEIRO));
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-            System.exit(0);
-        }
+        this.tileImage = Images.getImagem(Images.PECA_TABULEIRO);
         this.initializeProperties();
         this.controller.renderBoard();
     }

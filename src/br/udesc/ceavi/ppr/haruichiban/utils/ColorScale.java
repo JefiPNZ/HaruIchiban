@@ -41,7 +41,7 @@ public class ColorScale {
      * @throws java.io.IOException Caso não consiga ler o arquivo.
      */
     public BufferedImage convert(String source) throws IOException {
-        BufferedImage img = ImageIO.read(new File(source));
+        BufferedImage img = Images.getImagem(source);
         return convert(img);
     }
     

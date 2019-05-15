@@ -59,10 +59,10 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
         this.controller.addObserver(this);
         ColorScale scale = new ColorScale(color);
         try {
-            this.floorImg = ImageIO.read(new File(Images.JOGADOR_TABUA));
-            this.baseImg = ImageIO.read(new File(Images.JOGADOR_BASE));
+            this.floorImg = Images.getImagem(Images.JOGADOR_TABUA);
+            this.baseImg = Images.getImagem(Images.JOGADOR_BASE);
             this.clothImg = scale.convert(Images.JOGADOR_ROUPA);
-            this.faceImg = ImageIO.read(new File(Images.JOGADOR_ROSTO));
+            this.faceImg = Images.getImagem(Images.JOGADOR_ROSTO);
             if (GameController.getInstance().getFactoryPecas().getClass().getSimpleName()
                     .equals(FactoryPecasInverno.class.getSimpleName())) {
                 this.flowerImg = scale.convert(Images.JOGADOR_FLOR_INV);
