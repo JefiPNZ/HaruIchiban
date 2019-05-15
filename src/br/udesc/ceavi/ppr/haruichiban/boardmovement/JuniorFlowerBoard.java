@@ -4,9 +4,9 @@ import br.udesc.ceavi.ppr.haruichiban.command.FlowerBoardCommand;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
-import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import java.awt.Point;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
+import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
 
 /**
  *
@@ -29,8 +29,8 @@ public class JuniorFlowerBoard implements BoardMovement {
     }
 
     @Override
-    public boolean addPoint(Point positionBoard) {
-        this.localLerf = positionBoard;
+    public boolean addPoint(Posicao positionBoard) {
+        this.localLerf = positionBoard.getPosicao();
         if(isReady()) execute();
         return true;
     }

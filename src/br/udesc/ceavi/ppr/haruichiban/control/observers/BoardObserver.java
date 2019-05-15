@@ -30,5 +30,9 @@ public interface BoardObserver {
     public void notifyAtivarTabela();
 
     public void notifyDesativarTabela();
+
+    public void notifyAtivarDirection();
+
+    public void notifyDesativarDirection();
     
 }

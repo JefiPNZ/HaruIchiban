@@ -6,6 +6,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
+import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
 import java.awt.Point;
 
 /**
@@ -28,15 +29,17 @@ public class SeniorNewDrakLeaf implements BoardMovement {
     }
 
     @Override
-    public boolean addPoint(Point positionBoard) {
+    public boolean addPoint(Posicao positionBoard) {
         if (localLerf == null) {
 
-            if (validandoPosicao(positionBoard)) {
+            if (validandoPosicao(positionBoard.getPosicao())) {
                 return false;
             }
 
-            localLerf = positionBoard;
-            if(isReady()) execute();
+            localLerf = positionBoard.getPosicao();
+            if (isReady()) {
+                execute();
+            }
             return true;
         }
         return false;

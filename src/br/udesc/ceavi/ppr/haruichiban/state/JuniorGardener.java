@@ -8,6 +8,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
+import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
 
 /**
  *
@@ -39,7 +40,7 @@ public class JuniorGardener implements TitleOfGardener {
         IFluxoController fluxoController = GameController.getInstance().getFluxoController();
 
         JuniorFlowerBoard juniorFlowerBoard = new JuniorFlowerBoard(aThis, boardController, fluxoController);
-        juniorFlowerBoard.addPoint(boardController.getFolhaEscura());
+        juniorFlowerBoard.addPoint(new Posicao(boardController.getFolhaEscura()));
         juniorFlowerBoard.execute();
     }
 

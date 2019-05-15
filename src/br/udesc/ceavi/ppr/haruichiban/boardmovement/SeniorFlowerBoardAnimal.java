@@ -9,6 +9,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelBoardTile;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;
+import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
 import java.awt.Point;
 
 /**
@@ -26,17 +27,16 @@ public class SeniorFlowerBoardAnimal extends SeniorFlowerBoard implements BoardM
             IBoardController boardController, IFluxoController fluxoController, Point animalLocal) {
         super(player, boardController, fluxoController);
         this.animalLocal = animalLocal;
-
         super.localLerf = null;
     }
 
     @Override
-    public boolean addPoint(Point positionBoard) {
+    public boolean addPoint(Posicao positionBoard) {
         if (animal != null && localLerf == null) {
-            if (validar(positionBoard)) {
+            if (validar(positionBoard.getPosicao())) {
                 return false;
             }
-            localLerf = positionBoard;
+            localLerf = positionBoard.getPosicao();
             if(isReady()) execute();
             return true;
         }

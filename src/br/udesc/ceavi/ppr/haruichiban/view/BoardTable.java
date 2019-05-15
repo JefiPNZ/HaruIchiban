@@ -14,14 +14,13 @@ import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
+import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
 
@@ -47,6 +46,17 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
     public void notifyDesativarTabela() {
         this.getSelectionModel().clearSelection();
         this.setEnabled(false);
+    }
+
+    @Override
+    public void notifyAtivarDirection() {
+        parentPanel.ativarBotoes();
+    }
+
+    @Override
+    public void notifyDesativarDirection() {
+        parentPanel.desativarBotoes();
+        this.clearSelection();
     }
 
     /**
@@ -174,8 +184,17 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        if (!this.getSelectionModel().isSelectionEmpty() && !this.columnModel.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
-            this.getColumnModel().getSelectionModel().clearSelection();
+        if (!this.getSelectionModel().isSelectionEmpty()
+                && !this.columnModel.getSelectionModel().isSelectionEmpty()
+                && !newSelection.equals(lastSelection)) {
+            this.getSelectionModel().clearSelection();
+            this.columnModel.getSelectionModel().clearSelection();
+            controlleClick(new Posicao(newSelection));
+        }
+    }
+
+    protected synchronized void controlleClick(Posicao newSelection) {
+        if (newSelection != null) {
             controller.eventoDeSelecao(newSelection);
         }
     }
