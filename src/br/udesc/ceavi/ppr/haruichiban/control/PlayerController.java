@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Controlador de Player, servirar para controlar as acoes do play no jogo
+ * Controlador de Player, servirar para controlar as acoes do player no jogo
  *
  * @author Gustavo C Santos
  * @since 08/05/2019
@@ -26,10 +26,10 @@ public class PlayerController implements IPlayerController {
     /**
      * Representa o jogador.
      */
-    private ModelPlayer play;
+    private ModelPlayer player;
 
     /**
-     * Padrao State para guiar as açoes do play perante o estado dele
+     * Padrao State para guiar as açoes do player perante o estado dele
      */
     private TitleOfGardener title;
 
@@ -51,7 +51,7 @@ public class PlayerController implements IPlayerController {
      */
     public PlayerController(Color cor, int tamanhoDoDeck) {
         this.title = new UntitledGardener();
-        this.play = new ModelPlayer(cor, tamanhoDoDeck);
+        this.player = new ModelPlayer(cor, tamanhoDoDeck);
     }
 
     @Override
@@ -75,25 +75,25 @@ public class PlayerController implements IPlayerController {
     }
 
     public void addPontos(int pontos) {
-        play.addPontos(pontos);
+        player.addPontos(pontos);
     }
 
-    public ModelPlayer getPlay() {
-        return play;
+    public ModelPlayer getPlayer() {
+        return player;
     }
 
     @Override
     public int getPileSize() {
-        return play.getListaDeFlores().size();
+        return player.getListaDeFlores().size();
     }
 
     public Color getColor() {
-        return play.getColor();
+        return player.getColor();
     }
 
     @Override
     public synchronized List<Object> getHand() {
-        return play.getListaMao().stream().map(flor -> flor.getValor()).collect(Collectors.toList());
+        return player.getListaMao().stream().map(flor -> flor.getValor()).collect(Collectors.toList());
     }
 
     @Override
@@ -105,6 +105,8 @@ public class PlayerController implements IPlayerController {
     public void chooseFlowerDeckEnd(int x) {
         GameController.getInstance().executeCommand(
                 new ChooseFlowerPlayer(this, x));
+        fase = fluxoController.chooseFlowerEnd();
+        fluxoController.chooseFlower();
         notifiyFlowerChoise();
     }
 
@@ -115,9 +117,8 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public void getFlorFromHand(int x) {
-        florEmJogo = play.getFlorFromHand(x);
+        florEmJogo = player.getFlorFromHand(x);
     }
-
 
     @Override
     public Flor removeFlower() {
@@ -148,7 +149,7 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public void devolverFlorAoDeck() {
-        play.devolverFlor(removeFlower());
+        player.devolverFlor(removeFlower());
     }
 
     @Override
@@ -162,7 +163,7 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public int getPlayerScore() {
-        return this.play.getPoints();
+        return this.player.getPoints();
     }
 
     @Override
@@ -202,6 +203,11 @@ public class PlayerController implements IPlayerController {
     @Override
     public Fase getFase() {
         return fase;
+    }
+
+    @Override
+    public boolean haveFlowers() {
+        return player.haveFlowers();
     }
 
 }

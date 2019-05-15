@@ -24,7 +24,5 @@ public class ChooseFlowerPlayer implements Command {
     public void execute() {
         IFluxoController fluxoController = GameController.getInstance().getFluxoController();
         player.getFlorFromHand(escolhida);
-        player.setFase(fluxoController.chooseFlowerEnd());
-        fluxoController.chooseFlower();
     }
 }

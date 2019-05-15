@@ -46,7 +46,7 @@ public class JuniorFlowerBoard implements BoardMovement {
                         player.removeFlower(),
                         boardController.getBoardTile(localLerf),
                         boardController));
-        
+        boardController.renderBoard();
         player.setFase(fluxoController.putFlowerTableEnd());
         fluxoController.putFlowerTable();
         player.notifySimples("");

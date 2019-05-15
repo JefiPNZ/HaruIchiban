@@ -25,7 +25,6 @@ public class FlowerBoardCommand implements Command {
     @Override
     public void execute() {
         boardTile.getFolha().colocarPecaNaFolha(flor);
-        boardController.renderBoard();
     }
 
 }

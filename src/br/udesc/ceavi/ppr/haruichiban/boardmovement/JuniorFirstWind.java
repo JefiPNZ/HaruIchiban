@@ -81,10 +81,10 @@ public class JuniorFirstWind implements BoardMovement {
             boardController.removeBoardMovement();
             player.setFase(fluxoController.firstWindEnd());
             fluxoController.firstWind();
+            player.notifySimples("");
 //        } else {
 //            destino = null;
 //        }
-        player.notifySimples("");
     }
 
     @Override

@@ -45,24 +45,20 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
     private boolean validar(Point positionBoard) {
         ModelBoardTile boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
-            player.notifySimples("A Posicao Escolhida Não Tem Folha");
-            return true;
-        }
-        if (boardTile.getFolha().isEscura()) {
-            player.notifySimples("A Posicao Escolhida é Invalida Folha Escura");
-            this.localLerf = null;
-            return true;
-        }
-        if (boardTile.getFolha().hasAnimal()) {
-            player.notifySimples("A Posicao Escolhida Tem Outro Animal");
-            this.localLerf = null;
+            player.notifySimples("Animal Apenas Pode Ser Colocado Na Folha");
             return true;
         }
         if (boardTile.getFolha().hasPeca()) {
-            player.notifySimples("A Posicao Escolhida Ja Tem Flor");
+            player.notifySimples("Animal Apenas Pode Ser Colocado Folha Vazia");
             this.localLerf = null;
             return true;
         }
+        if (boardTile.getFolha().isEscura()) {
+            player.notifySimples("Animal Apenas Pode Ser Colocado Folha Clara");
+            this.localLerf = null;
+            return true;
+        }
+
         return false;
     }
 
@@ -76,12 +72,12 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
         GameController.getInstance().executeCommand(
                 new MoveAnimalCommand(
                         animal,
-                        boardController.getBoardTile(localLerf),
-                        boardController));
-        
+                        boardController.getBoardTile(localLerf)));
+        boardController.renderBoard();
         boardController.removeBoardMovement();
         player.setFase(fluxoController.newDarkLeafEnd());
         fluxoController.putFlowerTable();
+        player.notifySimples("");
     }
 
     @Override
@@ -92,15 +88,14 @@ public class SeniorNewDrakLeafAnimal extends SeniorNewDrakLeaf implements BoardM
     public void executePutFlower() {
         ModelBoardTile boardTile = boardController.getBoardTile(animalLocal);
         GameController gameController = GameController.getInstance();
-        
+
         this.animal = (Animal) boardTile.getFolha().removerPecaDeFlor();
         gameController.executeCommand(
                 new NewDrakLeafCommand(boardController, animalLocal));
-
+        boardController.renderBoard();
         player.setFase(Fase.MOVE_ANIMAL);
         boardController.initBoardMovement(this);
         gameController.notificaMudancaEstado("Mover Animal");
-        player.notifySimples("");
     }
 
 }

@@ -23,7 +23,6 @@ public class NewDrakLeafCommand implements Command {
     public void execute() {
         boardController.getBoardTile(localLerf).getFolha().virarFolha();
         boardController.setFolhaEscura(localLerf);
-        boardController.renderBoard();
     }
 
 }

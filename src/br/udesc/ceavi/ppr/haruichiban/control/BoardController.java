@@ -285,17 +285,23 @@ public class BoardController implements IBoardController {
 
     @Override
     public void removeAnimal() {
-        int numeroDePossiçoes = 0;
+        int numeroDeFores = 0;
+        int numeroDeFolha = 0;
         for (int row = 0; row < tabuleiro.length; row++) {
             for (int column = 0; column < tabuleiro[row].length; column++) {
-                if (tabuleiro[row][column].hasFolha() && tabuleiro[row][column].getFolha().hasPeca()) {
-//                    if(tabuleiro[row][column])
-                    numeroDePossiçoes++;
+                if (tabuleiro[row][column].hasFolha()) {
+                    numeroDeFolha++;
+                    if (tabuleiro[row][column].getFolha().hasPeca()
+                            && !tabuleiro[row][column].getFolha().hasAnimal()) {
+                        numeroDeFores++;
+                    }
                 }
             }
         }
-        System.out.println(numeroDePossiçoes);
-        if (numeroDePossiçoes <= 2) {
+        System.out.println(numeroDeFolha);
+        System.out.println(numeroDeFores);
+        System.out.println("numero de possicoes desocupadas " + (numeroDeFolha - numeroDeFores));
+        if ((numeroDeFolha - numeroDeFores) <= 2) {
             for (int row = 0; row < tabuleiro.length; row++) {
                 for (int column = 0; column < tabuleiro[row].length; column++) {
                     if (tabuleiro[row][column].hasFolha()

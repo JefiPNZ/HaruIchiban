@@ -75,4 +75,6 @@ public interface IPlayerController {
 
     public Flor removeFlower();
 
+    public boolean haveFlowers();
+
 }

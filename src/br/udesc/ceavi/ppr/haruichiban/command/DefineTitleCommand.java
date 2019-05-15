@@ -13,13 +13,10 @@ import java.util.Map;
  */
 public class DefineTitleCommand implements Command {
 
-    private Map<Integer, IPlayerController> map;
     private IPlayerController junior;
     private IPlayerController senior;
 
-    public DefineTitleCommand(Map<Integer, IPlayerController> map,
-            IPlayerController junior, IPlayerController senior) {
-        this.map = map;
+    public DefineTitleCommand(IPlayerController junior, IPlayerController senior) {
         this.junior = junior;
         this.senior = senior;
     }
@@ -31,9 +28,6 @@ public class DefineTitleCommand implements Command {
             senior.becomeSeniorGardener();
         } catch (PlayNaoPodeSeTornarJuniorException | PlayNaoPodeSeTornarSeniorException ex) {
         }
-
-        map.put(1, junior);
-        map.put(2, senior);
     }
 
 }

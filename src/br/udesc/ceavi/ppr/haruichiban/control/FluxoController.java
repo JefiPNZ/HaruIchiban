@@ -36,34 +36,44 @@ public class FluxoController implements IFluxoController {
      */
     @Override
     public void startGame() {
+        notificaMudancaEstado("Inicio De Turno - Escolher Flor");
         jardineiro.clear();
         try {
             topPlayer.becomeUntitledGardener();
             bottomPlayer.becomeUntitledGardener();
         } catch (PlayNaoPodeSeTornarUntitledGardenerException ex) {
+            System.err.println(ex.getMessage());
         }
         topPlayer.setFase(Fase.CHOISE_FLOWER_DECK);
         bottomPlayer.setFase(Fase.CHOISE_FLOWER_DECK);
         int vez = controlGame.getRandomizer().nextInt();
         if (vez % 2 == 0) {
-            this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
             chooseFlower(bottomPlayer);
         } else {
-            this.notificaMudancaEstado("Jogador superior escolha uma flor.");
             chooseFlower(topPlayer);
         }
+    }
+
+    private void startGame(IPlayerController vez) {
+        notificaMudancaEstado("Inicio De Turno - Escolher Flor");
+        try {
+            topPlayer.becomeUntitledGardener();
+            bottomPlayer.becomeUntitledGardener();
+        } catch (PlayNaoPodeSeTornarUntitledGardenerException ex) {
+            System.err.println(ex.getMessage());
+        }
+        topPlayer.setFase(Fase.CHOISE_FLOWER_DECK);
+        bottomPlayer.setFase(Fase.CHOISE_FLOWER_DECK);
+        chooseFlower(vez);
     }
 
     @Override
     public void chooseFlower() {
         if (bottomPlayer.getFase() == Fase.CHOISE_FLOWER_DECK) {
-            this.notificaMudancaEstado("Jogador inferior escolha uma flor.");
             chooseFlower(bottomPlayer);
         } else if (topPlayer.getFase() == Fase.CHOISE_FLOWER_DECK) {
-            this.notificaMudancaEstado("Jogador superior escolha uma flor.");
             chooseFlower(topPlayer);
-        } else if (topPlayer.getFase() != Fase.CHOISE_FLOWER_DECK && bottomPlayer.getFase() != Fase.CHOISE_FLOWER_DECK) {
-            this.notificaMudancaEstado("Etapa de seleção de flores finalizada.");
+        } else {
             defineTitles();
         }
     }
@@ -77,18 +87,29 @@ public class FluxoController implements IFluxoController {
 
         if (bottomPlayer.getFlower().getValor() > topPlayer.getFlower().getValor()) {
             controlGame.executeCommand(
-                    new DefineTitleCommand(jardineiro, topPlayer, bottomPlayer));
+                    new DefineTitleCommand(topPlayer, bottomPlayer));
+            jardineiro.put(JARDINEIROJUNIOR, topPlayer);
+            jardineiro.put(JARDINEIROSENIOR, bottomPlayer);
             defineTitlesEnd();
 
         } else if (bottomPlayer.getFlower().getValor() < topPlayer.getFlower().getValor()) {
             controlGame.executeCommand(
-                    new DefineTitleCommand(jardineiro, bottomPlayer, topPlayer));
+                    new DefineTitleCommand(bottomPlayer, topPlayer));
+            jardineiro.put(JARDINEIROJUNIOR, bottomPlayer);
+            jardineiro.put(JARDINEIROSENIOR, topPlayer);
             defineTitlesEnd();
 
         } else if (bottomPlayer.getFlower().getValor() == topPlayer.getFlower().getValor()) {
-            controlGame.executeCommand(
-                    new DifineTitleEmpateCommand(topPlayer, bottomPlayer, this));
-            return;
+
+            if (topPlayer.haveFlowers() && bottomPlayer.haveFlowers()) {
+                controlGame.executeCommand(
+                        new DifineTitleEmpateCommand(topPlayer, bottomPlayer));
+                this.notificaMudancaEstado("Flores Com Mesmos Valores");
+                this.notificaMudancaEstado("Voltando Flores Para Seus Respetivos Deck");
+                startGame();
+            } else {
+                endGame();
+            }
         }
     }
 
@@ -110,6 +131,7 @@ public class FluxoController implements IFluxoController {
 
     @Override
     public void firstWind() {
+        controllerBoard.removeAnimal();
         if (jardineiro.get(JARDINEIROJUNIOR).getFase() == Fase.FRIST_WINT
                 && jardineiro.get(JARDINEIROSENIOR).getFase() == Fase.FRIST_WINT) {
             this.notificaMudancaEstado("Chamando Primeiro Vento Da Primavera");
@@ -143,15 +165,7 @@ public class FluxoController implements IFluxoController {
     @Override
     public void getPlayerPoints() {
         this.notificaMudancaEstado("Verificando Pontuação");
-        System.out.println("Pontos Inicio De Calculo");
-
-        if(controllerBoard.validaPontuacao()){
-            // Valida terminou rodada
-        }
-        else {
-            System.out.println("Pontos Fim  De Calculo");
-            getPlayerPointsEnd();
-        }
+        getPlayerPointsEnd();
     }
 
     @Override
@@ -187,14 +201,21 @@ public class FluxoController implements IFluxoController {
     }
 
     public void getPlayerPointsEnd() {
-        topPlayer.setFase(Fase.INICIO_TURNO);
-        bottomPlayer.setFase(Fase.INICIO_TURNO);
-        controllerBoard.removeAnimal();
-        startGame();
+        if (topPlayer.haveFlowers() && bottomPlayer.haveFlowers()) {
+            topPlayer.setFase(Fase.INICIO_TURNO);
+            bottomPlayer.setFase(Fase.INICIO_TURNO);
+            startGame(jardineiro.get(JARDINEIROSENIOR));
+        } else {
+            endGame();
+        }
     }
 
     public void notificaMudancaEstado(String mensagem) {
         GameController.getInstance().notificaMudancaEstado(mensagem);
+    }
+
+    private void endGame() {
+        this.notificaMudancaEstado("Fim De Jogo");
     }
 
 }

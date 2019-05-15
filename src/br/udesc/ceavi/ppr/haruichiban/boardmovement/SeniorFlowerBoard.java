@@ -49,7 +49,7 @@ public class SeniorFlowerBoard implements BoardMovement {
             return true;
         }
         if (boardTile.getFolha().hasAnimal()) {
-            player.notifySimples("A Posicao Escolhida Tem Animal");
+            player.notifySimples("Flor Colocada, Escolha A Nova Posição Do Animal");
             boardController.removeBoardMovement();
             SeniorFlowerBoardAnimal juniorFlowerBoard
                     = new SeniorFlowerBoardAnimal(player, boardController, fluxoController, positionBoard);
@@ -77,6 +77,7 @@ public class SeniorFlowerBoard implements BoardMovement {
                         player.removeFlower(),
                         boardController.getBoardTile(localLerf),
                         boardController));
+        boardController.renderBoard();
         boardController.removeBoardMovement();
 
         player.setFase(fluxoController.putFlowerTableEnd());

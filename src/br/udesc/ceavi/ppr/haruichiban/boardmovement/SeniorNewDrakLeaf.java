@@ -15,32 +15,32 @@ import java.awt.Point;
  *
  */
 public class SeniorNewDrakLeaf implements BoardMovement {
-    
+
     protected IPlayerController player;
     protected IBoardController boardController;
     protected Point localLerf;
     protected IFluxoController fluxoController;
-    
+
     public SeniorNewDrakLeaf(IPlayerController player, IBoardController boardController, IFluxoController fluxoController) {
         this.player = player;
         this.boardController = boardController;
         this.fluxoController = fluxoController;
     }
-    
+
     @Override
     public boolean addPoint(Point positionBoard) {
         if (localLerf == null) {
-            
+
             if (validandoPosicao(positionBoard)) {
                 return false;
             }
-            
+
             localLerf = positionBoard;
             return true;
         }
         return false;
     }
-    
+
     private boolean validandoPosicao(Point positionBoard) {
         ModelBoardTile boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
@@ -48,13 +48,13 @@ public class SeniorNewDrakLeaf implements BoardMovement {
             return true;
         }
         if (boardTile.getFolha().hasAnimal()) {
-            player.notifySimples("A Posicao Escolhida Tem Animal");
+            player.notifySimples("Folha Escura, Escolha A Nova Posição Do Animal");
             boardController.removeBoardMovement();
             SeniorNewDrakLeafAnimal juniorFlowerBoard
                     = new SeniorNewDrakLeafAnimal(player, boardController, fluxoController, positionBoard);
             boardController.initBoardMovement(juniorFlowerBoard);
             juniorFlowerBoard.executePutFlower();
-            
+
             return true;
         }
         if (boardTile.getFolha().hasPeca()) {
@@ -63,26 +63,26 @@ public class SeniorNewDrakLeaf implements BoardMovement {
         }
         return false;
     }
-    
+
     @Override
     public boolean isReady() {
         return localLerf != null;
     }
-    
+
     @Override
     public synchronized void execute() {
         GameController.getInstance().executeCommand(
                 new NewDrakLeafCommand(boardController, localLerf));
-        
+        boardController.renderBoard();
         boardController.removeBoardMovement();
         player.setFase(fluxoController.newDarkLeafEnd());
         fluxoController.newDarkLeaf();
         player.notifySimples("");
     }
-    
+
     @Override
     public boolean tableInteraction() {
         return true;
     }
-    
+
 }

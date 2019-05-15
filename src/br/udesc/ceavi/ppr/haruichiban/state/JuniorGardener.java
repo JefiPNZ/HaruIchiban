@@ -45,6 +45,7 @@ public class JuniorGardener implements TitleOfGardener {
 
     @Override
     public void firstWind(IPlayerController aThis) {
+        aThis.notifySimples("Escolha Qual Folha Deseja Mover");
         IBoardController boardController = GameController.getInstance().getBoardController();
         IFluxoController fluxoController = GameController.getInstance().getFluxoController();
         JuniorFirstWind juniorFirstWind = new JuniorFirstWind(aThis, boardController, fluxoController);

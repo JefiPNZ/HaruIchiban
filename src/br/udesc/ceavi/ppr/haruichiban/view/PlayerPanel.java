@@ -40,7 +40,6 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
     private int rotation;
     private String estado;
     private String notificacao;
-
     /**
      * Cria um novo painel para o jogador com a cor desejada.
      *
@@ -180,7 +179,7 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
      * @param g
      */
     private void drawNotify(Graphics g) {
-        if (!this.notificacao.isEmpty()) {
+        if (!notificacao.isEmpty()) {
             g.setColor(Color.WHITE);
             Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
             g.setFont(fonte);
@@ -228,11 +227,13 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
 
     @Override
     public void notifyJogadorEscolhaUmaFlor() {
+        this.notificacao = "Escolha Sua Flor";
         this.repaint();
     }
 
     @Override
     public void notifyJogadorEscolhaUmaFlorEnd() {
+        this.notificacao = "";
         this.repaint();
     }
 

@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Jeferson Penz, Gustavo C. Santos
  */
-public class ModelPlayer{
+public class ModelPlayer {
 
     private int points;
     private List<Flor> listaDeFlores;
@@ -84,5 +84,9 @@ public class ModelPlayer{
         final ModelPlayer other = (ModelPlayer) obj;
         return Objects.equals(this.myColor, other.myColor);
     }
-    
+
+    public boolean haveFlowers() {
+        return !listaMao.isEmpty();
+    }
+
 }

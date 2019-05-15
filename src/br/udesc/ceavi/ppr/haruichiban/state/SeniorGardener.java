@@ -35,6 +35,7 @@ public class SeniorGardener implements TitleOfGardener {
 
     @Override
     public void putFlowerTable(IPlayerController aThis) {
+        aThis.notifySimples("Escolha A Posição Para A Flor");
         IBoardController boardController = GameController.getInstance().getBoardController();
         IFluxoController fluxoController = GameController.getInstance().getFluxoController();
 
@@ -51,6 +52,7 @@ public class SeniorGardener implements TitleOfGardener {
 
     @Override
     public void newDarkLeaf(IPlayerController aThis) {
+        aThis.notifySimples("Escolha A Nova Folha Escura");
         IBoardController boardController = GameController.getInstance().getBoardController();
         IFluxoController fluxoController = GameController.getInstance().getFluxoController();
 

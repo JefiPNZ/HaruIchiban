@@ -14,18 +14,15 @@ public class MoveAnimalCommand implements Command {
 
     private Animal animal;
     private ModelBoardTile boardTile;
-    private IBoardController boardController;
 
-    public MoveAnimalCommand(Animal animal, ModelBoardTile boardTile, IBoardController boardController) {
+    public MoveAnimalCommand(Animal animal, ModelBoardTile boardTile) {
         this.animal = animal;
         this.boardTile = boardTile;
-        this.boardController = boardController;
     }
 
     @Override
     public void execute() {
         boardTile.getFolha().colocarPecaNaFolha(animal);
-        boardController.renderBoard();
     }
 
 }
