@@ -1,6 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.BoardObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -11,19 +11,16 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
 
@@ -32,12 +29,35 @@ import javax.swing.event.ListSelectionEvent;
  *
  * @author Jeferson Penz
  */
-public class BoardTable extends JTable implements BoardObserver, GameStateObserver{
+public class BoardTable extends JTable implements BoardObserver, GameStateObserver {
 
     private IBoardController controller;
     private BoardPanel parentPanel;
     private BufferedImage[][] boardImages;
     private BufferedImage tileImage;
+
+    @Override
+    public void notifyAtivarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(true);
+    }
+
+    @Override
+    public void notifyDesativarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(false);
+    }
+
+    @Override
+    public void notifyAtivarDirection() {
+        parentPanel.ativarBotoes();
+    }
+
+    @Override
+    public void notifyDesativarDirection() {
+        parentPanel.desativarBotoes();
+        this.clearSelection();
+    }
 
     /**
      * Modelo de dados para tabela.
@@ -113,6 +133,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
             g.drawImage(scale.convert("img/" + imagem + ".png"), 0, 0, null);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            System.exit(0);
         }
     }
 
@@ -122,21 +143,13 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * @param parent
      */
     public BoardTable(BoardPanel parent) {
-        this.controller = GameController.getInstance().getBoardeController();
+        this.controller = GameController.getInstance().getBoardController();
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
-        try {
-            this.tileImage = ImageIO.read(new File(Images.PECA_TABULEIRO));
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+        this.tileImage = Images.getImagem(Images.PECA_TABULEIRO);
         this.initializeProperties();
-        try {
-            this.controller.renderBoard();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+        this.controller.renderBoard();
     }
 
     /**
@@ -155,15 +168,9 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         this.setOpaque(false);
         this.setShowGrid(false);
         this.setEnabled(false);
+
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if (!e.getValueIsAdjusting()) {
-                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
-            }
-        });
-        this.getColumnModel().getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            if (!e.getValueIsAdjusting()) {
-                executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
-            }
+            executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
         });
     }
 
@@ -177,10 +184,20 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * @param newSelection
      */
     protected void executeTableSelectionChange(Point newSelection) {
-        if (!this.getSelectionModel().isSelectionEmpty() && !newSelection.equals(lastSelection)) {
-            lastSelection = newSelection;
-            this.clearSelection();
-            System.out.println("Nova seleção: " + newSelection);
+        if (!this.getSelectionModel().isSelectionEmpty()
+                && !this.columnModel.getSelectionModel().isSelectionEmpty()
+                && !newSelection.equals(lastSelection)) {
+            this.getSelectionModel().clearSelection();
+            this.columnModel.getSelectionModel().clearSelection();
+            controller.eventoDeSelecao(newSelection);
+        }
+    }
+
+    protected synchronized void controlleClick(Diretion diretion) {
+        if (diretion != null) {
+            controller.botaoClick(diretion);
+            this.getSelectionModel().clearSelection();
+            this.columnModel.getSelectionModel().clearSelection();
         }
     }
 
@@ -193,8 +210,8 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         if (size.getWidth() <= 0 || size.getHeight() <= 0) {
             return new Dimension(0, 0);
         }
-        size.height -= 20;
-        size.width -= 20;
+        size.height -= 80;
+        size.width -= 80;
         float scaleX = (float) size.getWidth();
         float scaleY = (float) size.getHeight();
         if (scaleX > scaleY) {
@@ -209,14 +226,17 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
     }
 
     @Override
-    public void notificaMudancaEstado(String mensagem) {
-        try {
-            this.controller.renderBoard();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+    public void repaintTela() {
+        this.repaint();
+        this.parentPanel.repaint();
     }
 
     @Override
-    public void notificaFimJogo() {}
+    public void notificaMudancaEstado(String mensagem) {
+        this.controller.renderBoard();
+    }
+
+    @Override
+    public void notificaFimJogo(String mensagem) {
+    }
 }

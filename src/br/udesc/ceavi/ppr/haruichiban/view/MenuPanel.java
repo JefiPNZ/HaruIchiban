@@ -2,7 +2,7 @@ package br.udesc.ceavi.ppr.haruichiban.view;
 
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.control.IMenuController;
 import br.udesc.ceavi.ppr.haruichiban.control.MenuController;
 import java.awt.Color;
@@ -126,6 +126,6 @@ public class MenuPanel extends JPanel implements GameStateObserver{
     }
 
     @Override
-    public void notificaFimJogo() {}
+    public void notificaFimJogo(String mensagem) {}
     
 }

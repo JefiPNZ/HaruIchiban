@@ -1,7 +1,6 @@
-package br.udesc.ceavi.ppr.haruichiban.control;
+package br.udesc.ceavi.ppr.haruichiban.control.observers;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 /**
  *
@@ -25,5 +24,15 @@ public interface BoardObserver {
      * @param classeName
      */
     public void drawImage(int row, int col, Color lilypadColor, Float rotation, String classeName);
+
+    public void repaintTela();
+
+    public void notifyAtivarTabela();
+
+    public void notifyDesativarTabela();
+
+    public void notifyAtivarDirection();
+
+    public void notifyDesativarDirection();
     
 }

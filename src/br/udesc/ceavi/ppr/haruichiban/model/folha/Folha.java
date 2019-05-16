@@ -1,12 +1,9 @@
 package br.udesc.ceavi.ppr.haruichiban.model.folha;
 
-import br.udesc.ceavi.ppr.haruichiban.exceptions.NenufareJaPossuiUmaPecaEmCimaException;
-import br.udesc.ceavi.ppr.haruichiban.exceptions.CanNotChangeSideNenufareException;
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
 import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.model.TipoPeca;
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 /**
  *
@@ -17,12 +14,22 @@ import java.awt.image.BufferedImage;
 public abstract class Folha extends PecaTabuleiro {
 
     protected boolean isShowDarkSide;
+    protected boolean sempreEscura;
     protected PecaTabuleiro peca;
     protected Filhote filhote;
 
     public Folha(float rotacao) {
         super(rotacao, null);
+        this.sempreEscura = false;
         this.isShowDarkSide = false;
+    }
+
+    public boolean isSempreEscura() {
+        return sempreEscura;
+    }
+
+    public void setSempreEscura(boolean sempreEscura) {
+        this.sempreEscura = sempreEscura;
     }
 
     /**
@@ -31,7 +38,7 @@ public abstract class Folha extends PecaTabuleiro {
      * @return true esta mostrando,false se não esta mostrando
      */
     public boolean isEscura() {
-        return isShowDarkSide;
+        return this.sempreEscura || isShowDarkSide;
     }
 
     /**
@@ -57,13 +64,14 @@ public abstract class Folha extends PecaTabuleiro {
      * CanNotChangeSideNenufareException quando o lado escuro ja esta sendo
      * mostardo
      *
-     * @throws CanNotChangeSideNenufareException
+     * @return
      */
-    public void virarFolha() throws CanNotChangeSideNenufareException {
+    public boolean virarFolha() {
         if (isShowDarkSide) {
-            throw new CanNotChangeSideNenufareException();
+            return false;
         }
         isShowDarkSide = true;
+        return true;
     }
 
     /**
@@ -72,20 +80,21 @@ public abstract class Folha extends PecaTabuleiro {
      * com outra peca
      *
      * @param peca
-     * @throws NenufareJaPossuiUmaPecaEmCimaException
      */
-    public void colocarPecaNaFolha(PecaTabuleiro peca) throws NenufareJaPossuiUmaPecaEmCimaException {
+    public boolean colocarPecaNaFolha(PecaTabuleiro peca) {
         if (hasPeca()) {
-            throw new NenufareJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
+            return false;
         }
         this.peca = peca;
+        return true;
     }
-    
-    public void colocarFilhoteNaFolha(Filhote filhote) throws NenufareJaPossuiUmaPecaEmCimaException {
+
+    public boolean colocarFilhoteNaFolha(Filhote filhote) {
         if (hasFilhote()) {
-            throw new NenufareJaPossuiUmaPecaEmCimaException(peca.getClass().getName());
+            return false;
         }
         this.filhote = filhote;
+        return true;
     }
 
     /**
@@ -93,7 +102,7 @@ public abstract class Folha extends PecaTabuleiro {
      *
      * @return retorna peca removida
      */
-    public PecaTabuleiro removerPecaDeNenufare() {
+    public PecaTabuleiro removerPecaDeFlor() {
         PecaTabuleiro pecaPegar = peca;
         peca = null;
         return pecaPegar;

@@ -33,8 +33,10 @@ public class ModelBoardTile {
     /**
      * Remove a folha da peça.
      */
-    public void removeFolha() {
+    public Folha removeFolha() {
+        Folha retono = folha;
         this.folha = null;
+        return retono;
     }
 
     /**

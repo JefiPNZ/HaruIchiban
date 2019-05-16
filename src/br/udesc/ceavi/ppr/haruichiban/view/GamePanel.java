@@ -15,10 +15,11 @@ import javax.swing.JPanel;
 
 /**
  * Painel para representação do jogo.
+ *
  * @author Jeferson Penz
  */
-public class GamePanel extends JPanel{
-    
+public class GamePanel extends JPanel {
+
     private BufferedImage waterImg;
 
     /**
@@ -26,12 +27,7 @@ public class GamePanel extends JPanel{
      */
     public GamePanel() {
         super();
-        try{
-            waterImg = ImageIO.read(new File(Images.TABULEIRO_AGUA));
-        }
-        catch (IOException ex){
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
-        }
+        waterImg = Images.getImagem(Images.TABULEIRO_AGUA);
         this.setBackground(new Color(86, 134, 190));
         this.setLayout(new BorderLayout(1, 1));
     }
@@ -42,15 +38,15 @@ public class GamePanel extends JPanel{
      */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int xImg = (int)Math.ceil((float)this.getWidth() / (float)waterImg.getWidth());
-        int yImg = (int)Math.ceil((float)this.getHeight()/ (float)waterImg.getHeight());
-        ((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.05f));
+        int xImg = (int) Math.ceil((float) this.getWidth() / (float) waterImg.getWidth());
+        int yImg = (int) Math.ceil((float) this.getHeight() / (float) waterImg.getHeight());
+        ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.05f));
         for (int i = 0; i < xImg; i++) {
             for (int j = 0; j < yImg; j++) {
                 g.drawImage(waterImg, i * waterImg.getWidth(), j * waterImg.getHeight(), null);
             }
         }
-        ((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+        ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
     }
-    
+
 }

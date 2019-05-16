@@ -1,10 +1,13 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.SeniorFlowerBoard;
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.SeniorNewDrakLeaf;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
+import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
+import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
+import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 
 /**
  *
@@ -15,40 +18,46 @@ import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 public class SeniorGardener implements TitleOfGardener {
 
     @Override
-    public void becomeUntitledGardener(PlayerController aThis) {
+    public void becomeUntitledGardener(IPlayerController aThis) {
         aThis.setTitle(new UntitledGardener());
+        aThis.notifySemTitulo();
     }
 
     @Override
-    public void becomeJuniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarJuniorException {
+    public void becomeJuniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarJuniorException {
         throw new PlayNaoPodeSeTornarJuniorException("Este usuario é um Senior, e não pode se tornar um Junior");
     }
 
     @Override
-    public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException {
+    public void becomeSeniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarSeniorException {
         throw new PlayNaoPodeSeTornarSeniorException("Este usuario já é um Senior");
     }
 
     @Override
-    public void getFolhaNoTabuleiroParaFlor(PlayerController aThis) throws Exception {
-        //Requerindo Ao Jogador Que Escolha Um Local Apropriado
-        aThis.requerirAoJogadorQueEsteEscolhaUmFolhaParaColocarAFlor();
+    public void putFlowerTable(IPlayerController aThis) {
+        aThis.notifySimples("Escolha A Posição Para A Flor");
+        IBoardController boardController = GameController.getInstance().getBoardController();
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+
+        SeniorFlowerBoard juniorFlowerBoard = new SeniorFlowerBoard(aThis, boardController, fluxoController);
+        boardController.initBoardMovement(juniorFlowerBoard);
     }
 
     @Override
-    public void colocandoFlorNaFolha(PlayerController aThis, Folha flor) throws Exception {
-        flor.colocarPecaNaFolha(aThis.removerFlorEmJogo());
-        GameController.getInstance().florColocadaNoTabuleiro();
+    public void firstWind(IPlayerController aThis) {
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+        aThis.setFase(fluxoController.firstWindEnd());
+        fluxoController.firstWind();
     }
 
     @Override
-    public void chamarPrimeiroVentoDaPrimaveira(PlayerController aThis) {
-        //Não Faz Nada
-    }
+    public void newDarkLeaf(IPlayerController aThis) {
+        aThis.notifySimples("Escolha A Nova Folha Escura");
+        IBoardController boardController = GameController.getInstance().getBoardController();
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
 
-    @Override
-    public void escolhaANovaFolhaEscura(PlayerController aThis) throws Exception {
-        aThis.requerirAoJogadorQueEsteEscolhaUmFolhaParaSerVirada();
+        SeniorNewDrakLeaf juniorFlowerBoard = new SeniorNewDrakLeaf(aThis, boardController, fluxoController);
+        boardController.initBoardMovement(juniorFlowerBoard);
     }
 
 }

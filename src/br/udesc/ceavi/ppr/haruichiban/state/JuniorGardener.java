@@ -1,10 +1,14 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.JuniorFirstWind;
+import br.udesc.ceavi.ppr.haruichiban.boardmovement.JuniorFlowerBoard;
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
+import br.udesc.ceavi.ppr.haruichiban.control.IFluxoController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
-import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
+import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
+
 /**
  *
  * @author GustavoSantos
@@ -13,49 +17,46 @@ import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
  */
 public class JuniorGardener implements TitleOfGardener {
 
-    public void chooseNewDarkNenufares() throws Exception {
-        throw new Exception("The Play is already a GardenerJunior, he can not choose New Dark Nenufares");
-    }
-
     @Override
-    public void becomeUntitledGardener(PlayerController aThis) {
+    public void becomeUntitledGardener(IPlayerController aThis) {
         aThis.setTitle(new UntitledGardener());
+        aThis.notifySemTitulo();
     }
 
     @Override
-    public void becomeJuniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarJuniorException {
+    public void becomeJuniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarJuniorException {
         throw new PlayNaoPodeSeTornarJuniorException("Este usuario já é um Junior");
     }
 
     @Override
-    public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException {
+    public void becomeSeniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarSeniorException {
         throw new PlayNaoPodeSeTornarSeniorException("Este usuario é um Junior, e não pode se tornar um senior");
     }
 
     @Override
-    public void getFolhaNoTabuleiroParaFlor(PlayerController aThis) throws Exception {
-        //Buscando Flor Escura
-        Folha folhaEscura = GameController.getInstance().getBoardeController().getFolhaEscura();
-        colocandoFlorNaFolha(aThis, folhaEscura);
+    public void putFlowerTable(IPlayerController aThis) {
+        IBoardController boardController = GameController.getInstance().getBoardController();
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+
+        JuniorFlowerBoard juniorFlowerBoard = new JuniorFlowerBoard(aThis, boardController, fluxoController);
+        juniorFlowerBoard.addPoint(boardController.getFolhaEscura());
+        juniorFlowerBoard.execute();
     }
 
     @Override
-    public void colocandoFlorNaFolha(PlayerController aThis, Folha flor) throws Exception {
-        flor.colocarPecaNaFolha(aThis.removerFlorEmJogo());
-        GameController.getInstance().florColocadaNoTabuleiro();
+    public void firstWind(IPlayerController aThis) {
+        aThis.notifySimples("Escolha Qual Folha Deseja Mover");
+        IBoardController boardController = GameController.getInstance().getBoardController();
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+        JuniorFirstWind juniorFirstWind = new JuniorFirstWind(aThis, boardController, fluxoController);
+        boardController.initBoardMovement(juniorFirstWind);
     }
 
     @Override
-    public void chamarPrimeiroVentoDaPrimaveira(PlayerController aThis) {
-        try {
-            aThis.requerirAoJogadorQueEsteEscolhaUmFolhaParaSerMovida();
-        } catch (Exception ex) {
-            
-        }
+    public void newDarkLeaf(IPlayerController aThis) {
+        IFluxoController fluxoController = GameController.getInstance().getFluxoController();
+        aThis.setFase(fluxoController.newDarkLeafEnd());
+        fluxoController.newDarkLeaf();
     }
 
-    @Override
-    public void escolhaANovaFolhaEscura(PlayerController aThis) throws Exception{
-        //Não Faz Nada
-    }
 }

@@ -29,7 +29,7 @@ public abstract class Animal extends PecaTabuleiro {
     private static BufferedImage imagemPlataforma;
     public static BufferedImage getImagemPlataforma() throws IOException{
         if(imagemPlataforma == null){
-            imagemPlataforma = ImageIO.read(new File(Images.ANIMAL_PLATAFORMA));
+            imagemPlataforma = Images.getImagem(Images.ANIMAL_PLATAFORMA);
         }
         return imagemPlataforma;
     }

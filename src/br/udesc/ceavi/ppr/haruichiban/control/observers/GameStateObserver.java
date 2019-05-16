@@ -1,4 +1,4 @@
-package br.udesc.ceavi.ppr.haruichiban.control;
+package br.udesc.ceavi.ppr.haruichiban.control.observers;
 
 /**
  *
@@ -8,6 +8,6 @@ public interface GameStateObserver {
     
     public void notificaMudancaEstado(String mensagem);
     
-    public void notificaFimJogo();
+    public void notificaFimJogo(String mensagem);
     
 }

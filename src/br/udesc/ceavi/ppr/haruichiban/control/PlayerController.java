@@ -1,21 +1,22 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.command.ChooseFlowerPlayer;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.flores.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
-import br.udesc.ceavi.ppr.haruichiban.model.PecaTabuleiro;
 import br.udesc.ceavi.ppr.haruichiban.state.TitleOfGardener;
 import br.udesc.ceavi.ppr.haruichiban.state.UntitledGardener;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.SwingUtilities;
 
 /**
- * Controlador de Player, servirar para controlar as acoes do play no jogo
+ * Controlador de Player, servirar para controlar as acoes do player no jogo
  *
  * @author Gustavo C Santos
  * @since 08/05/2019
@@ -26,10 +27,10 @@ public class PlayerController implements IPlayerController {
     /**
      * Representa o jogador.
      */
-    private ModelPlayer play;
+    private ModelPlayer player;
 
     /**
-     * Padrao State para guiar as açoes do play perante o estado dele
+     * Padrao State para guiar as açoes do player perante o estado dele
      */
     private TitleOfGardener title;
 
@@ -40,107 +41,132 @@ public class PlayerController implements IPlayerController {
 
     private List<PlayerPanelObserver> observers = new ArrayList<>();
 
-    private boolean esconderValoresDaMao;
+    private IFluxoController fluxoController;
+
+    private Fase fase;
 
     /**
      *
      * @param cor identifica a cor das flores do jogador
+     * @param tamanhoDoDeck tamano do deck
      */
-    public PlayerController(Color cor,int tamanhoDoDeck) {
+    public PlayerController(Color cor, int tamanhoDoDeck) {
         this.title = new UntitledGardener();
-        this.play = new ModelPlayer(cor,tamanhoDoDeck);
-        hideHandValue();
+        this.player = new ModelPlayer(cor, tamanhoDoDeck);
     }
 
+    @Override
     public void becomeUntitledGardener() throws PlayNaoPodeSeTornarUntitledGardenerException {
         title.becomeUntitledGardener(this);
     }
 
+    @Override
     public void becomeJuniorGardener() throws PlayNaoPodeSeTornarJuniorException {
-        System.err.println("Me Tornei Junior");
         title.becomeJuniorGardener(this);
     }
 
+    @Override
     public void becomeSeniorGardener() throws PlayNaoPodeSeTornarSeniorException {
-        System.err.println("Me Tornei Senior");
         title.becomeSeniorGardener(this);
     }
 
+    @Override
     public void setTitle(TitleOfGardener title) {
         this.title = title;
     }
 
     public void addPontos(int pontos) {
-        play.addPontos(pontos);
+        player.addPontos(pontos);
     }
 
-    public ModelPlayer getPlay() {
-        return play;
+    public ModelPlayer getPlayer() {
+        return player;
     }
 
     @Override
     public int getPileSize() {
-        return play.getListaDeFlores().size();
-    }
-
-    @Override
-    public List<Object> getHand() {
-        if (esconderValoresDaMao) {
-            return Arrays.asList(-1, -1, -1);
-        }
-        return play.getListaMao().stream().map(flor -> flor.getValor()).collect(Collectors.toList());
-    }
-
-    @Override
-    public void selecionarFlor(int x) {
-        //Tira da mao do play a flor para coloca-la em jogo
-        this.florEmJogo = play.getFlorFromHand(x);
-        if (florEmJogo != null) {
-            System.out.println("Selecionei " + florEmJogo.getValor());
-            GameController.getInstance().selecaoDeFlorFinalizada();
-        }else{
-            System.err.println("Falha Na selecao da Flor");
-            System.exit(0);
-        }
-        //Notificar A Area da Flor Escolhida Pelo Jogador
-
-    }
-
-    public Flor getFlorEmJogo() {
-        return florEmJogo;
+        return player.getListaDeFlores().size();
     }
 
     public Color getColor() {
-        return play.getColor();
+        return player.getColor();
     }
 
-    public void showHandValue() {
-        esconderValoresDaMao = false;
-        observers.forEach(obs -> obs.notificarRenderizeOsValoresDaMao());
+    @Override
+    public synchronized List<Object> getHand() {
+        return player.getListaMao().stream().map(flor -> flor.getValor()).collect(Collectors.toList());
     }
 
-    public void hideHandValue() {
-        esconderValoresDaMao = true;
-        observers.forEach(obs -> obs.notificarRenderizeOsValoresDaMao());
-    }
-
-    public void requerirAoJogadorQueEsteEscolhaUmaFlor() {
-        observers.forEach(obs -> {
-            obs.notifyJogadorEscolhaUmaFlor();
+    @Override
+    public void choseFlowerDeck() {
+        SwingUtilities.invokeLater(() -> {
+            observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlor());
         });
-        showHandValue();
     }
 
-    public void requerirAoJogadorQueEsteEscolhaUmFolhaParaSerVirada() throws Exception {
-
+    @Override
+    public void chooseFlowerDeckEnd(int x) {
+        GameController.getInstance().executeCommand(
+                new ChooseFlowerPlayer(this, x));
+        fase = fluxoController.chooseFlowerEnd();
+        fluxoController.chooseFlower();
+        notifiyFlowerChoise();
     }
 
-    public void requerirAoJogadorQueEsteEscolhaUmFolhaParaSerMovida() throws Exception {
-
+    @Override
+    public Flor getFlower() {
+        return florEmJogo;
     }
 
-    public void requerirAoJogadorQueEsteEscolhaUmFolhaParaColocarAFlor() throws Exception {
+    @Override
+    public void getFlorFromHand(int x) {
+        florEmJogo = player.getFlorFromHand(x);
+    }
 
+    @Override
+    public Flor removeFlower() {
+        Flor flor = florEmJogo;
+        florEmJogo = null;
+        return flor;
+    }
+
+    @Override
+    public void putFlowerTable() {
+        title.putFlowerTable(this);
+    }
+
+    @Override
+    public void fristWint() {
+        title.firstWind(this);
+    }
+
+    @Override
+    public void newDarkLeaf() {
+        title.newDarkLeaf(this);
+    }
+
+    @Override
+    public TitleOfGardener getTitle() {
+        return title;
+    }
+
+    @Override
+    public void devolverFlorAoDeck() {
+        player.devolverFlor(removeFlower());
+    }
+
+    @Override
+    public void setFluxoController(IFluxoController aThis) {
+        this.fluxoController = aThis;
+    }
+
+    public IFluxoController getFluxoController() {
+        return fluxoController;
+    }
+
+    @Override
+    public int getPlayerScore() {
+        return this.player.getPoints();
     }
 
     @Override
@@ -148,44 +174,43 @@ public class PlayerController implements IPlayerController {
         this.observers.add(obs);
     }
 
-    public void requerirQueOJogadorColoqueAFlorNoTabuleiro() {
-        try {
-            title.getFolhaNoTabuleiroParaFlor(this);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(0);
-        }
+    @Override
+    public void notifySemTitulo() {
+        observers.forEach(obs -> obs.notifyYouAreSemTitulo());
     }
 
-    public PecaTabuleiro removerFlorEmJogo() {
-        Flor flor = florEmJogo;
-        florEmJogo = null;
-        return flor;
+    @Override
+    public void notifyYouAJunior() {
+        observers.forEach(obs -> obs.notifyYouAreJunior());
     }
 
-    public void chamarOPrimeiroVentoDaPrimaveira() {
-        try {
-            title.chamarPrimeiroVentoDaPrimaveira(this);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(0);
-        }
+    @Override
+    public void notifyYouASenior() {
+        observers.forEach(obs -> obs.notifyYouAreSenior());
     }
 
-    public void escolhaANovaFolhaEscura() {
-        try {
-            title.escolhaANovaFolhaEscura(this);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(0);
-        }
+    @Override
+    public void notifySimples(String messagem) {
+        observers.forEach(obs -> obs.notifySimpleMessager(messagem));
     }
 
-    public void notifyYouWon() {
-        System.out.println("Ganhei Porra");
+    private void notifiyFlowerChoise() {
+        observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlorEnd());
     }
 
-    public TitleOfGardener getTitle() {
-        return title;
+    @Override
+    public void setFase(Fase fase) {
+        this.fase = fase;
     }
+
+    @Override
+    public Fase getFase() {
+        return fase;
+    }
+
+    @Override
+    public boolean haveFlowers() {
+        return player.haveFlowers();
+    }
+
 }

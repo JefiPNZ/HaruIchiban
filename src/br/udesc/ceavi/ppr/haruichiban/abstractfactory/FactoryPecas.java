@@ -1,7 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.abstractfactory;
 
 import br.udesc.ceavi.ppr.haruichiban.model.filhote.Filhote;
-import br.udesc.ceavi.ppr.haruichiban.model.Flor;
+import br.udesc.ceavi.ppr.haruichiban.model.flores.Flor;
 import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 import br.udesc.ceavi.ppr.haruichiban.model.ModelPlayer;
 import br.udesc.ceavi.ppr.haruichiban.model.animais.Animal;

@@ -15,17 +15,20 @@ import java.io.IOException;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import javax.swing.JOptionPane;
 
 /**
  * Painel para representação dos dados de um jogador.
  *
  * @author Jeferson Penz
  */
-public class PlayerPanel extends JPanel {
+public class PlayerPanel extends JPanel implements PlayerPanelObserver {
 
     private IPlayerController controller;
     private BufferedImage floorImg;
@@ -35,7 +38,8 @@ public class PlayerPanel extends JPanel {
     private BufferedImage faceImg;
     private PlayerHandTable playerHand;
     private int rotation;
-
+    private String estado;
+    private String notificacao;
     /**
      * Cria um novo painel para o jogador com a cor desejada.
      *
@@ -48,13 +52,16 @@ public class PlayerPanel extends JPanel {
      */
     public PlayerPanel(Color color, IPlayerController controller) {
         super();
+        this.estado = "";
+        this.notificacao = "";
         this.controller = controller;
+        this.controller.addObserver(this);
         ColorScale scale = new ColorScale(color);
         try {
-            this.floorImg = ImageIO.read(new File(Images.JOGADOR_TABUA));
-            this.baseImg = ImageIO.read(new File(Images.JOGADOR_BASE));
+            this.floorImg = Images.getImagem(Images.JOGADOR_TABUA);
+            this.baseImg = Images.getImagem(Images.JOGADOR_BASE);
             this.clothImg = scale.convert(Images.JOGADOR_ROUPA);
-            this.faceImg = ImageIO.read(new File(Images.JOGADOR_ROSTO));
+            this.faceImg = Images.getImagem(Images.JOGADOR_ROSTO);
             if (GameController.getInstance().getFactoryPecas().getClass().getSimpleName()
                     .equals(FactoryPecasInverno.class.getSimpleName())) {
                 this.flowerImg = scale.convert(Images.JOGADOR_FLOR_INV);
@@ -101,6 +108,8 @@ public class PlayerPanel extends JPanel {
         this.drawFloor(g);
         this.drawPlayer(g);
         this.drawPile(g);
+        this.drawState(g);
+        this.drawNotify(g);
     }
 
     /**
@@ -150,6 +159,36 @@ public class PlayerPanel extends JPanel {
     }
 
     /**
+     * Desenha o estado do jogador no painel.
+     *
+     * @param g
+     */
+    private void drawState(Graphics g) {
+        if (!this.estado.isEmpty()) {
+            g.setColor(Color.WHITE);
+            Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
+            g.setFont(fonte);
+            FontMetrics metrics = g.getFontMetrics(fonte);
+            g.drawString(this.estado, (this.getWidth() - metrics.stringWidth(this.estado)) / 2, metrics.getHeight() + 5);
+        }
+    }
+
+    /**
+     * Desenha o estado da última notificação do jogador no painel.
+     *
+     * @param g
+     */
+    private void drawNotify(Graphics g) {
+        if (!notificacao.isEmpty()) {
+            g.setColor(Color.WHITE);
+            Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
+            g.setFont(fonte);
+            FontMetrics metrics = g.getFontMetrics(fonte);
+            g.drawString(this.notificacao, (this.getWidth() - metrics.stringWidth(this.notificacao)) / 2, this.getHeight() - 15);
+        }
+    }
+
+    /**
      * Define a rotação da imagem do jogador.
      *
      * @param rotation
@@ -169,6 +208,39 @@ public class PlayerPanel extends JPanel {
      */
     public BufferedImage getFlowerImg() {
         return flowerImg;
+    }
+
+    @Override
+    public void notifyYouAreJunior() {
+        this.estado = "Você é o Junior...";
+    }
+
+    @Override
+    public void notifyYouAreSenior() {
+        this.estado = "Você é o Senior...";
+    }
+
+    @Override
+    public void notifyYouAreSemTitulo() {
+        this.estado = "";
+    }
+
+    @Override
+    public void notifyJogadorEscolhaUmaFlor() {
+        this.notificacao = "Escolha Sua Flor";
+        this.repaint();
+    }
+
+    @Override
+    public void notifyJogadorEscolhaUmaFlorEnd() {
+        this.notificacao = "";
+        this.repaint();
+    }
+
+    @Override
+    public void notifySimpleMessager(String mensagem) {
+        this.notificacao = mensagem;
+        this.repaint();
     }
 
 }

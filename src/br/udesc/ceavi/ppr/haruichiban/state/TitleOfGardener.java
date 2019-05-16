@@ -1,10 +1,9 @@
 package br.udesc.ceavi.ppr.haruichiban.state;
 
-import br.udesc.ceavi.ppr.haruichiban.control.PlayerController;
+import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarJuniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarSeniorException;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
-import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
 
 /**
  *
@@ -14,17 +13,15 @@ import br.udesc.ceavi.ppr.haruichiban.model.folha.Folha;
  */
 public interface TitleOfGardener {
 
-    public void becomeUntitledGardener(PlayerController aThis) throws PlayNaoPodeSeTornarUntitledGardenerException;
+    public void becomeUntitledGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarUntitledGardenerException;
 
-    public void becomeJuniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarJuniorException;
+    public void becomeJuniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarJuniorException;
 
-    public void becomeSeniorGardener(PlayerController aThis) throws PlayNaoPodeSeTornarSeniorException;
+    public void becomeSeniorGardener(IPlayerController aThis) throws PlayNaoPodeSeTornarSeniorException;
 
-    public void getFolhaNoTabuleiroParaFlor(PlayerController aThis) throws Exception;
+    public void putFlowerTable(IPlayerController aThis);
 
-    public void colocandoFlorNaFolha(PlayerController aThis, Folha flor) throws Exception;
+    public void firstWind(IPlayerController aThis);
 
-    public void chamarPrimeiroVentoDaPrimaveira(PlayerController aThis) throws Exception;;
-
-    public void escolhaANovaFolhaEscura(PlayerController aThis) throws Exception;
+    public void newDarkLeaf(IPlayerController aThis);
 }

@@ -1,7 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
 import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.GameStateObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -18,7 +19,7 @@ import javax.swing.SwingUtilities;
  *
  * @author Jeferson Penz
  */
-public class MainFrame extends JFrame implements GameStateObserver{
+public class MainFrame extends JFrame implements GameStateObserver {
 
     /**
      * Painel para conter todo o jogo.
@@ -59,11 +60,10 @@ public class MainFrame extends JFrame implements GameStateObserver{
      */
     public static void main(String[] args) {
         GameController.getInstance();
-        FrameConfig frameConfig = new FrameConfig(new MainFrame());
-        frameConfig.initializeFrameProperties();
+        MainFrame.exibeConfiguracao();
     }
-    
-    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase){
+
+    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
         GameController.getInstance().addGameStateObserver(this);
         GameController.getInstance().begin(varianteTabuleiro, tamanhoTabuleiro, corJogadorTopo, corJogadorBase);
         this.initializeGameComponents();
@@ -106,12 +106,21 @@ public class MainFrame extends JFrame implements GameStateObserver{
     }
 
     @Override
-    public void notificaMudancaEstado(String mensagem) {}
+    public void notificaMudancaEstado(String mensagem) {
+        this.repaint();
+    }
 
     @Override
-    public void notificaFimJogo() {
-            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    public void notificaFimJogo(String mensagem) {
+        if(mensagem != null && !mensagem.isEmpty()){
+            JOptionPane.showMessageDialog(this, mensagem);
+        }
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        MainFrame.exibeConfiguracao();
+    }
+    
+    public static void exibeConfiguracao(){
         FrameConfig frameConfig = new FrameConfig(new MainFrame());
         frameConfig.initializeFrameProperties();
     }
