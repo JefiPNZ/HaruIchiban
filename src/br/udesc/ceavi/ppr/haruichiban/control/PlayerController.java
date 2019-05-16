@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.SwingUtilities;
 
 /**
  * Controlador de Player, servirar para controlar as acoes do player no jogo
@@ -98,7 +99,9 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public void choseFlowerDeck() {
-        observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlor());
+        SwingUtilities.invokeLater(() -> {
+            observers.forEach(obs -> obs.notifyJogadorEscolhaUmaFlor());
+        });
     }
 
     @Override

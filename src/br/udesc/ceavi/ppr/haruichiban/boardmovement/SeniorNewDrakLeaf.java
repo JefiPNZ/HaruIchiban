@@ -46,6 +46,9 @@ public class SeniorNewDrakLeaf implements BoardMovement {
     }
 
     private boolean validandoPosicao(Point positionBoard) {
+        if(positionBoard == null){
+            return false;
+        }
         ModelBoardTile boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
             player.notifySimples("A Posicao Escolhida Não Tem Folha");

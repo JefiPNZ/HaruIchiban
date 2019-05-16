@@ -5,6 +5,7 @@ import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.Posicao;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -23,7 +24,7 @@ public class BoardPanel extends JPanel {
     private BoardTable board;
     private JButton norte;
     private JButton sul;
-    private JButton lest;
+    private JButton leste;
     private JButton oeste;
 
     /**
@@ -52,10 +53,23 @@ public class BoardPanel extends JPanel {
         GameController.getInstance().addGameStateObserver(this.board);
         JScrollPane pane = new JScrollPane();
         this.setLayout(new BorderLayout());
-        norte = new JButton("Norte");
-        sul = new JButton("Sul");
-        oeste = new JButton("Oeste");
-        lest = new JButton("Lest");
+        norte = new JButton("<html>Norte</html>");
+        norte.setPreferredSize(new Dimension(0, 30));
+        norte.setBorder(null);
+        norte.setFocusPainted(false);
+        norte.setBackground(new Color(120, 143, 235));
+        sul = new JButton("<html>Sul</html");
+        sul.setBorder(null);
+        sul.setPreferredSize(new Dimension(0, 30));
+        sul.setBackground(new Color(120, 143, 235));
+        oeste = new JButton("<html>O<br/>e<br/>s<br/>t<br/>e</html>");
+        oeste.setPreferredSize(new Dimension(30, 0));
+        oeste.setBorder(null);
+        oeste.setBackground(new Color(120, 143, 235));
+        leste = new JButton("<html>L<br/>e<br/>s<br/>t<br/>e</html>");
+        leste.setPreferredSize(new Dimension(30, 0));
+        leste.setBorder(null);
+        leste.setBackground(new Color(120, 143, 235));
         desativarBotoes();
         JPanel pa = new JPanel();
         pa.setOpaque(false);
@@ -63,7 +77,13 @@ public class BoardPanel extends JPanel {
         this.add(norte, BorderLayout.NORTH);
         this.add(sul, BorderLayout.SOUTH);
         this.add(oeste, BorderLayout.WEST);
-        this.add(lest, BorderLayout.EAST);
+        this.add(leste, BorderLayout.EAST);
+        
+        
+        norte.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.NORTE)));
+        sul.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.SUL)));
+        oeste.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.OESTE)));
+        leste.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.LEST)));
 
         pane.setViewportView(board);
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -88,8 +108,8 @@ public class BoardPanel extends JPanel {
         oeste.setSelected(false);
         oeste.setEnabled(false);
 
-        lest.setSelected(false);
-        lest.setEnabled(false);
+        leste.setSelected(false);
+        leste.setEnabled(false);
     }
 
     protected void ativarBotoes() {
@@ -102,12 +122,7 @@ public class BoardPanel extends JPanel {
         oeste.setEnabled(true);
         oeste.setSelected(true);
         
-        lest.setEnabled(true);
-        lest.setSelected(true);
-        
-        norte.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.NORTE)));
-        sul.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.SUL)));
-        oeste.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.OESTE)));
-        lest.addActionListener((e) -> board.controlleClick(new Posicao(Posicao.Direcao.LEST)));
+        leste.setEnabled(true);
+        leste.setSelected(true);
     }
 }

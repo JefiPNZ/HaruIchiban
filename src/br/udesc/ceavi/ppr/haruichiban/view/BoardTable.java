@@ -208,8 +208,8 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
         if (size.getWidth() <= 0 || size.getHeight() <= 0) {
             return new Dimension(0, 0);
         }
-        size.height -= 20;
-        size.width -= 20;
+        size.height -= 80;
+        size.width -= 80;
         float scaleX = (float) size.getWidth();
         float scaleY = (float) size.getHeight();
         if (scaleX > scaleY) {
