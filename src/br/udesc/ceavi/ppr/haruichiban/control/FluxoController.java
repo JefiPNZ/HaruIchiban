@@ -1,7 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
 import br.udesc.ceavi.ppr.haruichiban.command.DefineTitleCommand;
-import br.udesc.ceavi.ppr.haruichiban.command.DifineTitleEmpateCommand;
+import br.udesc.ceavi.ppr.haruichiban.command.DefineTitleEmpateCommand;
 import br.udesc.ceavi.ppr.haruichiban.exceptions.PlayNaoPodeSeTornarUntitledGardenerException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +41,7 @@ public class FluxoController implements IFluxoController {
         try {
             topPlayer.becomeUntitledGardener();
             bottomPlayer.becomeUntitledGardener();
-        } catch (PlayNaoPodeSeTornarUntitledGardenerException ex) {
-            System.err.println(ex.getMessage());
-        }
+        } catch (PlayNaoPodeSeTornarUntitledGardenerException ex) {}
         topPlayer.setFase(Fase.CHOISE_FLOWER_DECK);
         bottomPlayer.setFase(Fase.CHOISE_FLOWER_DECK);
         int vez = controlGame.getRandomizer().nextInt();
@@ -86,15 +84,13 @@ public class FluxoController implements IFluxoController {
         this.notificaMudancaEstado("Definição de títulos:");
 
         if (bottomPlayer.getFlower().getValor() > topPlayer.getFlower().getValor()) {
-            controlGame.executeCommand(
-                    new DefineTitleCommand(topPlayer, bottomPlayer));
+            controlGame.executeCommand(new DefineTitleCommand(topPlayer, bottomPlayer));
             jardineiro.put(JARDINEIROJUNIOR, topPlayer);
             jardineiro.put(JARDINEIROSENIOR, bottomPlayer);
             defineTitlesEnd();
 
         } else if (bottomPlayer.getFlower().getValor() < topPlayer.getFlower().getValor()) {
-            controlGame.executeCommand(
-                    new DefineTitleCommand(bottomPlayer, topPlayer));
+            controlGame.executeCommand(new DefineTitleCommand(bottomPlayer, topPlayer));
             jardineiro.put(JARDINEIROJUNIOR, bottomPlayer);
             jardineiro.put(JARDINEIROSENIOR, topPlayer);
             defineTitlesEnd();
@@ -102,8 +98,7 @@ public class FluxoController implements IFluxoController {
         } else if (bottomPlayer.getFlower().getValor() == topPlayer.getFlower().getValor()) {
 
             if (topPlayer.haveFlowers() && bottomPlayer.haveFlowers()) {
-                controlGame.executeCommand(
-                        new DifineTitleEmpateCommand(topPlayer, bottomPlayer));
+                controlGame.executeCommand(new DefineTitleEmpateCommand(topPlayer, bottomPlayer));
                 this.notificaMudancaEstado("Flores Com Mesmos Valores");
                 this.notificaMudancaEstado("Voltando Flores Para Seus Respetivos Deck");
                 startGame();
