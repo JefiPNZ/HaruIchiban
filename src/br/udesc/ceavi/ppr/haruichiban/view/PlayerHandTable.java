@@ -8,21 +8,20 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
-import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * Tabela para a mão atual do jogador.
+ * Tabela para a m�o atual do jogador.
  *
  * @author Jeferson Penz
  */
-public class PlayerHandTable extends JTable implements PlayerPanelObserver {
+public class PlayerHandTable extends JTable implements IPlayerPanelObserver {
 
-    private IPlayerController controller;
+    private static final long serialVersionUID = 1L;
+    private Jogador controller;
     private PlayerPanel parentPanel;
     private ListSelectionListener listener;
 
@@ -30,6 +29,8 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * Modelo de dados para tabela.
      */
     private class PlayerHandTableModel extends AbstractTableModel {
+
+        private static final long serialVersionUID = 1L;
 
         @Override
         public int getColumnCount() {
@@ -51,6 +52,8 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * Renderização dos dados da tabela.
      */
     private class PlayerHandTableRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -77,7 +80,7 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
      * @param parent
      * @param controller entrege pelo GameController
      */
-    public PlayerHandTable(PlayerPanel parent, IPlayerController controller) {
+    public PlayerHandTable(PlayerPanel parent, Jogador controller) {
         this.parentPanel = parent;
         this.controller = controller;
         this.controller.addObserver(this);

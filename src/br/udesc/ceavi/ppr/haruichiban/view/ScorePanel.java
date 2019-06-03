@@ -1,16 +1,10 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.IScoreController;
-import br.udesc.ceavi.ppr.haruichiban.control.ScoreController;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -20,15 +14,14 @@ import javax.swing.JPanel;
  */
 public class ScorePanel extends JPanel {
 
-    private BufferedImage scoreImg;
-    private IScoreController controller;
+	private static final long serialVersionUID = 1L;
+	private BufferedImage scoreImg;
 
     /**
      * Cria um novo painel para a pontuação.
      */
     public ScorePanel() {
         super();
-        controller = new ScoreController();
         this.scoreImg = Images.getImagem(Images.PONTUACAO_FUNDO);
         this.setOpaque(false);
         this.setBackground(new Color(0, 0, 0, 0));
@@ -52,9 +45,9 @@ public class ScorePanel extends JPanel {
             int height = (int) (scaleX / scaleY * this.getHeight());
             g.fillRect(5, this.getHeight() / 2 - height / 2 + 20, this.getWidth() - 10, height - 40);
             g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(5, this.getHeight() / 2 - height / 2 + 20, this.getWidth() - 10, ((height - 40) / 2) / 5 * controller.getTopPlayerScore() + 20);
-            int posBot = (this.getHeight() / 2 + height / 2 - 20) - ((height - 40) / 2) / 5 * controller.getBotPlayerScore() - (controller.getBotPlayerScore() == 1 ? 20 : 0);
-            g.fillRect(5, posBot, this.getWidth() - 10, ((height - 40) / 2) / 5 * controller.getBotPlayerScore() - (controller.getBotPlayerScore() == 1 ? 20 : 0));
+//            g.fillRect(5, this.getHeight() / 2 - height / 2 + 20, this.getWidth() - 10, ((height - 40) / 2) / 5 * controller.getTopPlayerScore() + 20);
+//            int posBot = (this.getHeight() / 2 + height / 2 - 20) - ((height - 40) / 2) / 5 * controller.getBotPlayerScore() - (controller.getBotPlayerScore() == 1 ? 20 : 0);
+//            g.fillRect(5, posBot, this.getWidth() - 10, ((height - 40) / 2) / 5 * controller.getBotPlayerScore() - (controller.getBotPlayerScore() == 1 ? 20 : 0));
             g.drawImage(scoreImg, 0, this.getHeight() / 2 - height / 2, this.getWidth(), height, null);
         }
     }

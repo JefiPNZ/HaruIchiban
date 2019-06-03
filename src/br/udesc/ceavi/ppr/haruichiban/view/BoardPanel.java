@@ -1,6 +1,5 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.GameController;
 import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,12 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
- * Painel para representação do tabuleiro do jogo.
+ * Painel para representacao do tabuleiro do jogo.
  *
  * @author Jeferson Penz
  */
 public class BoardPanel extends JPanel {
 
+    private static final long serialVersionUID = 1L;
     private BoardTable board;
     private JButton norte;
     private JButton sul;
@@ -49,7 +49,6 @@ public class BoardPanel extends JPanel {
      */
     private void initializeBoard() {
         this.board = new BoardTable(this);
-        GameController.getInstance().addGameStateObserver(this.board);
         JScrollPane pane = new JScrollPane();
         this.setLayout(new BorderLayout());
         norte = new JButton("<html>Norte</html>");
@@ -77,8 +76,7 @@ public class BoardPanel extends JPanel {
         this.add(sul, BorderLayout.SOUTH);
         this.add(oeste, BorderLayout.WEST);
         this.add(leste, BorderLayout.EAST);
-        
-        
+
         pane.setViewportView(board);
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -109,16 +107,16 @@ public class BoardPanel extends JPanel {
     protected void ativarBotoes() {
         norte.setEnabled(true);
         norte.setSelected(true);
-        
+
         sul.setEnabled(true);
         sul.setSelected(true);
-        
+
         oeste.setEnabled(true);
         oeste.setSelected(true);
-        
+
         leste.setEnabled(true);
         leste.setSelected(true);
-        
+
         norte.addActionListener((e) -> board.controlleClick(Diretion.NORTE));
         sul.addActionListener((e) -> board.controlleClick(Diretion.SUL));
         oeste.addActionListener((e) -> board.controlleClick(Diretion.OESTE));

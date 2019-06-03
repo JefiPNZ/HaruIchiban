@@ -1,37 +1,39 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserver;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import br.udesc.ceavi.ppr.haruichiban.control.IBoardController;
-import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
-import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
-import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
-import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import br.udesc.ceavi.ppr.haruichiban.control.BoardControllerProxy;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserverProxy;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserverProxy;
+import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
+import br.udesc.ceavi.ppr.haruichiban.utils.Diretion;
+import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 
 /**
- * Tabela para representação do tabuleiro do jogo.
+ * Tabela para representacao do tabuleiro do jogo.
  *
  * @author Jeferson Penz
  */
-public class BoardTable extends JTable implements BoardObserver, GameStateObserver {
+public class BoardTable extends JTable implements BoardObserverProxy, GameStateObserverProxy {
 
-    private IBoardController controller;
+    private static final long serialVersionUID = 1L;
+    private BoardControllerProxy controller;
     private BoardPanel parentPanel;
     private BufferedImage[][] boardImages;
     private BufferedImage tileImage;
@@ -64,6 +66,8 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      */
     private class BoardTableModel extends AbstractTableModel {
 
+        private static final long serialVersionUID = 1L;
+
         @Override
         public int getColumnCount() {
             return controller.getAlturaTabuleiro();
@@ -89,6 +93,8 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * Renderização dos dados da tabela.
      */
     private class BoardTableRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -143,7 +149,7 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
      * @param parent
      */
     public BoardTable(BoardPanel parent) {
-        this.controller = GameController.getInstance().getBoardController();
+        this.controller = new BoardControllerProxy();
         this.controller.addObserver(this);
         this.parentPanel = parent;
         this.boardImages = new BufferedImage[controller.getLarguraTabuleiro()][controller.getAlturaTabuleiro()];
@@ -178,8 +184,8 @@ public class BoardTable extends JTable implements BoardObserver, GameStateObserv
 
     /**
      * Executa o evento de troca da seleção do tabuleiro.<br/>
-     * Como há dois eventos ouvindo (linha e coluna), é necessário garantir que
-     * apenas seja chamado o evento quando não houver a troca de posição.
+     * Como há dois eventos ouvindo (linha e coluna), é necessário garantir que apenas seja chamado o evento quando não
+     * houver a troca de posição.
      *
      * @param newSelection
      */

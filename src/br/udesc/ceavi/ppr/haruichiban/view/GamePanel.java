@@ -7,10 +7,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -20,7 +16,8 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel {
 
-    private BufferedImage waterImg;
+	private static final long serialVersionUID = 1L;
+	private BufferedImage waterImg;
 
     /**
      * Cria um novo painel para o jogo.

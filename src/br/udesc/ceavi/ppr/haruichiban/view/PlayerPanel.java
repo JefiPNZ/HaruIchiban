@@ -1,7 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.abstractfactory.FactoryPecasInverno;
-import br.udesc.ceavi.ppr.haruichiban.control.GameController;
+import br.udesc.ceavi.ppr.haruichiban.control.ClientController;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
@@ -10,27 +9,28 @@ import java.awt.Graphics;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import br.udesc.ceavi.ppr.haruichiban.control.IPlayerController;
-import br.udesc.ceavi.ppr.haruichiban.control.observers.PlayerPanelObserver;
+import br.udesc.ceavi.ppr.haruichiban.model.GameConfig;
+
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JOptionPane;
 
 /**
- * Painel para representação dos dados de um jogador.
+ * Painel para representacao dos dados de um jogador.
  *
  * @author Jeferson Penz
  */
-public class PlayerPanel extends JPanel implements PlayerPanelObserver {
+public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
 
-    private IPlayerController controller;
+    private static final long serialVersionUID = 1L;
+    private Jogador controller;
     private BufferedImage floorImg;
     private BufferedImage flowerImg;
     private BufferedImage baseImg;
@@ -40,6 +40,8 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
     private int rotation;
     private String estado;
     private String notificacao;
+    private java.util.Random random;
+
     /**
      * Cria um novo painel para o jogador com a cor desejada.
      *
@@ -50,7 +52,7 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
      *
      * @param color Cor do jogador.
      */
-    public PlayerPanel(Color color, IPlayerController controller) {
+    public PlayerPanel(Color color, Jogador controller, GameConfig gameConfig) {
         super();
         this.estado = "";
         this.notificacao = "";
@@ -62,17 +64,22 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
             this.baseImg = Images.getImagem(Images.JOGADOR_BASE);
             this.clothImg = scale.convert(Images.JOGADOR_ROUPA);
             this.faceImg = Images.getImagem(Images.JOGADOR_ROSTO);
-            if (GameController.getInstance().getFactoryPecas().getClass().getSimpleName()
-                    .equals(FactoryPecasInverno.class.getSimpleName())) {
+            if (gameConfig.getEstacao().equalsIgnoreCase("Inverno")) {
                 this.flowerImg = scale.convert(Images.JOGADOR_FLOR_INV);
             } else {
                 this.flowerImg = scale.convert(Images.JOGADOR_FLOR_PRIM);
-
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            JOptionPane.showMessageDialog(null, "N\u00E3o foi poss\u00EDvel ler os arquivos de imagem do jogo.");
         }
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                playerHand.revalidate();
+            }
+        });
         this.rotation = 0;
         this.setBackground(new Color(0, 0, 0, 0));
         this.setPreferredSize(new Dimension(0, baseImg.getHeight()));
@@ -119,13 +126,16 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
      */
     private void drawFloor(Graphics g) {
         int xImg = (int) Math.ceil((float) this.getWidth() / (float) floorImg.getWidth());
-        AffineTransform rotTransform = AffineTransform.getRotateInstance(Math.toRadians(this.rotation), floorImg.getWidth() / 2, floorImg.getHeight() / 2);
+        AffineTransform rotTransform = AffineTransform.getRotateInstance(Math.toRadians(this.rotation),
+                floorImg.getWidth() / 2, floorImg.getHeight() / 2);
         AffineTransformOp rotOperator = new AffineTransformOp(rotTransform, AffineTransformOp.TYPE_BICUBIC);
-        Random rand = GameController.getInstance().getFixedRandomizer();
+        Random rand = ClientController.getInstance().getFixedRandomizer();
+        AffineTransform scltransform = AffineTransform.getScaleInstance(1,(float) this.getHeight()/ floorImg.getHeight());
+        AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         for (int i = 0; i < xImg; i++) {
             AffineTransform tslTransform = AffineTransform.getTranslateInstance(0, rand.nextInt(10));
             AffineTransformOp tslOperator = new AffineTransformOp(tslTransform, AffineTransformOp.TYPE_BICUBIC);
-            g.drawImage(rotOperator.filter(tslOperator.filter(floorImg, null), null), i * floorImg.getWidth(), 0, null);
+            g.drawImage(scloperator.filter(rotOperator.filter(tslOperator.filter(floorImg, null), null), null), i * floorImg.getWidth(), 0, null);
         }
     }
 
@@ -135,11 +145,16 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
      * @param g
      */
     private void drawPlayer(Graphics g) {
-        AffineTransform transformation = AffineTransform.getRotateInstance(Math.toRadians(this.rotation), baseImg.getWidth() / 2, baseImg.getHeight() / 2);
+        AffineTransform transformation = AffineTransform.getRotateInstance(Math.toRadians(this.rotation),
+                baseImg.getWidth() / 2, baseImg.getHeight() / 2);
+        Random rand = ClientController.getInstance().getFixedRandomizer();
+        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth()/ baseImg.getWidth() * 0.25,
+                                                                        (float) this.getHeight() / baseImg.getHeight());
+        AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         AffineTransformOp operator = new AffineTransformOp(transformation, AffineTransformOp.TYPE_BICUBIC);
-        g.drawImage(operator.filter(baseImg, null), 0, 0, null);
-        g.drawImage(operator.filter(clothImg, null), 0, 0, null);
-        g.drawImage(operator.filter(faceImg, null), 0, 0, null);
+        g.drawImage(scloperator.filter(operator.filter(baseImg, null), null), 0, 0, null);
+        g.drawImage(scloperator.filter(operator.filter(clothImg, null), null), 0, 0, null);
+        g.drawImage(scloperator.filter(operator.filter(faceImg, null), null), 0, 0, null);
     }
 
     /**
@@ -148,13 +163,14 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
      * @param g
      */
     private void drawPile(Graphics g) {
-        Random rand = GameController.getInstance().getFixedRandomizer();
+        Random rand = ClientController.getInstance().getFixedRandomizer();
         int displacement = this.getHeight() / 2 - getFlowerImg().getHeight() / 2;
+        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth()/ getFlowerImg().getWidth() * 0.075,
+                                                                        (float) this.getHeight() / getFlowerImg().getHeight() * 0.675);
+        AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         for (int i = 0; i < controller.getPileSize(); i++) {
-            g.drawImage(getFlowerImg(),
-                    this.getWidth() - getFlowerImg().getWidth() - 15 - i * (rand.nextInt(10) + 25),
-                    displacement + rand.nextInt(displacement / 2) - displacement / 4,
-                    null);
+            g.drawImage(scloperator.filter(getFlowerImg(), null), this.getWidth() - getFlowerImg().getWidth() - 15 - i * (rand.nextInt(10) + 25),
+                    displacement + rand.nextInt(displacement / 2) - displacement / 4, null);
         }
     }
 
@@ -169,7 +185,8 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
             Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
             g.setFont(fonte);
             FontMetrics metrics = g.getFontMetrics(fonte);
-            g.drawString(this.estado, (this.getWidth() - metrics.stringWidth(this.estado)) / 2, metrics.getHeight() + 5);
+            g.drawString(this.estado, (this.getWidth() - metrics.stringWidth(this.estado)) / 2,
+                    metrics.getHeight() + 5);
         }
     }
 
@@ -184,8 +201,14 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
             Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
             g.setFont(fonte);
             FontMetrics metrics = g.getFontMetrics(fonte);
-            g.drawString(this.notificacao, (this.getWidth() - metrics.stringWidth(this.notificacao)) / 2, this.getHeight() - 15);
+            g.drawString(this.notificacao, (this.getWidth() - metrics.stringWidth(this.notificacao)) / 2,
+                    this.getHeight() - 15);
         }
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension((int) this.getRootPane().getSize().getWidth(), (int) (this.getRootPane().getSize().getHeight() * 0.2f));
     }
 
     /**
@@ -212,12 +235,12 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver {
 
     @Override
     public void notifyYouAreJunior() {
-        this.estado = "Você é o Junior...";
+        this.estado = "Voc\u00EA \u00E9  o Junior...";
     }
 
     @Override
     public void notifyYouAreSenior() {
-        this.estado = "Você é o Senior...";
+        this.estado = "Voc\u00EA \u00E9 o Senior...";
     }
 
     @Override

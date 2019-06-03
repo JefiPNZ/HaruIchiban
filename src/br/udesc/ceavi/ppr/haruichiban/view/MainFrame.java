@@ -1,26 +1,29 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
-import br.udesc.ceavi.ppr.haruichiban.control.GameController;
-import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserver;
+import br.udesc.ceavi.ppr.haruichiban.control.OponnetControllerProxy;
+import br.udesc.ceavi.ppr.haruichiban.control.PlayerControllerProxy;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserverProxy;
+import br.udesc.ceavi.ppr.haruichiban.model.GameConfig;
+import br.udesc.ceavi.ppr.haruichiban.utils.Images;
+
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.WindowEvent;
-import javax.swing.BoxLayout;
+
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+
+import com.google.gson.Gson;
+import java.awt.Dimension;
 
 /**
  * JFrame Principal contendo a tela da Aplicação.
  *
  * @author Jeferson Penz
  */
-public class MainFrame extends JFrame implements GameStateObserver {
+public class MainFrame extends JFrame implements GameStateObserverProxy {
 
+    private static final long serialVersionUID = 1L;
     /**
      * Painel para conter todo o jogo.
      */
@@ -46,31 +49,37 @@ public class MainFrame extends JFrame implements GameStateObserver {
      */
     private JPanel menuPanel;
 
+    private PlayerControllerProxy player;
+    private OponnetControllerProxy oponnet;
+
+    private GameConfig gameConfig;
+
     /**
      * Cria o frame para conter o jogo.
      */
     public MainFrame() {
-        super(GameController.GAME_NAME);
+        super("Haru Ichiban");
     }
 
-    /**
-     * Método principal da aplicação.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        GameController.getInstance();
-        MainFrame.exibeConfiguracao();
-    }
+    public void begin(PlayerControllerProxy player) throws Exception {
+        this.player = player;
+        this.getGameConfig();
 
-    public void begin(String varianteTabuleiro, String tamanhoTabuleiro, Color corJogadorTopo, Color corJogadorBase) {
-        GameController.getInstance().addGameStateObserver(this);
-        GameController.getInstance().begin(varianteTabuleiro, tamanhoTabuleiro, corJogadorTopo, corJogadorBase);
+        this.oponnet = new OponnetControllerProxy(player.getSocket());
+        this.oponnet.setCor(player.isTop() ? gameConfig.getColorBotton() : gameConfig.getColorTop());
         this.initializeGameComponents();
         this.initializeFrameProperties();
-        SwingUtilities.invokeLater(() -> {
-            GameController.getInstance().startGame();
-        });
+        this.setVisible(true);
+    }
+
+    private void getGameConfig() {
+        player.sendRequest("E,GAMECONFIG");
+        this.gameConfig = (GameConfig) new Gson().fromJson(player.getIn().nextLine(), GameConfig.class);
+        if (gameConfig.getEstacao().equalsIgnoreCase("Inverno")) {
+            Images.mapImagemInverno();
+        } else {
+            Images.mapImagemPrimaveira();
+        }
     }
 
     /**
@@ -78,8 +87,8 @@ public class MainFrame extends JFrame implements GameStateObserver {
      */
     public final void initializeFrameProperties() {
         this.setVisible(false);
-        this.setUndecorated(true);
-        this.setExtendedState(MAXIMIZED_BOTH);
+        this.setMinimumSize(new Dimension(800, 600));
+        this.setSize(800, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
@@ -89,14 +98,12 @@ public class MainFrame extends JFrame implements GameStateObserver {
      */
     private void initializeGameComponents() {
         this.gamePanel = new GamePanel();
-        this.topPlayerPanel = new PlayerPanel(GameController.getInstance().getTopPlayer().getColor(),
-                GameController.getInstance().getTopPlayer());
-        this.topPlayerPanel.setRotation(180);
-        this.bottomPlayerPanel = new PlayerPanel(GameController.getInstance().getBottomPlayer().getColor(),
-                GameController.getInstance().getBottomPlayer());
+        this.bottomPlayerPanel = new PlayerPanel(player.getColor(), player, gameConfig);
+        this.topPlayerPanel = new PlayerPanel(oponnet.getColor(), oponnet, gameConfig);
         this.boardPanel = new BoardPanel();
+        this.topPlayerPanel.setRotation(180);
         this.scorePanel = new ScorePanel();
-        this.menuPanel  = new MenuPanel();
+        this.menuPanel = new MenuPanel();
         this.gamePanel.add(this.topPlayerPanel, BorderLayout.NORTH);
         this.gamePanel.add(this.bottomPlayerPanel, BorderLayout.SOUTH);
         this.gamePanel.add(this.boardPanel, BorderLayout.CENTER);
@@ -112,17 +119,17 @@ public class MainFrame extends JFrame implements GameStateObserver {
 
     @Override
     public void notificaFimJogo(String mensagem) {
-        if(mensagem != null && !mensagem.isEmpty()){
+        if (mensagem != null && !mensagem.isEmpty()) {
             JOptionPane.showMessageDialog(this, mensagem);
         }
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        MainFrame.exibeConfiguracao();
     }
-    
-    public static void exibeConfiguracao(){
-        FrameConfig frameConfig = new FrameConfig(new MainFrame());
-        frameConfig.initializeFrameProperties();
+
+    public void play() {
+        while (player.getIn().hasNextLine()) {}
+        player.sendRequest("END");
+        // Finalizar Thread La no Servidor
     }
 
 }
