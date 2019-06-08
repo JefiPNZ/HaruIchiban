@@ -10,98 +10,78 @@ import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
+import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Product;
+import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
 import br.udesc.ceavi.ppr.haruichiban.view.IPlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.view.Jogador;
 
 public class PlayerControllerProxy implements Jogador {
 
-    private Socket socket;
-    private Scanner in;
-    private PrintWriter out;
+	private Socket socket;
 
-    private boolean top;
-    private Color cor;
+	private boolean top;
+	private Color cor;
 
-    public PlayerControllerProxy(Socket socket) throws Exception {
-        this.socket = socket;
-        this.in = new Scanner(socket.getInputStream());
-        this.out = new PrintWriter(socket.getOutputStream());
-        definirPosicao();
-        definirCor();
-    }
+	public PlayerControllerProxy(Socket socket) throws Exception {
+		this.socket = socket;
+		ClientController.getInstance().initRequestSocket(new Scanner(socket.getInputStream()),
+				new PrintWriter(socket.getOutputStream(),true));
+		definirPosicao();
+		definirCor();
+	}
 
-    private void definirCor() {
-        System.out.println("\nRequerindo Ao Servidor Minha Cor " + myPosicao());
-        sendRequest("I,MYCOLOR");
-        String ret = in.nextLine();
-        this.cor = (Color) new Gson().fromJson(ret, Color.class);
-        System.out.println("Minha Cor " + myPosicao() + " :" + cor);
-    }
+	private void definirCor() {
+		getCanal().newRequest(Request.MYCOLOR).enviar();
+		this.cor = (Color) new Gson().fromJson(getCanal().getResposta(), Color.class);
+	}
 
-    private void definirPosicao() {
-        System.out.println("Requerindo Ao Servidor Minha Posicao");
-        String confi = in.nextLine();
-        top = confi.contains("TOP");
-        System.out.println("Posicao Definida " + myPosicao());
-    }
+	private void definirPosicao() {
+		getCanal().newRequest(Request.MYPOSITION).enviar();
+		top = getCanal().getResposta().contains("TOP");
+	}
 
-    private String myPosicao() {
-        return isTop() ? "TOP" : "BOTTON";
-    }
+	public boolean isTop() {
+		return top;
+	}
 
-    public boolean isTop() {
-        return top;
-    }
+	@Override
+	public Color getColor() {
+		return cor;
+	}
 
-    @Override
-    public Color getColor() {
-        return cor;
-    }
+	@Override
+	public List<Integer> getHand() {
+		getCanal().newRequest(Request.MYHAND).enviar();
+		String resposta = getCanal().getResposta();
+		List<String> asList = Arrays.asList(resposta.split(",")[0], resposta.split(",")[1], resposta.split(",")[2]);
+		return asList.stream().map(valor -> Integer.parseInt(valor)).collect(Collectors.toList());
+	}
 
-    @Override
-    public List<Integer> getHand() {
-        System.out.println("\nRequerindo valores da flores que tenho em mao");
-        sendRequest("I,HAND");
-        String resposta = in.nextLine();
-        System.out.println("Resposta: " + resposta);
-        List<String> asList = Arrays.asList(resposta.split(",")[0], resposta.split(",")[1], resposta.split(",")[2]);
-        return asList.stream().map(valor -> Integer.parseInt(valor)).collect(Collectors.toList());
-    }
+	@Override
+	public int getPileSize() {
+		getCanal().newRequest(Request.MYPILESIZE).enviar();
+		String resposta = getCanal().getResposta();
+		return Integer.parseInt(resposta);
+	}
 
-    @Override
-    public int getPileSize() {
-        System.out.println("\nRequerindo o numero de flores que tenho no montes");
-        sendRequest("I,PILESIZE");
-        String resposta = in.nextLine();
-        System.out.println("Resposta: " + resposta);
-        return Integer.parseInt(resposta);
-    }
+	public void chooseFlowerDeckEnd(int selectedColumn) {
+		getCanal().newProduct(Product.CHOOSEFLOWER).addParametro("x=" + selectedColumn).enviar();
+	}
 
-    public void chooseFlowerDeckEnd(int selectedColumn) {
-        sendRequest("I,CHOSEFLOR(" + selectedColumn + ")");
-    }
+	public void addObserver(IPlayerPanelObserver obs) {
 
-    @Override
-    public void sendRequest(String request) {
-        out.println(request);
-        out.flush();
-    }
+	}
 
-    public void addObserver(IPlayerPanelObserver obs) {
+	public Socket getSocket() {
+		return socket;
+	}
 
-    }
+	@Override
+	public void setCor(Color cor) {
+		this.cor = cor;
+	}
 
-    public Scanner getIn() {
-        return in;
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    @Override
-    public void setCor(Color cor) {
-        this.cor = cor;
-    }
-
+	private RequestSocket getCanal() {
+		return ClientController.getInstance().getCanal();
+	}
 }

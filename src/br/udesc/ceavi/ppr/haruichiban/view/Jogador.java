@@ -11,8 +11,6 @@ public interface Jogador {
 
 	int getPileSize();
 
-	void sendRequest(String request);
-
 	void setCor(Color cor);
 
 	void addObserver(IPlayerPanelObserver playerPanel);

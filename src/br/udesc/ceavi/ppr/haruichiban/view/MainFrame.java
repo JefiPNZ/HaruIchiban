@@ -1,7 +1,11 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
+import br.udesc.ceavi.ppr.haruichiban.control.ClientController;
 import br.udesc.ceavi.ppr.haruichiban.control.OponnetControllerProxy;
 import br.udesc.ceavi.ppr.haruichiban.control.PlayerControllerProxy;
+import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket;
+import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Product;
+import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserverProxy;
 import br.udesc.ceavi.ppr.haruichiban.model.GameConfig;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
@@ -13,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.google.gson.Gson;
 import java.awt.Dimension;
 
 /**
@@ -65,21 +68,26 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
         this.player = player;
         this.getGameConfig();
 
-        this.oponnet = new OponnetControllerProxy(player.getSocket());
+        this.oponnet = new OponnetControllerProxy();
         this.oponnet.setCor(player.isTop() ? gameConfig.getColorBotton() : gameConfig.getColorTop());
+
         this.initializeGameComponents();
         this.initializeFrameProperties();
         this.setVisible(true);
     }
 
     private void getGameConfig() {
-        player.sendRequest("E,GAMECONFIG");
-        this.gameConfig = (GameConfig) new Gson().fromJson(player.getIn().nextLine(), GameConfig.class);
+        this.gameConfig = ClientController.getInstance().getGameConfig();
+
         if (gameConfig.getEstacao().equalsIgnoreCase("Inverno")) {
             Images.mapImagemInverno();
         } else {
             Images.mapImagemPrimaveira();
         }
+    }
+
+    private RequestSocket getCanal() {
+        return ClientController.getInstance().getCanal();
     }
 
     /**
@@ -127,8 +135,15 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
     }
 
     public void play() {
-        while (player.getIn().hasNextLine()) {}
-        player.sendRequest("END");
+        while (getCanal().isAtivo()) {
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        getCanal().newProduct(Product.ENDGAME).enviar();
         // Finalizar Thread La no Servidor
     }
 

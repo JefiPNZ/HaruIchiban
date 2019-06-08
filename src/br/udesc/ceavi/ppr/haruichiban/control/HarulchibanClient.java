@@ -14,10 +14,15 @@ public class HarulchibanClient {
         MainFrame frame = new MainFrame();
         try {
             socket = new Socket(ip, 60000);
+            System.out.println("Coneção Realizada");
             player = new PlayerControllerProxy(socket);
+            System.out.println("PlayerControllerProxy Criado Com Sucesso");
+            ClientController.getInstance();
+            System.out.println("Iniciando Interfase");
             frame.begin(player);
+            System.out.println("Interfase Iniciada Com Sucesso");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(frame, "NÃ£o foi possÃ­vel conectar: " + ex, "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Nao foi possivel conectar: " + ex, "Erro", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
 
