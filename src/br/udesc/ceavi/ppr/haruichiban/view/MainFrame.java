@@ -74,7 +74,9 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
 
     private void getGameConfig() {
         player.sendRequest("E,GAMECONFIG");
-        this.gameConfig = (GameConfig) new Gson().fromJson(player.getIn().nextLine(), GameConfig.class);
+        String ret = player.getIn().nextLine();
+        System.out.println("Resposta: " + ret);
+        this.gameConfig = (GameConfig) new Gson().fromJson(ret, GameConfig.class);
         if (gameConfig.getEstacao().equalsIgnoreCase("Inverno")) {
             Images.mapImagemInverno();
         } else {
@@ -87,7 +89,7 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
      */
     public final void initializeFrameProperties() {
         this.setVisible(false);
-        this.setMinimumSize(new Dimension(800, 600));
+        this.setMinimumSize(new Dimension(600, 400));
         this.setSize(800, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);

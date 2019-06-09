@@ -10,6 +10,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import javax.swing.event.ListSelectionListener;
 
@@ -63,7 +65,10 @@ public class PlayerHandTable extends JTable implements IPlayerPanelObserver {
                     ColorScale scale = new ColorScale(1.15f, 1.15f, 1.15f);
                     img = scale.convert(img);
                 }
-                this.setIcon(new ImageIcon(img));
+                AffineTransform transform = AffineTransform.getScaleInstance((float) table.getColumnModel().getColumn(column).getWidth() / img.getWidth() * 0.8f,
+                                                                             (float) table.getRowHeight() / img.getHeight() * 0.8f);
+                AffineTransformOp operator = new AffineTransformOp(transform, AffineTransformOp.TYPE_BICUBIC);
+                this.setIcon(new ImageIcon(operator.filter(img, null)));
                 if (table.isEnabled() && controller.getHand().size() > column) {
                     this.setText(controller.getHand().get(column).toString());
                 } else {
@@ -129,7 +134,16 @@ public class PlayerHandTable extends JTable implements IPlayerPanelObserver {
         if (size.getWidth() <= 0 || size.getHeight() <= 0) {
             return new Dimension(0, 0);
         }
-        size.width = size.width > 375 ? 375 : size.width;
+        size.width = (int)(size.width * 0.4);
+        float scaleX = (float) size.getWidth();
+        float scaleY = (float) size.getHeight();
+        if (scaleX > scaleY * 3) {
+            int width = (int) (scaleY * 3 / scaleX * scaleX);
+            size = new Dimension(width, (int) size.getHeight());
+        } else {
+            int height = (int) (scaleX / 3 / scaleY * scaleY);
+            size = new Dimension((int) size.getWidth(), height);
+        }
         this.setRowHeight((int) size.getHeight());
         return size;
     }

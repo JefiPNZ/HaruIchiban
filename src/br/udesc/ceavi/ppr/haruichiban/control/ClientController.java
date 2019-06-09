@@ -1,12 +1,7 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
-import java.awt.Color;
 import java.util.Random;
 
-import com.google.gson.Gson;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.SwingUtilities;
 
 /**
  * Classe Principal para inicializasao e controle do estado da Aplicacao.

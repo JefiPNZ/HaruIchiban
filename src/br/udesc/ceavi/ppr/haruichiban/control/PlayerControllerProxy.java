@@ -27,13 +27,18 @@ public class PlayerControllerProxy implements Jogador {
         this.in = new Scanner(socket.getInputStream());
         this.out = new PrintWriter(socket.getOutputStream());
         definirPosicao();
+    }
+    
+    public void inicia(){
         definirCor();
+        sendRequest("READY");
     }
 
     private void definirCor() {
         System.out.println("\nRequerindo Ao Servidor Minha Cor " + myPosicao());
         sendRequest("I,MYCOLOR");
         String ret = in.nextLine();
+        System.out.println(ret);
         this.cor = (Color) new Gson().fromJson(ret, Color.class);
         System.out.println("Minha Cor " + myPosicao() + " :" + cor);
     }
@@ -41,6 +46,7 @@ public class PlayerControllerProxy implements Jogador {
     private void definirPosicao() {
         System.out.println("Requerindo Ao Servidor Minha Posicao");
         String confi = in.nextLine();
+        System.out.println(confi);
         top = confi.contains("TOP");
         System.out.println("Posicao Definida " + myPosicao());
     }
@@ -56,6 +62,11 @@ public class PlayerControllerProxy implements Jogador {
     @Override
     public Color getColor() {
         return cor;
+    }
+    
+    public boolean aguardaPronto(){
+        String ret = in.nextLine();
+        return ret.equals("STRT");
     }
 
     @Override
