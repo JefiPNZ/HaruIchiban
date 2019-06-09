@@ -20,14 +20,15 @@ public class RequestSocket {
     }
 
     public RequestSocket newRequest(Request newRequest) {
-        this.request = newRequest.getRequest();
         resposta = null;
+        this.request = newRequest.getRequest();
         return this;
     }
+
     public RequestSocket newProduct(Product newRequest) {
-    	this.request = newRequest.getProduct();
-    	resposta = null;
-    	return this;
+        resposta = null;
+        this.request = newRequest.getProduct();
+        return this;
     }
 
     protected RequestSocket addParametro(String paramentro) {
@@ -46,11 +47,17 @@ public class RequestSocket {
             request += parametros;
         }
         servidor.println(request);
+
     }
 
     public String getResposta() {
         if (resposta == null) {
             resposta = respostaServidor.nextLine();
+        }
+        if (resposta.equals("Request-Perdida")) {
+            System.out.println(resposta);
+            newProduct(Product.GAME_ENDGAME);
+            System.exit(0);
         }
         return resposta;
     }
@@ -59,22 +66,30 @@ public class RequestSocket {
         return request;
     }
 
+    /**
+     * Enum Request em uma String
+     *
+     * MY,Do Player OP,Do Oponnet GAME,Do game MY,ColorRequest MY -> Informa a
+     *
+     */
     public enum Request {
-        MYCOLOR("I,ColorRequest"),
-        MYPILESIZE("I,PileSizeRequest"),
-        MYPOSITION("I,PositionRequest"),
-        MYHAND("I,HandRequest"),
+        MY_COLOR("MY,Color"),
+        MY_PILESIZE("MY,PileSize"),
+        MY_POSITION("MY,Position"),
+        MY_HAND("MY,Hand"),
         
-        OPONNETCOLOR("E,OponnetColorRequest"),
-        OPONNETPILESIZE("E,OpennetPileSize"),
-
-    	POINTS("I,PointsRequest"),
-    	WINEW("E,WinerRequest"),
-    	GAMECONFIG("E,GameConfigRequest"),
-    	BOARDTILE("E,BoardRequest"), 
-    	JOGOCONTINUA("E,JogoContinua"), 
-    	HAVEOPONENT("E,HaveOponentRequest");
-
+        OPONNET_COLOR("OP,Color"),
+        OPONNET_PILESIZE("OP,PileSize"),
+        OPONNET_POSITION("OP,Position"),
+        OPONNET_HAND("OP,Hand"),
+        
+        GAME_WINEW("GAME,Winer"),
+        GAME_GAMECONFIG("GAME,GameConfig"),
+        GAME_JOGOCONTINUA("GAME,JogoContinua"),
+        GAME_HAVEOPONENT("GAME,HaveOponent"),
+        GAME_BOARDTILE("GEME,BoardPonit"),
+        GAME_POINTS("GAME,Points");
+        
         private String request;
 
         Request(String request) {
@@ -85,24 +100,26 @@ public class RequestSocket {
             return request;
         }
     }
-    
+
     public enum Product {
-    	PRODUCEMYDECK("I,ProduceDeckRequest"),
-    	CHOOSEFLOWER("I,ChooseFlower"),
-    	ENDGAME("END");
-    	
-    	private String request;
-    	
-    	Product(String request) {
-    		this.request = request;
-    	}
-    	
-    	public String getProduct() {
-    		return request;
-    	}
+        MY_PRODUCEMYDECK("MY,ProduceDeck"),
+        MY_CHOOSEFLOWER("MY,ChooseFlower"),
+       
+        GAME_ENDGAME("GAME,ENDGAME");
+
+        private String request;
+
+        Product(String request) {
+            this.request = request;
+        }
+
+        public String getProduct() {
+            return request;
+        }
     }
-	public boolean isAtivo() {
-		newRequest(Request.JOGOCONTINUA).enviar();
-		return getResposta().equals("true");
-	}
+
+    public boolean isAtivo() {
+        newRequest(Request.GAME_JOGOCONTINUA).enviar();
+        return getResposta().equals("true");
+    }
 }

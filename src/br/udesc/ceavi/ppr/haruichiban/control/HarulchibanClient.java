@@ -14,7 +14,7 @@ public class HarulchibanClient {
         MainFrame frame = new MainFrame();
         try {
             socket = new Socket(ip, 60000);
-            System.out.println("Coneção Realizada");
+            System.out.println("Conex\u00E3o Realizada");
             player = new PlayerControllerProxy(socket);
             System.out.println("PlayerControllerProxy Criado Com Sucesso");
             ClientController.getInstance();

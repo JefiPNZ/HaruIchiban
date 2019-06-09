@@ -143,7 +143,7 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
             }
         }
 
-        getCanal().newProduct(Product.ENDGAME).enviar();
+        getCanal().newProduct(Product.GAME_ENDGAME).enviar();
         // Finalizar Thread La no Servidor
     }
 

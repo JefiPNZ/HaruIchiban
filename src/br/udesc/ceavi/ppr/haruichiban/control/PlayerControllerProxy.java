@@ -3,10 +3,8 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 import java.awt.Color;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -14,74 +12,87 @@ import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Product;
 import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
 import br.udesc.ceavi.ppr.haruichiban.view.IPlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.view.Jogador;
+import java.util.ArrayList;
 
 public class PlayerControllerProxy implements Jogador {
 
-	private Socket socket;
+    private Socket socket;
 
-	private boolean top;
-	private Color cor;
+    private boolean top;
+    private Color cor;
 
-	public PlayerControllerProxy(Socket socket) throws Exception {
-		this.socket = socket;
-		ClientController.getInstance().initRequestSocket(new Scanner(socket.getInputStream()),
-				new PrintWriter(socket.getOutputStream(),true));
-		definirPosicao();
-		definirCor();
-	}
+    public PlayerControllerProxy(Socket socket) throws Exception {
+        this.socket = socket;
+        ClientController.getInstance().initRequestSocket(new Scanner(socket.getInputStream()),
+                new PrintWriter(socket.getOutputStream(), true));
+        definirCor();
+        definirPosicao();
+    }
 
-	private void definirCor() {
-		getCanal().newRequest(Request.MYCOLOR).enviar();
-		this.cor = (Color) new Gson().fromJson(getCanal().getResposta(), Color.class);
-	}
+    private void definirCor() {
+        getCanal().newRequest(Request.MY_COLOR).enviar();
+        this.cor = (Color) new Gson().fromJson(getCanal().getResposta(), Color.class);
+    }
 
-	private void definirPosicao() {
-		getCanal().newRequest(Request.MYPOSITION).enviar();
-		top = getCanal().getResposta().contains("TOP");
-	}
+    private void definirPosicao() {
+        getCanal().newRequest(Request.MY_POSITION).enviar();
+        top = getCanal().getResposta().contains("TOP");
+    }
 
-	public boolean isTop() {
-		return top;
-	}
+    public boolean isTop() {
+        return top;
+    }
 
-	@Override
-	public Color getColor() {
-		return cor;
-	}
+    @Override
+    public Color getColor() {
+        return cor;
+    }
 
-	@Override
-	public List<Integer> getHand() {
-		getCanal().newRequest(Request.MYHAND).enviar();
-		String resposta = getCanal().getResposta();
-		List<String> asList = Arrays.asList(resposta.split(",")[0], resposta.split(",")[1], resposta.split(",")[2]);
-		return asList.stream().map(valor -> Integer.parseInt(valor)).collect(Collectors.toList());
-	}
+    @Override
+    public synchronized List<Integer> getHand() {
+        getCanal().newRequest(Request.MY_HAND).enviar();
+        String resposta = getCanal().getResposta();
 
-	@Override
-	public int getPileSize() {
-		getCanal().newRequest(Request.MYPILESIZE).enviar();
-		String resposta = getCanal().getResposta();
-		return Integer.parseInt(resposta);
-	}
+        List<Integer> lista = new ArrayList<>();
 
-	public void chooseFlowerDeckEnd(int selectedColumn) {
-		getCanal().newProduct(Product.CHOOSEFLOWER).addParametro("x=" + selectedColumn).enviar();
-	}
+        if (resposta.isEmpty()) {
+            return lista;
+        }
 
-	public void addObserver(IPlayerPanelObserver obs) {
+        for (String numero : resposta.split(",")) {
+            lista.add(Integer.getInteger(numero));
+        }
 
-	}
+        return lista;
+    }
 
-	public Socket getSocket() {
-		return socket;
-	}
+    @Override
+    public synchronized int getPileSize() {
+        getCanal().newRequest(Request.MY_PILESIZE).enviar();
+        String resposta = getCanal().getResposta();
+        return Integer.parseInt(resposta);
+    }
 
-	@Override
-	public void setCor(Color cor) {
-		this.cor = cor;
-	}
+    @Override
+    public void chooseFlowerDeckEnd(int selectedColumn) {
+        getCanal().newProduct(Product.MY_CHOOSEFLOWER).addParametro("x=" + selectedColumn).enviar();
+    }
 
-	private RequestSocket getCanal() {
-		return ClientController.getInstance().getCanal();
-	}
+    @Override
+    public void addObserver(IPlayerPanelObserver obs) {
+
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    @Override
+    public void setCor(Color cor) {
+        this.cor = cor;
+    }
+
+    private RequestSocket getCanal() {
+        return ClientController.getInstance().getCanal();
+    }
 }

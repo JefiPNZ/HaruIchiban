@@ -46,7 +46,7 @@ public class TesteClienteBottonRequest {
 
 	@Test
 	public void T1requisicaoColorRequest() {
-		request.newRequest(Request.MYCOLOR);
+		request.newRequest(Request.MY_COLOR);
 
 		request.enviar();
 
@@ -57,7 +57,7 @@ public class TesteClienteBottonRequest {
 
 	@Test
 	public void T2requisicaoPositionRequest() {
-		request.newRequest(Request.MYPOSITION);
+		request.newRequest(Request.MY_POSITION);
 		
 		request.enviar();
 
@@ -69,7 +69,7 @@ public class TesteClienteBottonRequest {
 	// Requisição feita antes do caregamento dos dados
 	@Test
 	public void T3HandRequestInicial() {
-		request.newRequest(Request.MYHAND);
+		request.newRequest(Request.MY_HAND);
 		
 		request.enviar();
 
@@ -81,7 +81,7 @@ public class TesteClienteBottonRequest {
 	// Requisição feita antes do caregamento dos dados
 	@Test
 	public void T4PileSizeRequest() {
-		request.newRequest(Request.MYPILESIZE);
+		request.newRequest(Request.MY_PILESIZE);
 		
 		request.enviar();
 
@@ -102,7 +102,7 @@ public class TesteClienteBottonRequest {
 //	}
 	@Test
 	public void T5HaveOponentRequest() {
-		request.newRequest(Request.HAVEOPONENT);
+		request.newRequest(Request.GAME_HAVEOPONENT);
 		request.enviar();
 		Assert.assertEquals("E,HaveOponentRequest", request.getRequest());
 		Assert.assertEquals("true", request.getResposta());
@@ -110,17 +110,17 @@ public class TesteClienteBottonRequest {
 
 	@Test
 	public void T6ProduceDeckRequest() {
-		request.newProduct(Product.PRODUCEMYDECK);
+		request.newProduct(Product.MY_PRODUCEMYDECK);
 		request.enviar();
 		Assert.assertEquals("I,ProduceDeckRequest", request.getRequest());
 		Assert.assertEquals("DeckProduzido", request.getResposta());
 
-		request.newRequest(Request.MYPILESIZE);
+		request.newRequest(Request.MY_PILESIZE);
 		request.enviar();
 		Assert.assertEquals("I,PileSizeRequest", request.getRequest());
 		Assert.assertEquals("" + 5, request.getResposta());
 
-		request.newRequest(Request.MYHAND);
+		request.newRequest(Request.MY_HAND);
 		request.enviar();
 		Assert.assertEquals("I,HandRequest", request.getRequest());
 		Assert.assertNotEquals("", request.getResposta());

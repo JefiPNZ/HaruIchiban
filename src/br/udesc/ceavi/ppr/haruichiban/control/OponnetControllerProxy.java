@@ -1,15 +1,11 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
 import java.awt.Color;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-
 import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
 import br.udesc.ceavi.ppr.haruichiban.view.IPlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.view.Jogador;
+import java.util.ArrayList;
 
 public class OponnetControllerProxy implements Jogador {
 
@@ -29,20 +25,34 @@ public class OponnetControllerProxy implements Jogador {
     }
 
     @Override
-    public List<Integer> getHand() {
-        return Arrays.asList(-1, -1, -1);
+    public synchronized List<Integer> getHand() {
+        getCanal().newRequest(Request.OPONNET_HAND).enviar();
+        String resposta = getCanal().getResposta();
+
+        List<Integer> lista = new ArrayList<>();
+
+        if (resposta.isEmpty()) {
+            return lista;
+        }
+
+        for (String numero : resposta.split(",")) {
+            lista.add(-1);
+        }
+
+        return lista;
     }
 
     @Override
-    public int getPileSize() {
-        getCanal().newRequest(Request.OPONNETPILESIZE);
-        return 3;
+    public synchronized int getPileSize() {
+        getCanal().newRequest(Request.OPONNET_PILESIZE).enviar();
+        String resposta = getCanal().getResposta();
+        return Integer.parseInt(resposta);
     }
 
     public RequestSocket getCanal() {
-    	return ClientController.getInstance().getCanal();
+        return ClientController.getInstance().getCanal();
     }
-    
+
     @Override
     public void addObserver(IPlayerPanelObserver playerPanel) {
     }
