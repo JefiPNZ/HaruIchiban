@@ -4,10 +4,9 @@ import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Scanner;
 
-import com.google.gson.Gson;
-
-import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
-import br.udesc.ceavi.ppr.haruichiban.model.GameConfig;
+import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserverProxy;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Classe Principal para inicializasao e controle do estado da Aplicacao.
@@ -57,7 +56,8 @@ public class ClientController {
      */
     private RequestSocket request;
 
-    private GameConfig gameConfig;
+
+    private List<GameStateObserverProxy> observers;
 
     /**
      * Classe para criação da instância do Singleton.
@@ -65,6 +65,7 @@ public class ClientController {
      * @throws Exception
      */
     private ClientController() {
+        this.observers = new ArrayList<>();
         this.randomizer = new Random();
         this.fixedSeed = this.randomizer.nextLong();
     }
@@ -96,11 +97,11 @@ public class ClientController {
         return request;
     }
 
-    public GameConfig getGameConfig() {
-        if (this.gameConfig == null) {
-            getCanal().newRequest(Request.GAME_GAMECONFIG).enviar();
-            this.gameConfig = (GameConfig) new Gson().fromJson(getCanal().getResposta(), GameConfig.class);
-        }
-        return gameConfig;
+    public void addObserver(GameStateObserverProxy obs) {
+        this.observers.add(obs);
+    }
+
+
+    public void play() {
     }
 }

@@ -1,6 +1,8 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
 import br.udesc.ceavi.ppr.haruichiban.control.ClientController;
+import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket;
+import br.udesc.ceavi.ppr.haruichiban.model.Request;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
 import java.awt.Color;
@@ -14,7 +16,6 @@ import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import br.udesc.ceavi.ppr.haruichiban.model.GameConfig;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -52,7 +53,7 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
      *
      * @param color Cor do jogador.
      */
-    public PlayerPanel(Color color, Jogador controller, GameConfig gameConfig) {
+    public PlayerPanel(Color color, Jogador controller) {
         super();
         this.estado = "";
         this.notificacao = "";
@@ -64,7 +65,9 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
             this.baseImg = Images.getImagem(Images.JOGADOR_BASE);
             this.clothImg = scale.convert(Images.JOGADOR_ROUPA);
             this.faceImg = Images.getImagem(Images.JOGADOR_ROSTO);
-            if (gameConfig.getEstacao().equalsIgnoreCase("Inverno")) {
+            getCanal().newRequest(Request.GAME_ESTACAO).enviar();
+            String estacao = getCanal().getResposta();
+            if (estacao.equalsIgnoreCase("Inverno")) {
                 this.flowerImg = scale.convert(Images.JOGADOR_FLOR_INV);
             } else {
                 this.flowerImg = scale.convert(Images.JOGADOR_FLOR_PRIM);
@@ -85,6 +88,10 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
         this.setPreferredSize(new Dimension(0, baseImg.getHeight()));
         this.setOpaque(false);
         this.initializePlayerHand();
+    }
+
+    private static RequestSocket getCanal() {
+        return ClientController.getInstance().getCanal();
     }
 
     /**
@@ -130,7 +137,7 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
                 floorImg.getWidth() / 2, floorImg.getHeight() / 2);
         AffineTransformOp rotOperator = new AffineTransformOp(rotTransform, AffineTransformOp.TYPE_BICUBIC);
         Random rand = ClientController.getInstance().getFixedRandomizer();
-        AffineTransform scltransform = AffineTransform.getScaleInstance(1,(float) this.getHeight()/ floorImg.getHeight());
+        AffineTransform scltransform = AffineTransform.getScaleInstance(1, (float) this.getHeight() / floorImg.getHeight());
         AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         for (int i = 0; i < xImg; i++) {
             AffineTransform tslTransform = AffineTransform.getTranslateInstance(0, rand.nextInt(10));
@@ -148,8 +155,8 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
         AffineTransform transformation = AffineTransform.getRotateInstance(Math.toRadians(this.rotation),
                 baseImg.getWidth() / 2, baseImg.getHeight() / 2);
         Random rand = ClientController.getInstance().getFixedRandomizer();
-        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth()/ baseImg.getWidth() * 0.25,
-                                                                        (float) this.getHeight() / baseImg.getHeight());
+        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth() / baseImg.getWidth() * 0.25,
+                (float) this.getHeight() / baseImg.getHeight());
         AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         AffineTransformOp operator = new AffineTransformOp(transformation, AffineTransformOp.TYPE_BICUBIC);
         g.drawImage(scloperator.filter(operator.filter(baseImg, null), null), 0, 0, null);
@@ -165,8 +172,8 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
     private void drawPile(Graphics g) {
         Random rand = ClientController.getInstance().getFixedRandomizer();
         int displacement = this.getHeight() / 2 - getFlowerImg().getHeight() / 2;
-        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth()/ getFlowerImg().getWidth() * 0.075,
-                                                                        (float) this.getHeight() / getFlowerImg().getHeight() * 0.675);
+        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth() / getFlowerImg().getWidth() * 0.075,
+                (float) this.getHeight() / getFlowerImg().getHeight() * 0.675);
         AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         for (int i = 0; i < controller.getPileSize(); i++) {
             g.drawImage(scloperator.filter(getFlowerImg(), null), this.getWidth() - getFlowerImg().getWidth() - 15 - i * (rand.nextInt(10) + 25),

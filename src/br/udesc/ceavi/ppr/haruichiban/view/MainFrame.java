@@ -4,13 +4,13 @@ import br.udesc.ceavi.ppr.haruichiban.control.ClientController;
 import br.udesc.ceavi.ppr.haruichiban.control.OponnetControllerProxy;
 import br.udesc.ceavi.ppr.haruichiban.control.PlayerControllerProxy;
 import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket;
-import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Product;
-import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserverProxy;
-import br.udesc.ceavi.ppr.haruichiban.model.GameConfig;
+import br.udesc.ceavi.ppr.haruichiban.model.Request;
 import br.udesc.ceavi.ppr.haruichiban.utils.Images;
+import com.google.gson.Gson;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
@@ -52,10 +52,15 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
      */
     private JPanel menuPanel;
 
+    /**
+     * Representa o player
+     */
     private PlayerControllerProxy player;
-    private OponnetControllerProxy oponnet;
 
-    private GameConfig gameConfig;
+    /**
+     * Representa o Oponnet
+     */
+    private OponnetControllerProxy oponnet;
 
     /**
      * Cria o frame para conter o jogo.
@@ -64,26 +69,28 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
         super("Haru Ichiban");
     }
 
-    public void begin(PlayerControllerProxy player) throws Exception {
+    public void begin(PlayerControllerProxy player) {
         this.player = player;
-        this.getGameConfig();
-
-        this.oponnet = new OponnetControllerProxy();
-        this.oponnet.setCor(player.isTop() ? gameConfig.getColorBotton() : gameConfig.getColorTop());
-
-        this.initializeGameComponents();
         this.initializeFrameProperties();
-        this.setVisible(true);
+        aguardarOponnet();
     }
 
-    private void getGameConfig() {
-        this.gameConfig = ClientController.getInstance().getGameConfig();
-
-        if (gameConfig.getEstacao().equalsIgnoreCase("Inverno")) {
+    private void initImages() {
+        getCanal().newRequest(Request.GAME_ESTACAO).enviar();
+        String estacao = getCanal().getResposta();
+        if (estacao.equalsIgnoreCase("Inverno")) {
             Images.mapImagemInverno();
         } else {
             Images.mapImagemPrimaveira();
         }
+    }
+
+    private void initInterfase() {
+        this.initImages();
+        this.oponnet = new OponnetControllerProxy();
+        getCanal().newRequest(Request.OPONNET_COLOR).enviar();
+        this.oponnet.setCor(new Gson().fromJson(getCanal().getResposta(), Color.class));
+        this.initializeGameComponents();
     }
 
     private RequestSocket getCanal() {
@@ -98,6 +105,7 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
         this.setMinimumSize(new Dimension(800, 600));
         this.setSize(800, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setResizable(false);
         this.setVisible(true);
     }
 
@@ -106,8 +114,8 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
      */
     private void initializeGameComponents() {
         this.gamePanel = new GamePanel();
-        this.bottomPlayerPanel = new PlayerPanel(player.getColor(), player, gameConfig);
-        this.topPlayerPanel = new PlayerPanel(oponnet.getColor(), oponnet, gameConfig);
+        this.bottomPlayerPanel = new PlayerPanel(player.getColor(), player);
+        this.topPlayerPanel = new PlayerPanel(oponnet.getColor(), oponnet);
         this.boardPanel = new BoardPanel();
         this.topPlayerPanel.setRotation(180);
         this.scorePanel = new ScorePanel();
@@ -118,11 +126,11 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
         this.gamePanel.add(this.scorePanel, BorderLayout.WEST);
         this.gamePanel.add(this.menuPanel, BorderLayout.EAST);
         this.setContentPane(this.gamePanel);
+        initializeFrameProperties();
     }
 
     @Override
     public void notificaMudancaEstado(String mensagem) {
-        this.repaint();
     }
 
     @Override
@@ -134,17 +142,28 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
-    public void play() {
-        while (getCanal().isAtivo()) {
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    @Override
+    public void update() {
+        this.repaint();
+    }
+
+    private void aguardarOponnet() {
+        boolean gameComecou = false;
+        while (!gameComecou) {
+            getCanal().newRequest(Request.GAME_HAVEOPONENT).enviar();
+            if (getCanal().getResposta().equals("true")) {
+                gameComecou = true;
+            } else {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
-
-        getCanal().newProduct(Product.GAME_ENDGAME).enviar();
-        // Finalizar Thread La no Servidor
+        initInterfase();
+        ClientController.getInstance().addObserver(this);
+        ClientController.getInstance().play();
     }
 
 }

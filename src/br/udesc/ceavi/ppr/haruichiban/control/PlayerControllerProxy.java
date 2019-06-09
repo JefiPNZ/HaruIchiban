@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 
-import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Product;
-import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
+import br.udesc.ceavi.ppr.haruichiban.model.Product;
+import br.udesc.ceavi.ppr.haruichiban.model.Request;
 import br.udesc.ceavi.ppr.haruichiban.view.IPlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.view.Jogador;
 import java.util.ArrayList;

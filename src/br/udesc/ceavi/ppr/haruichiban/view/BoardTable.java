@@ -19,6 +19,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import br.udesc.ceavi.ppr.haruichiban.control.BoardControllerProxy;
+import br.udesc.ceavi.ppr.haruichiban.control.ClientController;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.BoardObserverProxy;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserverProxy;
 import br.udesc.ceavi.ppr.haruichiban.utils.ColorScale;
@@ -37,29 +38,6 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
     private BoardPanel parentPanel;
     private BufferedImage[][] boardImages;
     private BufferedImage tileImage;
-
-    @Override
-    public void notifyAtivarTabela() {
-        this.getSelectionModel().clearSelection();
-        this.setEnabled(true);
-    }
-
-    @Override
-    public void notifyDesativarTabela() {
-        this.getSelectionModel().clearSelection();
-        this.setEnabled(false);
-    }
-
-    @Override
-    public void notifyAtivarDirection() {
-        parentPanel.ativarBotoes();
-    }
-
-    @Override
-    public void notifyDesativarDirection() {
-        parentPanel.desativarBotoes();
-        this.clearSelection();
-    }
 
     /**
      * Modelo de dados para tabela.
@@ -84,6 +62,7 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
                 return boardImages[row][col];
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.toString());
+                e.printStackTrace();
                 return null;
             }
         }
@@ -138,7 +117,7 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
         try {
             g.drawImage(scale.convert("img/" + imagem + ".png"), 0, 0, null);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possível ler os arquivos de imagem do jogo.");
+            JOptionPane.showMessageDialog(null, "N\u00E3o foi possível ler os arquivos de imagem do jogo.");
             System.exit(0);
         }
     }
@@ -156,6 +135,8 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
         this.tileImage = Images.getImagem(Images.PECA_TABULEIRO);
         this.initializeProperties();
         this.controller.renderBoard();
+
+        ClientController.getInstance().addObserver(this);
     }
 
     /**
@@ -184,8 +165,8 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
 
     /**
      * Executa o evento de troca da seleção do tabuleiro.<br/>
-     * Como há dois eventos ouvindo (linha e coluna), é necessário garantir que apenas seja chamado o evento quando não
-     * houver a troca de posição.
+     * Como há dois eventos ouvindo (linha e coluna), é necessário garantir que
+     * apenas seja chamado o evento quando não houver a troca de posição.
      *
      * @param newSelection
      */
@@ -239,10 +220,37 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
 
     @Override
     public void notificaMudancaEstado(String mensagem) {
-        this.controller.renderBoard();
     }
 
     @Override
     public void notificaFimJogo(String mensagem) {
+    }
+
+    @Override
+    public void notifyAtivarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(true);
+    }
+
+    @Override
+    public void notifyDesativarTabela() {
+        this.getSelectionModel().clearSelection();
+        this.setEnabled(false);
+    }
+
+    @Override
+    public void notifyAtivarDirection() {
+        parentPanel.ativarBotoes();
+    }
+
+    @Override
+    public void notifyDesativarDirection() {
+        parentPanel.desativarBotoes();
+        this.clearSelection();
+    }
+
+    @Override
+    public void update() {
+        this.controller.renderBoard();
     }
 }

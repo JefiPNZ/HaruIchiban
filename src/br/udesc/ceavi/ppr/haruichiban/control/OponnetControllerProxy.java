@@ -2,7 +2,7 @@ package br.udesc.ceavi.ppr.haruichiban.control;
 
 import java.awt.Color;
 import java.util.List;
-import br.udesc.ceavi.ppr.haruichiban.control.RequestSocket.Request;
+import br.udesc.ceavi.ppr.haruichiban.model.Request;
 import br.udesc.ceavi.ppr.haruichiban.view.IPlayerPanelObserver;
 import br.udesc.ceavi.ppr.haruichiban.view.Jogador;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class OponnetControllerProxy implements Jogador {
 
     private Color cor;
 
-    public OponnetControllerProxy() throws Exception {
+    public OponnetControllerProxy() {
     }
 
     @Override

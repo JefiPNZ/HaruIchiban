@@ -1,5 +1,6 @@
 package br.udesc.ceavi.ppr.haruichiban.view;
 
+import br.udesc.ceavi.ppr.haruichiban.control.ClientController;
 import br.udesc.ceavi.ppr.haruichiban.control.observers.GameStateObserverProxy;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -33,10 +34,11 @@ public class MenuPanel extends JPanel implements GameStateObserverProxy {
 //        menuController = new MenuController();
         this.mensagens = new ArrayList<>();
         this.ultimaMensagem = "";
-//        GameController.getInstance().addGameStateObserver(this);
         this.setBackground(new Color(140, 75, 55));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.initComponentes();
+
+        ClientController.getInstance().addObserver(this);
     }
 
     private void initComponentes() {
@@ -52,7 +54,7 @@ public class MenuPanel extends JPanel implements GameStateObserverProxy {
         haruIchiban.setForeground(Color.white);
         JLabel men = new JLabel("Menu");
         men.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 2, 0, 2),
-                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE)));
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE)));
         men.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
         men.setForeground(Color.white);
 
@@ -66,13 +68,13 @@ public class MenuPanel extends JPanel implements GameStateObserverProxy {
         labelBotoes.setForeground(Color.WHITE);
         JButton reiniciar = new JButton("Reiniciar");
         reiniciar.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),
-                 BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
 //        reiniciar.addActionListener((ActionEvent e) -> {
 //            menuController.reiniciar();
 //        });
         JButton sair = new JButton("Sair");
         sair.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),
-                 BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
 //        sair.addActionListener((ActionEvent e) -> {
 //            menuController.finalizar();
 //        });
@@ -118,6 +120,11 @@ public class MenuPanel extends JPanel implements GameStateObserverProxy {
 
     @Override
     public void notificaFimJogo(String mensagem) {
+    }
+
+    @Override
+    public void update() {
+        this.repaint();
     }
 
 }
