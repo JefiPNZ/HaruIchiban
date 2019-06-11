@@ -72,7 +72,7 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
     public void begin(PlayerControllerProxy player) {
         this.player = player;
         this.initializeFrameProperties();
-//        this.iniciaInterface();
+        this.iniciaInterface();
         ClientController.getInstance().addObserver(this);
         ClientController.getInstance().play();
     }
@@ -107,7 +107,6 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
         this.setMinimumSize(new Dimension(600, 400));
         this.setSize(800, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setResizable(false);
         this.setVisible(true);
     }
 
