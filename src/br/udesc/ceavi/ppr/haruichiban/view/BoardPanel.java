@@ -42,6 +42,7 @@ public class BoardPanel extends JPanel {
         this.setOpaque(false);
         this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         this.initializeBoard();
+        this.setEnabled(true);
     }
 
     /**

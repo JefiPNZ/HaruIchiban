@@ -159,6 +159,7 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
         });
+        this.setEnabled(true);
     }
 
     private Point lastSelection = null;
@@ -177,6 +178,7 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
             this.getSelectionModel().clearSelection();
             this.columnModel.getSelectionModel().clearSelection();
             controller.eventoDeSelecao(newSelection);
+            System.out.println(newSelection);
         }
     }
 
@@ -214,6 +216,7 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
 
     @Override
     public void repaintTela() {
+        this.revalidate();
         this.repaint();
         this.parentPanel.repaint();
     }
@@ -229,13 +232,11 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
     @Override
     public void notifyAtivarTabela() {
         this.getSelectionModel().clearSelection();
-        this.setEnabled(true);
     }
 
     @Override
     public void notifyDesativarTabela() {
         this.getSelectionModel().clearSelection();
-        this.setEnabled(false);
     }
 
     @Override
