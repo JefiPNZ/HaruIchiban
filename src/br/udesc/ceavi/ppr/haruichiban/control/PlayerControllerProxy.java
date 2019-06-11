@@ -25,10 +25,14 @@ public class PlayerControllerProxy implements Jogador {
         this.socket = socket;
         ClientController.getInstance().initRequestSocket(new Scanner(socket.getInputStream()),
                 new PrintWriter(socket.getOutputStream(), true));
-        definirCor();
-        definirPosicao();
     }
-
+    
+    public void inicia(){
+//        this.getCanal().newProduct(Product.MY_READY).enviar();
+        definirPosicao();
+        definirCor();
+    }
+    
     private void definirCor() {
         getCanal().newRequest(Request.MY_COLOR).enviar();
         this.cor = (Color) new Gson().fromJson(getCanal().getResposta(), Color.class);
@@ -37,6 +41,12 @@ public class PlayerControllerProxy implements Jogador {
     private void definirPosicao() {
         getCanal().newRequest(Request.MY_POSITION).enviar();
         top = getCanal().getResposta().contains("TOP");
+    }
+    
+    public boolean aguardaPronto(){
+        getCanal().limpaResposta();
+        String ret = getCanal().getResposta();
+        return ret.equals("STRT");
     }
 
     public boolean isTop() {

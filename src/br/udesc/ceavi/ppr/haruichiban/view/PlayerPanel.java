@@ -154,9 +154,16 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
     private void drawPlayer(Graphics g) {
         AffineTransform transformation = AffineTransform.getRotateInstance(Math.toRadians(this.rotation),
                 baseImg.getWidth() / 2, baseImg.getHeight() / 2);
-        Random rand = ClientController.getInstance().getFixedRandomizer();
-        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth() / baseImg.getWidth() * 0.25,
-                (float) this.getHeight() / baseImg.getHeight());
+        float scaleX = this.getWidth() * 0.3f / baseImg.getWidth();
+        float scaleY = this.getHeight() * 1.0f / baseImg.getHeight();
+        AffineTransform scltransform = null;
+        if (scaleX > scaleY) {
+            scltransform = AffineTransform.getScaleInstance(scaleY / scaleX * scaleX
+                                                           ,scaleY);
+        } else {
+            scltransform = AffineTransform.getScaleInstance(scaleX
+                                                           ,scaleX / scaleY * scaleY);
+        }
         AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         AffineTransformOp operator = new AffineTransformOp(transformation, AffineTransformOp.TYPE_BICUBIC);
         g.drawImage(scloperator.filter(operator.filter(baseImg, null), null), 0, 0, null);
@@ -171,13 +178,24 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
      */
     private void drawPile(Graphics g) {
         Random rand = ClientController.getInstance().getFixedRandomizer();
-        int displacement = this.getHeight() / 2 - getFlowerImg().getHeight() / 2;
-        AffineTransform scltransform = AffineTransform.getScaleInstance((float) this.getWidth() / getFlowerImg().getWidth() * 0.075,
-                (float) this.getHeight() / getFlowerImg().getHeight() * 0.675);
+        float scaleX = this.getWidth() * 0.1f / getFlowerImg().getWidth();
+        float scaleY = this.getHeight() * 0.8f / getFlowerImg().getHeight();
+        AffineTransform scltransform = null;
+        if (scaleX > scaleY) {
+            scltransform = AffineTransform.getScaleInstance(scaleY / scaleX * scaleX
+                                                           ,scaleY);
+        } else {
+            scltransform = AffineTransform.getScaleInstance(scaleX
+                                                           ,scaleX / scaleY * scaleY);
+        }
         AffineTransformOp scloperator = new AffineTransformOp(scltransform, AffineTransformOp.TYPE_BICUBIC);
         for (int i = 0; i < controller.getPileSize(); i++) {
-            g.drawImage(scloperator.filter(getFlowerImg(), null), this.getWidth() - getFlowerImg().getWidth() - 15 - i * (rand.nextInt(10) + 25),
-                    displacement + rand.nextInt(displacement / 2) - displacement / 4, null);
+            BufferedImage filtered = scloperator.filter(getFlowerImg(), null);
+            int displacementx = (int)(i * filtered.getWidth() * 0.2f);
+            int displacementy = this.getHeight() / 2 - filtered.getHeight() / 2;
+            g.drawImage(filtered,
+                        this.getWidth() - filtered.getWidth() - displacementx,
+                        displacementy + rand.nextInt(displacementy / 2) - displacementy / 4, null);
         }
     }
 
@@ -215,7 +233,15 @@ public class PlayerPanel extends JPanel implements IPlayerPanelObserver {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension((int) this.getRootPane().getSize().getWidth(), (int) (this.getRootPane().getSize().getHeight() * 0.2f));
+        float scaleX = (float) this.getRootPane().getSize().getWidth() * 0.7f;
+        float scaleY = (float) this.getRootPane().getSize().getHeight();
+        if (scaleX > scaleY) {
+            scaleY = scaleY * 0.2f;
+        } else {
+            scaleY = scaleX / scaleY * scaleY * 0.2f;
+        }
+        return new Dimension((int) scaleX
+                            ,(int) scaleY);
     }
 
     /**

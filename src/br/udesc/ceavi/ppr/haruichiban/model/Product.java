@@ -6,6 +6,7 @@
 package br.udesc.ceavi.ppr.haruichiban.model;
 
 public enum Product {
+    MY_READY("MY,Ready"),
     MY_PRODUCEMYDECK("MY,ProduceDeck"),
     MY_CHOOSEFLOWER("MY,ChooseFlower"),
     GAME_ENDGAME("GAME,ENDGAME");

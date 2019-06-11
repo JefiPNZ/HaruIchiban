@@ -61,6 +61,7 @@ public class RequestSocket {
     public String getResposta() {
         if (resposta == null) {
             resposta = respostaServidor.nextLine();
+            System.out.println(resposta);
         }
         if (resposta.equals("Request-Perdida")) {
             System.out.println(resposta);
@@ -69,10 +70,11 @@ public class RequestSocket {
         }
         return resposta;
     }
-
-//    public String getRequest() {
-//        return request;
-//    }
+    
+    public void limpaResposta(){
+        this.resposta = null;
+    }
+    
     public boolean isAtivo() {
         newRequest(Request.GAME_JOGOCONTINUA).enviar();
         return getResposta().equals("true");

@@ -154,7 +154,7 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
         this.setFillsViewportHeight(true);
         this.setOpaque(false);
         this.setShowGrid(false);
-        this.setEnabled(false);
+        this.setEnabled(false); 
 
         this.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             executeTableSelectionChange(new Point(getSelectedColumn(), getSelectedRow()));
@@ -202,10 +202,10 @@ public class BoardTable extends JTable implements BoardObserverProxy, GameStateO
         float scaleX = (float) size.getWidth();
         float scaleY = (float) size.getHeight();
         if (scaleX > scaleY) {
-            int width = (int) (scaleY / scaleX * size.getWidth());
+            int width = (int) (scaleY / scaleX * scaleX);
             size = new Dimension(width, (int) size.getHeight());
         } else {
-            int height = (int) (scaleX / scaleY * size.getHeight());
+            int height = (int) (scaleX / scaleY * scaleY);
             size = new Dimension((int) size.getWidth(), height);
         }
         this.setRowHeight((int) size.getHeight() / this.getModel().getRowCount());

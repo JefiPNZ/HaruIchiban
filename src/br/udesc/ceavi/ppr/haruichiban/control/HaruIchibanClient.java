@@ -1,10 +1,11 @@
 package br.udesc.ceavi.ppr.haruichiban.control;
 
+import br.udesc.ceavi.ppr.haruichiban.model.Product;
 import java.net.Socket;
 
 import br.udesc.ceavi.ppr.haruichiban.view.MainFrame;
+import br.udesc.ceavi.ppr.haruichiban.view.WaitFrame;
 import javax.swing.JOptionPane;
-import br.udesc.ceavi.ppr.haruichiban.model.Product;
 
 public class HaruIchibanClient {
 
@@ -12,15 +13,22 @@ public class HaruIchibanClient {
     private PlayerControllerProxy player;
 
     public HaruIchibanClient(String ip) {
-        MainFrame frame = new MainFrame();
+        WaitFrame aguarde = new WaitFrame();
         try {
             socket = new Socket(ip, 60000);
             player = new PlayerControllerProxy(socket);
             ClientController.getInstance();
-            frame.begin(player);
+            if(player.aguardaPronto()){
+                player.inicia();
+                aguarde.fechaAguarde();
+                MainFrame frame = new MainFrame();
+                frame.begin(player);
+            }
         } catch (Exception ex) {
-            ClientController.getInstance().getCanal().newProduct(Product.GAME_ENDGAME).enviar();
-            JOptionPane.showMessageDialog(frame, "Nao foi possivel conectar: " + ex, "Erro", JOptionPane.ERROR_MESSAGE);
+            try{
+                ClientController.getInstance().getCanal().newProduct(Product.GAME_ENDGAME).enviar();
+            } catch(Exception ex2){}
+            JOptionPane.showMessageDialog(aguarde, "Não foi possível conectar: " + ex, "Erro", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
             System.exit(0);
         }

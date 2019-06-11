@@ -72,7 +72,9 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
     public void begin(PlayerControllerProxy player) {
         this.player = player;
         this.initializeFrameProperties();
-        aguardarOponnet();
+//        this.iniciaInterface();
+        ClientController.getInstance().addObserver(this);
+        ClientController.getInstance().play();
     }
 
     private void initImages() {
@@ -85,7 +87,7 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
         }
     }
 
-    private void initInterfase() {
+    private void iniciaInterface() {
         this.initImages();
         this.oponnet = new OponnetControllerProxy();
         getCanal().newRequest(Request.OPONNET_COLOR).enviar();
@@ -102,7 +104,7 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
      */
     public final void initializeFrameProperties() {
         this.setVisible(false);
-        this.setMinimumSize(new Dimension(800, 600));
+        this.setMinimumSize(new Dimension(600, 400));
         this.setSize(800, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -131,6 +133,7 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
 
     @Override
     public void notificaMudancaEstado(String mensagem) {
+        this.repaint();
     }
 
     @Override
@@ -145,25 +148,6 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
     @Override
     public void update() {
         this.repaint();
-    }
-
-    private void aguardarOponnet() {
-        boolean gameComecou = false;
-        while (!gameComecou) {
-            getCanal().newRequest(Request.GAME_HAVEOPONENT).enviar();
-            if (getCanal().getResposta().equals("true")) {
-                gameComecou = true;
-            } else {
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        initInterfase();
-        ClientController.getInstance().addObserver(this);
-        ClientController.getInstance().play();
     }
 
 }
