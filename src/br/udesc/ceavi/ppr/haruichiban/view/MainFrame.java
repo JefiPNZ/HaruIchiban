@@ -71,8 +71,8 @@ public class MainFrame extends JFrame implements GameStateObserverProxy {
 
     public void begin(PlayerControllerProxy player) {
         this.player = player;
-        this.initializeFrameProperties();
         this.iniciaInterface();
+        this.initializeFrameProperties();
         ClientController.getInstance().addObserver(this);
         ClientController.getInstance().play();
     }

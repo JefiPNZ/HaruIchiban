@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -66,20 +67,13 @@ public class MenuPanel extends JPanel implements GameStateObserverProxy {
 
         JLabel labelBotoes = new JLabel("Etapa: ");
         labelBotoes.setForeground(Color.WHITE);
-        JButton reiniciar = new JButton("Reiniciar");
-        reiniciar.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),
-                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-//        reiniciar.addActionListener((ActionEvent e) -> {
-//            menuController.reiniciar();
-//        });
         JButton sair = new JButton("Sair");
         sair.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-//        sair.addActionListener((ActionEvent e) -> {
-//            menuController.finalizar();
-//        });
+        sair.addActionListener((ActionEvent e) -> {
+            System.exit(0);
+        });
         painelBotoes.add(labelBotoes, gbc);
-        painelBotoes.add(reiniciar, gbc);
         painelBotoes.add(sair, gbc);
 
         JPanel painelMensagens = new JPanel();
