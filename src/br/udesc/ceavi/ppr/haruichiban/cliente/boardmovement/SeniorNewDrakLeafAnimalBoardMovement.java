@@ -28,14 +28,9 @@ public class SeniorNewDrakLeafAnimalBoardMovement extends SeniorNewDrakLeafBoard
     @Override
     public boolean addPoint(Point positionBoard) {
         if (newAnimalPosition == null) {
-            System.out.println("Posicao Para Sapo : " + positionBoard);
             if (!validar(positionBoard)) {
-                System.out.println("Posicao Valida : " + positionBoard);
                 newAnimalPosition = positionBoard;
-            } else {
-
-                System.out.println("Posicao Nao : " + positionBoard);
-            }
+            } 
             return true;
         }
         if (isReady()) {
@@ -47,17 +42,17 @@ public class SeniorNewDrakLeafAnimalBoardMovement extends SeniorNewDrakLeafBoard
     private boolean validar(Point positionBoard) {
         ModelBoardTileProxy boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
-            player.notifySimples("Animal Apenas Pode Ser Colocado Na Folha");
+            player.notifySimples("Animal apenas pode ser colocado em Folhas");
             return true;
         }
 
         if (boardTile.hasPeca()) {
-            player.notifySimples("Animal Apenas Pode Ser Colocado Folha Vazia");
+            player.notifySimples("Animal apenas pode ser colocado em Folhas Vazias");
             return true;
         }
 
         if (boardTile.isEscura()) {
-            player.notifySimples("Animal Apenas Pode Ser Colocado Folha Clara");
+            player.notifySimples("Animal apenas pode ser colocado em Folhas Claras");
             return true;
         }
 
@@ -88,7 +83,7 @@ public class SeniorNewDrakLeafAnimalBoardMovement extends SeniorNewDrakLeafBoard
         ModelBoardTileProxy boardTile = boardController.getBoardTile(animalLocal);
         boardTile.setPeca(null);
         boardTile.tornarEscura();
-        SwingUtilities.invokeLater(() -> boardController.renderBoard());
+        boardController.renderBoard();
         boardController.initBoardMovement(this);
         GameClienteController.getInstance().threadPoolExecute(() -> gameController.notificaMudancaEstado("Mover Animal"));
     }

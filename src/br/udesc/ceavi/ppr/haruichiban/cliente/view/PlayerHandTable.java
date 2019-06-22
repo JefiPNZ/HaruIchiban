@@ -63,8 +63,9 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
                     ColorScale scale = new ColorScale(1.15f, 1.15f, 1.15f);
                     img = scale.convert(img);
                 }
-                AffineTransform transform = AffineTransform.getScaleInstance((float) table.getColumnModel().getColumn(column).getWidth() / img.getWidth() * 0.8f,
-                        (float) table.getRowHeight() / img.getHeight() * 0.8f);
+                AffineTransform transform = AffineTransform.getScaleInstance(
+                        (float) table.getColumnModel().getColumn(column).getWidth() / img.getWidth() * 0.75f,
+                        (float) table.getRowHeight() / img.getHeight() * 0.75f);
                 AffineTransformOp operator = new AffineTransformOp(transform, AffineTransformOp.TYPE_BICUBIC);
                 this.setIcon(new ImageIcon(operator.filter(img, null)));
                 if (controller.getHand().size() > column) {
@@ -134,11 +135,12 @@ public class PlayerHandTable extends JTable implements PlayerPanelObserver {
         size.width = (int) (size.width * 0.4);
         float scaleX = (float) size.getWidth();
         float scaleY = (float) size.getHeight();
-        if (scaleX > scaleY * 3) {
-            int width = (int) (scaleY * 3 / scaleX * scaleX);
+        int numeroColunas = controller.getHand().size();
+        if (scaleX > scaleY * numeroColunas) {
+            int width = (int) (scaleY * numeroColunas / scaleX * scaleX);
             size = new Dimension(width, (int) size.getHeight());
         } else {
-            int height = (int) (scaleX / 3 / scaleY * scaleY);
+            int height = (int) (scaleX / numeroColunas / scaleY * scaleY);
             size = new Dimension((int) size.getWidth(), height);
         }
         this.setRowHeight((int) size.getHeight());

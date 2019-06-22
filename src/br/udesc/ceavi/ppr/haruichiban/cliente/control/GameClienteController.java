@@ -11,6 +11,7 @@ import br.udesc.ceavi.ppr.haruichiban.cliente.control.interfaces.IPlayerControll
 import br.udesc.ceavi.ppr.haruichiban.cliente.control.observers.GameStateObserver;
 import br.udesc.ceavi.ppr.haruichiban.cliente.utils.Images;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -78,6 +79,7 @@ public class GameClienteController {
     private PackageClientOutput packageOutput;
     private boolean isTop;
     private IEmitirSomController emitirSomController;
+    private boolean dadosCarregador;
 
     /**
      * Classe para criação da instância do Singleton.
@@ -110,9 +112,8 @@ public class GameClienteController {
      * Para a execução da lógica do jogo.
      */
     public void begin() {
-        this.bottomPlayer = new OponnetControllerProxy(Color.white);
-        this.topPlayer = new OponnetControllerProxy(Color.BLACK);
-        startEstacao();
+        this.bottomPlayer = new OponentControllerProxy(Color.BLACK);
+        this.topPlayer = new OponentControllerProxy(Color.BLACK);
         this.controllerBoard = new BoardController();
         this.controlDeFluxo = new FluxoController();
         this.emitirSomController = new EmitirSomController();
@@ -136,11 +137,11 @@ public class GameClienteController {
     }
 
     public IPlayerController getPlayer() {
-        return isTop ? topPlayer : bottomPlayer;
+        return topPlayer.getClass().getSimpleName().equals(PlayerController.class.getSimpleName()) ? topPlayer : bottomPlayer;
     }
 
     public IPlayerController getOponnet() {
-        return !isTop ? topPlayer : bottomPlayer;
+        return topPlayer.getClass().getSimpleName().equals(OponentControllerProxy.class.getSimpleName()) ? topPlayer : bottomPlayer;
     }
 
     /**
@@ -209,7 +210,7 @@ public class GameClienteController {
     }
 
     public String getEstacao() {
-        return estacao == null ? "Privamera" : estacao;
+        return estacao;
     }
 
     private void openChannel() {
@@ -218,78 +219,45 @@ public class GameClienteController {
             PlayerController player = new PlayerController(socket);
             Scanner scanner = new Scanner(socket.getInputStream());
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-
             CommunicationPackage communicationPackage = new CommunicationPackage();
-
-            communicationPackage.addGet(ModelGet.GAME_ESTACAO, "");
-            printWriter.println(communicationPackage.toJson());
-            printWriter.flush();
-            Gson gson = new Gson();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-            estacao = communicationPackage.getParametro();
 
             communicationPackage.addGet(ModelGet.MY_POSITION, "");
             printWriter.println(communicationPackage.toJson());
             printWriter.flush();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-            String posicao = communicationPackage.getParametro();
-            player.setPosition(posicao);
-            if (posicao.equalsIgnoreCase("TOP")) {
+
+            communicationPackage = new Gson().fromJson(scanner.nextLine(), CommunicationPackage.class);
+
+            if (communicationPackage.getParametro().toUpperCase().contains("TOP")) {
                 topPlayer = player;
-                isTop = true;
+                player.setTop(true);
             } else {
                 bottomPlayer = player;
-                isTop = false;
+                player.setTop(false);
             }
             packageInput = new PackageClientInput(scanner);
             packageOutput = new PackageClientOutput(printWriter);
-            communicationPackage.addGet(ModelGet.MY_COLOR, "");
-            printWriter.println(communicationPackage.toJson());
-            printWriter.flush();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-
-//            if(communicationPackage.getModelGet() != ModelGet.MY_COLOR) {
-//                communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-//            }
-            Color corPlayer = gson.fromJson(communicationPackage.getParametro(), Color.class);
-            player.setColor(corPlayer);
-
-            communicationPackage.addGet(ModelGet.OPONNET_COLOR, "");
-            printWriter.println(communicationPackage.toJson());
-            printWriter.flush();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-            Color corOponnet = gson.fromJson(communicationPackage.getParametro(), Color.class);
-            getOponnet().setColor(corOponnet);
-
-            communicationPackage.addGet(ModelGet.MY_HAND, "");
-            printWriter.println(communicationPackage.toJson());
-            printWriter.flush();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-            player.setHand(communicationPackage.getParametro());
-
-            communicationPackage.addGet(ModelGet.OPONNET_HAND, "");
-            printWriter.println(communicationPackage.toJson());
-            printWriter.flush();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-            getOponnet().setHand(communicationPackage.getParametro());
-
-            communicationPackage.addGet(ModelGet.MY_PILESIZE, "");
-            printWriter.println(communicationPackage.toJson());
-            printWriter.flush();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-            player.setPileSize(Integer.parseInt(communicationPackage.getParametro()));
-
-            communicationPackage.addGet(ModelGet.OPONNET_PILESIZE, "");
-            printWriter.println(communicationPackage.toJson());
-            printWriter.flush();
-            communicationPackage = gson.fromJson(scanner.nextLine(), CommunicationPackage.class);
-            getOponnet().setPileSize(Integer.parseInt(communicationPackage.getParametro()));
 
             new Thread(packageInput, "Thread Input Cliente").start();
             new Thread(packageOutput, "Thread Output Cliente").start();
+            carregandoDados();
+
         } catch (IOException ex) {
             Logger.getLogger(GameClienteController.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
         }
+    }
+
+    private void carregandoDados() throws JsonSyntaxException, NumberFormatException {
+        packageOutput.newGet(ModelGet.MY_PILESIZE, "");
+        packageOutput.newGet(ModelGet.MY_COLOR, "");
+        packageOutput.newGet(ModelGet.MY_HAND, "");
+
+        packageOutput.newGet(ModelGet.OPONNET_COLOR, "");
+        packageOutput.newGet(ModelGet.OPONNET_HAND, "");
+        packageOutput.newGet(ModelGet.OPONNET_PILESIZE, "");
+
+        packageOutput.newGet(ModelGet.GAME_BOARD, "");
+        packageOutput.newGet(ModelGet.GAME_ESTACAO, "");
     }
 
     public PackageClientOutput getPackageOutput() {
@@ -314,14 +282,25 @@ public class GameClienteController {
     }
 
     public void vencedor(int pontosDoVencedor, int pontosDoPerdedor) {
-        gameStateObserver.forEach(obs -> obs.notifyVencedor(pontosDoVencedor,pontosDoPerdedor));
+        gameStateObserver.forEach(obs -> obs.notifyVencedor(pontosDoVencedor, pontosDoPerdedor));
     }
 
     public void perderdor(int pontosDoVencedor, int pontosDoPerdedor) {
-        gameStateObserver.forEach(obs -> obs.notifyPerdedor(pontosDoVencedor,pontosDoPerdedor));
+        gameStateObserver.forEach(obs -> obs.notifyPerdedor(pontosDoVencedor, pontosDoPerdedor));
     }
 
     public PackageClientInput getPackageInput() {
         return packageInput;
     }
+
+    public void setEstacao(String estacao) {
+        this.estacao = estacao;
+        startEstacao();
+        this.dadosCarregador = true;
+    }
+
+    public boolean isDadosCarregados() {
+        return dadosCarregador;
+    }
+
 }

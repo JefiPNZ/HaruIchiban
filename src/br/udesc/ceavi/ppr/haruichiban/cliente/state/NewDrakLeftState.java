@@ -11,7 +11,7 @@ public class NewDrakLeftState extends State  {
 
     @Override
     public void executar() {
-        GameClienteController.getInstance().getPlayer().notifySimples("Escolha O Local Da Nova Folha Escura");
+        GameClienteController.getInstance().getPlayer().notifySimples("Escolha o local da nova Folha Escura");
         GameClienteController.getInstance().getBoardController().initBoardMovement(new SeniorNewDrakLeafBoardMovement());
     }
 

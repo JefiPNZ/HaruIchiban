@@ -30,7 +30,7 @@ public class EmitirSomController implements IEmitirSomController {
 
     @Override
     public void emitirSom() {
-        GameClienteController.getInstance().getPlayer().notifySimples("Emitindo Som");
+        GameClienteController.getInstance().getPlayer().notifySimples("Coaxando");
         State state = GameClienteController.getInstance().getFluxoController().getState();
         desativarEmitirSom();
         state.setEndFase();

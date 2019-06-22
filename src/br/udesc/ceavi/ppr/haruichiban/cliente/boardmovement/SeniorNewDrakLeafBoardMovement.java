@@ -48,12 +48,11 @@ public class SeniorNewDrakLeafBoardMovement implements BoardMovement {
         }
         ModelBoardTileProxy boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
-            player.notifySimples("A Posicao Escolhida N\u00E3o Tem Folha");
+            player.notifySimples("A posi\u00e7\u00e3 escolhida n\u00E3o tem uma Folha");
             return true;
         }
         if (boardTile.hasAnimal()) {
-            player.notifySimples("Folha tem Animal");
-            player.notifySimples("Folha Escura, Escolha A Nova Posi\u00E7\u00E3o Do Animal");
+            player.notifySimples("Folha virada, escolha uma nova posi\u00E7\u00E3o para o Animal");
             boardController.removeBoardMovement();
             SeniorNewDrakLeafAnimalBoardMovement juniorFlowerBoard
                     = new SeniorNewDrakLeafAnimalBoardMovement(positionBoard);
@@ -63,7 +62,7 @@ public class SeniorNewDrakLeafBoardMovement implements BoardMovement {
             return true;
         }
         if (boardTile.hasPeca()) {
-            player.notifySimples("A Posicao Escolhida Ja Tem Flor");
+            player.notifySimples("A posi\u00e7\u00e3o escolhida j\u00e1 tem uma Flor");
             return true;
         }
         return false;

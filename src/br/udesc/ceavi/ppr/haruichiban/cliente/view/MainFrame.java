@@ -2,14 +2,12 @@ package br.udesc.ceavi.ppr.haruichiban.cliente.view;
 
 import br.udesc.ceavi.ppr.haruichiban.cliente.control.GameClienteController;
 import br.udesc.ceavi.ppr.haruichiban.cliente.control.observers.GameStateObserver;
-import br.udesc.ceavi.ppr.haruichiban.cliente.state.State;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 /**
  * JFrame Principal contendo a tela da Aplicação.
@@ -53,11 +51,14 @@ public class MainFrame extends JFrame implements GameStateObserver {
         GameClienteController.getInstance();
         GameClienteController.getInstance().addGameStateObserver(this);
         GameClienteController.getInstance().begin();
+        while (!GameClienteController.getInstance().isDadosCarregados()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {}
+        }
         this.initializeGameComponents();
         this.initializeFrameProperties();
-        SwingUtilities.invokeLater(() -> {
-            GameClienteController.getInstance().startGame();
-        });
+        GameClienteController.getInstance().startGame();
     }
 
     /**
@@ -89,7 +90,8 @@ public class MainFrame extends JFrame implements GameStateObserver {
         this.topPlayerPanel = new PlayerPanel(GameClienteController.getInstance().getTopPlayer().getColor(),
                 GameClienteController.getInstance().getTopPlayer());
         this.topPlayerPanel.setRotation(180);
-        this.bottomPlayerPanel = new PlayerPanel(GameClienteController.getInstance().getBottomPlayer().getColor(),
+        this.bottomPlayerPanel = new PlayerPanel(
+                GameClienteController.getInstance().getBottomPlayer().getColor(),
                 GameClienteController.getInstance().getBottomPlayer());
         this.boardPanel = new BoardPanel();
         this.scorePanel = new ScorePanel();
@@ -119,8 +121,8 @@ public class MainFrame extends JFrame implements GameStateObserver {
 
     @Override
     public void notifyVencedor(int pontosDoVencedor, int pontosDoPerdedor) {
-        JOptionPane.showMessageDialog(null, "Voce Ganhou E Se Tornou o Jardineiro Supremo! \nCom " + pontosDoVencedor
-                + " Pontos e Seu Adiversairo Com " + pontosDoPerdedor,
+        JOptionPane.showMessageDialog(null, "Voce ganhou e se tornou o Jardineiro Supremo! \nCom " + pontosDoVencedor
+                + " pontos e seu Adversa\u00e1rio com " + pontosDoPerdedor,
                 "GAME OVER", JOptionPane.INFORMATION_MESSAGE);
         GameClienteController.getInstance().getPackageInput().close();
         GameClienteController.getInstance().getPackageOutput().close();
@@ -129,7 +131,7 @@ public class MainFrame extends JFrame implements GameStateObserver {
 
     @Override
     public void notifyPerdedor(int pontosDoVencedor, int pontosDoPerdedor) {
-        JOptionPane.showMessageDialog(null, "Voce Perdeu! \nSeu Oponnet fez " + pontosDoVencedor + " E voce fez apenas " + pontosDoPerdedor, "GAME OVER", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Voce Perdeu! \nSeu oponente fez " + pontosDoVencedor + " e voce fez apenas " + pontosDoPerdedor, "GAME OVER", JOptionPane.INFORMATION_MESSAGE);
         GameClienteController.getInstance().getPackageInput().close();
         GameClienteController.getInstance().getPackageOutput().close();
         System.exit(0);

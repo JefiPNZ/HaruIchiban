@@ -46,11 +46,11 @@ public class SeniorFlowerBoardBoardMovement implements BoardMovement {
     private boolean validandoPosicao(Point positionBoard) {
         ModelBoardTileProxy boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
-            player.notifySimples("A Posicao Escolhida N\u00E3o Tem Folha");
+            player.notifySimples("A posi\u00e7\u00e3 escolhida n\u00E3o tem uma Folha");
             return true;
         }
         if (boardTile.hasAnimal()) {
-            player.notifySimples("Flor Colocada, Escolha A Nova Posi\u00E7\u00E3o Do Animal");
+            player.notifySimples("Flor colocada, escolha uma nova posi\u00E7\u00E3o para o Animal");
 
             boardController.removeBoardMovement();
             SeniorFlowerBoardAnimalBoardMovement juniorFlowerBoard = new SeniorFlowerBoardAnimalBoardMovement(positionBoard);
@@ -59,7 +59,7 @@ public class SeniorFlowerBoardBoardMovement implements BoardMovement {
             return true;
         }
         if (boardTile.hasPeca()) {
-            player.notifySimples("A Posicao Escolhida Ja Tem Flor");
+            player.notifySimples("A posi\u00e7\u00e3o escolhida j\u00e1 tem uma Flor");
             return true;
         }
         return false;

@@ -63,7 +63,7 @@ public interface IPlayerController {
      */
     public void notifySimplesComTempo(String primeiraMessagem, String messagemFim, int tempo);
 
-    public void setPosition(String parametroes);
+    public void setTop(boolean top);
 
     public void setPontos(int parseInt);
 

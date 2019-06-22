@@ -42,16 +42,16 @@ public class SeniorFlowerBoardAnimalBoardMovement extends SeniorFlowerBoardBoard
     private boolean validar(Point positionBoard) {
         ModelBoardTileProxy boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
-            player.notifySimples("Animal Apenas Pode Ser Colocado Na Folha");
+            player.notifySimples("Animal apenas pode ser colocado em Folhas");
             return true;
         }
         if (boardTile.hasPeca()) {
-            player.notifySimples("Animal Apenas Pode Ser Colocado Folha Vazia");
+            player.notifySimples("Animal apenas pode ser colocado em Folhas Vazias");
             this.newAnimalPosition = null;
             return true;
         }
         if (boardTile.isEscura()) {
-            player.notifySimples("Animal Apenas Pode Ser Colocado Folha Clara");
+            player.notifySimples("Animal apenas pode ser colocado em Folhas Claras");
             this.newAnimalPosition = null;
             return true;
         }

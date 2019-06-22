@@ -22,14 +22,14 @@ public class AutoFloweringBoardMovement implements BoardMovement {
 
     private final IBoardController boardController;
     private final IPlayerController player;
-    private String mesagem;
+    private String mensagem;
 
     public AutoFloweringBoardMovement() {
         this.boardController = GameClienteController.getInstance().getBoardController();
         this.player = GameClienteController.getInstance().getPlayer();
-        setSapoPositin();
-        mesagem = "Coloque o Animal de Player Top";
-        player.notifySimplesComTempo("Escolha As Novas Posi\u00E7\u00F5es Dos Animais", mesagem, 5000);
+        setSapoPosition();
+        mensagem = "Coloque o animal do Jogador Superior";
+        player.notifySimplesComTempo("Escolha as novas posi\u00E7\u00F5es dos Animais", mensagem, 5000);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class AutoFloweringBoardMovement implements BoardMovement {
                 newAnimalTOPPositon = positionBoard;
                 boardTile.setPeca(topAnimal);
                 boardController.renderBoard();
-                mesagem = "Coloque o Animal de Player Bottom";
-                player.notifySimplesComTempo("Ok\u0021 Agora O Do Player Bottom", mesagem, 2000);
+                mensagem = "Coloque o animal do Jogador Inferior";
+                player.notifySimplesComTempo("Escolha as novas posi\u00E7\u00F5es dos Animais", mensagem, 2000);
             }
         } else {
             if (!validar(positionBoard)) {
@@ -60,17 +60,17 @@ public class AutoFloweringBoardMovement implements BoardMovement {
     private boolean validar(Point positionBoard) {
         ModelBoardTileProxy boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
-            player.notifySimplesComTempo("Animal Apenas Pode Ser Colocado Na Folha", mesagem, 1500);
+            player.notifySimplesComTempo("Animal apenas pode ser colocado em Folhas", mensagem, 1500);
             return true;
         }
 
         if (boardTile.hasPeca()) {
-            player.notifySimplesComTempo("Animal Apenas Pode Ser Colocado Folha Vazia", mesagem, 1500);
+            player.notifySimplesComTempo("Animal apenas pode ser colocado em Folhas Vazias", mensagem, 1500);
             return true;
         }
 
         if (boardTile.isEscura()) {
-            player.notifySimplesComTempo("Animal Apenas Pode Ser Colocado Folha Clara", mesagem, 1500);
+            player.notifySimplesComTempo("Animal apenas pode ser colocado em Folhas Claras", mensagem, 1500);
             return true;
         }
 
@@ -106,7 +106,7 @@ public class AutoFloweringBoardMovement implements BoardMovement {
     /**
      * Tem como objetivo definir a cor do sapo do player de cima e de baixo
      */
-    private void setSapoPositin() {
+    private void setSapoPosition() {
         topAnimal = new PecaProxy();
         topAnimal.setPecaCor(GameClienteController.getInstance().getTopPlayer().getColor());
         topAnimal.setPecaName(GameClienteController.getInstance().getEstacao().equals("Primavera") ? "Sapo" : "Pinguim");

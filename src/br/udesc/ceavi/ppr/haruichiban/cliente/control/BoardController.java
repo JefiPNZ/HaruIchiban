@@ -7,7 +7,6 @@ import br.udesc.ceavi.ppr.haruichiban.cliente.control.observers.BoardObserver;
 import br.udesc.ceavi.ppr.haruichiban.cliente.model.ModelBoardTileProxy;
 import br.udesc.ceavi.ppr.haruichiban.cliente.utils.Diretion;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class BoardController implements IBoardController {
 
     public BoardController() {
         this.observers = new ArrayList<>();
-        this.tabuleiro = new ModelBoardTileProxy[5][5];
+//        this.tabuleiro = new ModelBoardTileProxy[5][5];
     }
 
     /**
@@ -77,12 +76,12 @@ public class BoardController implements IBoardController {
 
     @Override
     public int getAlturaTabuleiro() {
-        return this.tabuleiro[0].length;
+        return this.tabuleiro == null ? 0 : this.tabuleiro[0].length;
     }
 
     @Override
     public int getLarguraTabuleiro() {
-        return this.tabuleiro.length;
+        return this.tabuleiro == null ? 0 : this.tabuleiro.length;
     }
 
     @Override

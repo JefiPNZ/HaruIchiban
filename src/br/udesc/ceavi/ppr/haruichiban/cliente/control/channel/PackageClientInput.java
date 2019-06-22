@@ -28,6 +28,7 @@ public class PackageClientInput implements Runnable {
     }
 
     public synchronized void add(String packet) {
+     
         try {
             CommunicationPackage newPackege = gson.fromJson(packet, CommunicationPackage.class);
             entradas.put(newPackege);

@@ -32,9 +32,9 @@ public class FirstWindBoardMovement implements BoardMovement {
     public boolean addPoint(Point positionBoard) {
         if (validacaoOrigem(positionBoard)) {
             if (origem == null) {
-                player.notifySimples("Folha Escolhida, Escolha a Dire\u00E7\u00E3o");
+                player.notifySimples("Folha escolhida, escolha a dire\u00E7\u00E3o");
             } else {
-                player.notifySimples("Nova Folha Escolhida, Escolha a Dire\u00E7\u00E3o");
+                player.notifySimples("Nova folha escolhida, escolha a dire\u00E7\u00E3o");
             }
             origem = positionBoard;
             return true;
@@ -45,7 +45,7 @@ public class FirstWindBoardMovement implements BoardMovement {
     private boolean validacaoOrigem(Point positionBoard) {
         ModelBoardTileProxy boardTile = boardController.getBoardTile(positionBoard);
         if (!boardTile.hasFolha()) {
-            player.notifySimples("So Pode Mover Uma Folha");
+            player.notifySimples("S\u00f3 pode mover uma Folha");
             return false;
         }
         return true;
@@ -133,7 +133,7 @@ public class FirstWindBoardMovement implements BoardMovement {
                 }
                 return true;
             }
-            player.notifySimples("Movimento N\u00E3o Valido");
+            player.notifySimples("Movimento inv\u00e1lido");
         }
         return false;
     }

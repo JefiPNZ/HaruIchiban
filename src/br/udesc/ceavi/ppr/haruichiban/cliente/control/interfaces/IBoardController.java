@@ -45,8 +45,8 @@ public interface IBoardController {
 
     public ModelBoardTileProxy[][] getTabuleiro();
 
-    public void atualizar();
-
     public void atualizar(String parametro);
+
+    public void atualizar();
 
 }

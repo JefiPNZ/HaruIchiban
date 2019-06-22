@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import br.udesc.ceavi.ppr.haruichiban.cliente.state.State;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -59,7 +60,7 @@ public class PlayerController implements IPlayerController {
 
     @Override
     public void chooseFlowerDeckEnd(int x) {
-        SwingUtilities.invokeLater(() -> notifySimples("Flor de Valor: " + (int) hand.get(x) + " Escolhoda"));
+        notifySimples("Flor de valor: " + (int) hand.get(x) + " escolhida");
         State state = GameClienteController.getInstance().getFluxoController().getState();
         state.addParametroToFase(x);
         notifiyFlowerChoise();
@@ -153,10 +154,11 @@ public class PlayerController implements IPlayerController {
     }
 
     @Override
-    public void setPosition(String parametroes) {
-        this.amTop = parametroes.contains("TOP");
+    public void setTop(boolean top) {
+        this.amTop = top;
     }
 
+    @Override
     public boolean isAmTop() {
         return amTop;
     }

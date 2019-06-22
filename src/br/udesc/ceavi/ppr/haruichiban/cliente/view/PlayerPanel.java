@@ -249,11 +249,12 @@ public class PlayerPanel extends JPanel implements PlayerPanelObserver, IEmitirS
     private void drawState(Graphics g) {
         if (!this.estado.isEmpty()) {
             g.setColor(Color.WHITE);
-            Font fonte = new Font(Font.MONOSPACED, Font.BOLD, 14);
+            int tamFonte = (int) (getSize().getHeight() * 0.125);
+            Font fonte = new Font(Font.MONOSPACED, Font.BOLD, tamFonte);
             g.setFont(fonte);
             FontMetrics metrics = g.getFontMetrics(fonte);
             g.drawString(this.estado, (this.getWidth() - metrics.stringWidth(this.estado)) / 2,
-                    metrics.getHeight() + 5);
+                    metrics.getHeight() + tamFonte - 10);
         }
     }
 

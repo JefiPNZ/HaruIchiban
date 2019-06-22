@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 
-public class OponnetControllerProxy implements IPlayerController {
+public class OponentControllerProxy implements IPlayerController {
 
     private Color cor;
     private List<Object> hand;
@@ -17,7 +17,7 @@ public class OponnetControllerProxy implements IPlayerController {
     private List<PlayerPanelObserver> observers;
     private int pontos;
 
-    public OponnetControllerProxy(Color cor) {
+    public OponentControllerProxy(Color cor) {
         this.observers = new ArrayList<>();
         this.hand = new ArrayList<>();
         this.pileSize = 0;
@@ -101,7 +101,7 @@ public class OponnetControllerProxy implements IPlayerController {
     }
 
     @Override
-    public void setPosition(String parametroes) {
+    public void setTop(boolean parametroes) {
     }
 
     @Override
@@ -143,16 +143,16 @@ public class OponnetControllerProxy implements IPlayerController {
 
     @Override
     public boolean isAmTop() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public void choseFlowerDeck() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void chooseFlowerDeckEnd(int x) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 }
